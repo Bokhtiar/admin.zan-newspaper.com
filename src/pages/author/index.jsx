@@ -16,19 +16,19 @@ import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { confirmAlert } from "react-confirm-alert";
 
 
-export const CategoryList = () => {
-  const [categories, setCategories] = useState([]);
+export const AuthorList = () => {
+  const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
-  console.log("categories", categories);
+  console.log("author", author);
 
   // Fetch categories from API
-  const fetchCategory = useCallback(async () => {
+  const fetchAuthor = useCallback(async () => {
     setLoading(true)
     try {
-      const response = await NetworkServices.Category.index();
+      const response = await NetworkServices.Author.index();
       console.log(response);
       if (response && response.status === 200) {
-        setCategories(response?.data?.data || []);
+        setAuthor(response?.data?.data || []);
       }
     } catch (error) {
       console.log(error);
@@ -38,23 +38,24 @@ export const CategoryList = () => {
   }, []);
 
   useEffect(() => {
-    fetchCategory();
-  }, [fetchCategory]);
+    fetchAuthor();
+  }, [fetchAuthor]);
 
   // Handle single category deletion
   const destroy = (id) => {
+    console.log("id",id)
     confirmAlert({
       title: "Confirm Delete",
-      message: "Are you sure you want to delete this category?",
+      message: "Are you sure you want to delete this author?",
       buttons: [
         {
           label: "Yes",
           onClick: async () => {
             try {
-              const response = await NetworkServices.Category.destroy(id);
+              const response = await NetworkServices.Author.destroy(id);
               if (response?.status === 200) {
-                Toastify.Info("Category deleted successfully.");
-                fetchCategory();
+                Toastify.Info("Author deleted successfully.");
+                fetchAuthor();
               }
             } catch (error) {
               networkErrorHandeller(error);
@@ -77,22 +78,23 @@ export const CategoryList = () => {
   }
 
   const propsData = {
-    pageTitle: "Category List",
+    pageTitle: "Author List",
     pageIcon: <IoIosList />,
-    buttonName: "Create New Category",
-    buttonUrl: "/dashboard/create-category",
+    buttonName: "Create New Author",
+    buttonUrl: "/dashboard/create-author",
     type: "add",
   };
 
     const columns = [
       {
-        name: "Thumbnail",
+        name: "Author Image",
         cell: (row) => (
           <img
             className="w-10 h-10 rounded-full border"
             src={
-              row?.category_image
-                ? `${process.env.REACT_APP_API_SERVER}${row?.category_image}`
+              row?.author_image
+                ? `${process.env.REACT_APP_API_SERVER}${row?.author_image
+                }`
                 : ""
             }
             alt="images"
@@ -100,20 +102,24 @@ export const CategoryList = () => {
         ),
       },
       {
-        name: "Category Name",
-        cell: (row) => row?.category_name,
+        name: "Author Name",
+        cell: (row) => row?.author_name,
+      },
+      {
+        name: "Designation",
+        cell: (row) => row?.designation,
       },
 
       {
         name: "Action",
         cell: (row) => (
           <div className="flex gap-2">
-            <Link to={`/dashboard/edit-category/${row?.category_id}`}>
+            <Link to={`/dashboard/edit-author/${row?.author_id}`}>
               <FaEdit className="text-primary text-xl" />
             </Link>
             <MdDelete
               className="text-red-500 text-xl cursor-pointer"
-              onClick={() => destroy(row?.category_id)}
+              onClick={() => destroy(row?.author_id)}
             />
           </div>
         ),
@@ -123,7 +129,7 @@ export const CategoryList = () => {
   return (
     <>
       <PageHeader propsData={propsData} />
-      <DataTable columns={columns} data={categories} pagination />
+      <DataTable columns={columns} data={author} pagination />
     </>
   );
 };

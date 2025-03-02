@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { removeToken } from "../../utils/helper";
+
 import { IoIosNotifications } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { removeToken } from "../../utils/helper";
 export const Header = ({ sidebarOpen, setSidebarOpen }) => {
   const navigate = useNavigate();
 

@@ -4,12 +4,12 @@ import { PasswordInput, TextInput } from "../../components/input";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { PrimaryButton } from "../../components/button";
-import newsIcon from "../../assets/icon/JPG Logo.jpg";
+import NewsIcon from "../../assets/icon/JPG Logo.jpg";
 import { NetworkServices } from "../../network";
 import { networkErrorHandeller, setToken } from "../../utils/helper";
 import { Toastify } from "../../components/toastify";
 
-export default function Login() {
+export default function Register() {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [rocketPosition, setRocketPosition] = useState({ left: 0, bottom: 0 });
@@ -53,18 +53,19 @@ export default function Login() {
 
       // FormData object creation
       const formData = new FormData();
+      formData.append("name", data.name);
       formData.append("email", data.email);
       formData.append("password", data.password);
+      //   formData.append("role", "admin");
 
       // API call
-      const response = await NetworkServices.Authentication.login(formData);
+      const response = await NetworkServices.Authentication.Register(formData);
 
-      console.log("response",response)
+      console.log("response", response);
 
-      if (response.status === 200) {
-        setToken(response.data.data.token);
-        Toastify.Success("Login successfully done");
-        navigate("/dashboard");
+      if (response.status === 201) {
+        Toastify.Success(response?.data?.message);
+        navigate("/");
       }
     } catch (error) {
       networkErrorHandeller(error);
@@ -87,6 +88,7 @@ export default function Login() {
         <FaRocket className="w-20 h-20 text-white " />
       </div>
 
+
       {loading ? (
         ""
       ) : (
@@ -105,21 +107,35 @@ export default function Login() {
 
             <div className="flex justify-center">
               <img
-                src={newsIcon}
+                src={NewsIcon}
                 alt="Logo"
-                className="w-20 h-20 rounded-full shadow-lg border-gray-300"
+                className="w-20 h-20 rounded-full shadow-lg border-gray-300 "
               />
             </div>
 
-            <h2 className="text-white text-2xl font-semibold text-center my-6">
-              Login
+            <h2 className="text-white text-2xl font-semibold text-center my-4">
+              Register
             </h2>
 
             <form
               className="px-4 w-full z-50"
               onSubmit={handleSubmit(onSubmit)}
             >
-              <div className="my-4">
+              <div className="my-3">
+                <label className="block">
+                  <TextInput
+                    name="name"
+                    control={control}
+                    label="Name *"
+                    type="text"
+                    placeholder="Enter Name"
+                    rules={{ required: "Name is required" }}
+                    error={errors.name?.message}
+                    className="w-full"
+                  />
+                </label>
+              </div>
+              <div className="my-3">
                 <label className="block">
                   <TextInput
                     name="email"
@@ -134,7 +150,7 @@ export default function Login() {
                 </label>
               </div>
 
-              <div className="my-4">
+              <div className="my-3">
                 <label className="block">
                   <PasswordInput
                     name="password"
@@ -149,12 +165,12 @@ export default function Login() {
                 </label>
               </div>
 
-              <div className="my-4 flex justify-center">
+              <div className="my-3 flex justify-center">
                 <PrimaryButton loading={loading} name="submit" />
               </div>
 
-              <p className="text-gray-500"> Don't have an account? <Link to='/register'>
-              <span className="text-[#7c5cc4]">Register</span>
+              <p className="text-gray-500">Already have an account? <Link to='/'>
+              <span className="text-[#7c5cc4]">LogIn</span>
               </Link> </p>
             </form>
           </div>

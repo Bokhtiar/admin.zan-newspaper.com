@@ -21,8 +21,19 @@ module.exports = {
       },
       colors: {
         'primary': "#228B22",
-      }
+      },
+      keyframes: {
+        borderAnimation: {
+          '0%': { borderColor: 'red blue blue red' },
+          '50%': { borderColor: 'blue red red blue' },
+          '100%': { borderColor: 'red blue blue red' },
+        },
+      },
+      animation: {
+        border: 'borderAnimation 2s infinite linear',
+      },
     },
+
   },
  
   plugins: [require("daisyui")],

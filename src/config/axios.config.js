@@ -1,7 +1,8 @@
 import axios from "axios";
 import { getToken } from "../utils/helper";
 
-const apiUrl = "http://localhost:8000/api/";
+// const apiUrl = "http://localhost:8000/api/";
+const apiUrl = `${process.env.REACT_APP_API_ENDPOINT}api/`
 
 /* Publica/Common request config */
 axios.defaults.headers.post["Content-Type"] = "application/json";
