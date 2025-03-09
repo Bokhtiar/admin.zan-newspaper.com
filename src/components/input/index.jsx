@@ -461,7 +461,7 @@ export const TextCheckbox = (props) => {
               : `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border disabled:border-gray-300 ${props?.className}`
           }
         />
-          
+        
       </div>
     );
   };

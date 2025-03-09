@@ -12,6 +12,8 @@ import EditNews from "../pages/news/EditNews";
 import { AuthorList } from "../pages/author";
 import CreateAuthor from "../pages/author/CreateAuthor";
 import EditAuthor from "../pages/author/EditAuthor";
+import CreateAddImage from "../pages/singleAddImage/CreateAddImage";
+import SingleItemList from "../pages/singleAddImage";
 
 
 
@@ -36,6 +38,10 @@ const appRoutes = [
             { path:"news", element: <NewsList /> },
             { path: "create-news", element: <CreateNews /> },
             { path: "edit-news/:newsId", element: <EditNews /> },
+            // single add image
+            { path: "singleaddimage", element: <SingleItemList/> },
+            { path: "create-singleaddimage", element: <CreateAddImage/> },
+            
 
          
       

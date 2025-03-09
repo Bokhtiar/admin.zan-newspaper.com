@@ -21,11 +21,12 @@ import { PageHeader } from "../../components/pageHandle/pagehandle";
 
 const CreateNews = () => {
   const [categories, setCategories] = useState([]);
+  const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editorValue, setEditorValue] = useState("");
 
 
-  console.log("editorValue",editorValue)
+  console.log("author",author)
   console.log("editorValue",editorValue)
 
   const navigate = useNavigate();
@@ -83,6 +84,31 @@ const CreateNews = () => {
     fetchCategory();
   }, [fetchCategory]);
 
+  const fetchAuthor = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await NetworkServices.Author.index();
+      if (response && response.status === 200) {
+        const result = response.data.data.map((item, index) => {
+          return {
+            label: item.author_name,
+            value: item.author_name,
+            ...item,
+          };
+        });
+        setAuthor(result);
+      }
+    } catch (error) {
+      console.error("Fetch Author Error:", error);
+    }
+    setLoading(false); // End loading (handled in both success and error)
+  }, []);
+
+  // category api fetch
+  useEffect(() => {
+    fetchAuthor();
+  }, [fetchAuthor]);
+
   // const onFormSubmit = async (data) => {
 
   //   const payload = {
@@ -113,7 +139,7 @@ const CreateNews = () => {
   
     // ফর্মের অন্যান্য ডাটা FormData তে অ্যাড করুন
     formData.append("category_id", data.category_id);
-    formData.append("author_id", "3"); // যদি থাকে
+    formData.append("author_id", data.author_id); // যদি থাকে
     formData.append("title", data.title);
     formData.append("subtitle", data.subtitle);
     
@@ -190,7 +216,7 @@ const CreateNews = () => {
             <SingleSelect
               name="author"
               control={control}
-              options={categories}
+              options={author}
               rules={{ required: "Category selection is required" }}
               onSelected={(selected) =>
                 setValue("author_id", selected?.author_id)
@@ -253,6 +279,7 @@ const CreateNews = () => {
           <ReactQuill
             id="editor"
             name="content" // Optional, to link the label with the editor
+            className="h-[200px] mb-24 md:mb-20 lg:mb-16"
             value={editorValue} // Value bound to state
             onChange={handleChange} // Handle change events
             theme="snow" // Theme for the editor

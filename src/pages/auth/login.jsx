@@ -39,7 +39,7 @@ export default function Login() {
         } else {
           clearInterval(interval); // Stop when the rocket reaches the top right
         }
-      }, 10); // Adjust speed as necessary
+      }, 30); // Adjust speed as necessary
     }
 
     return () => clearInterval(interval); // Cleanup interval on unmount or when loading changes

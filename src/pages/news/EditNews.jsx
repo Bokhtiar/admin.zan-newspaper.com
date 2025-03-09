@@ -18,6 +18,7 @@ import ReactQuill from "react-quill";
 const EditNews = () => {
   const [categories, setCategories] = useState([]);
   const [news, setNews] = useState([]);
+  const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
   const { newsId } = useParams(); // URL থেকে ID নেওয়া
   const navigate = useNavigate();
@@ -53,7 +54,31 @@ const EditNews = () => {
     }
   }, []);
 
-  // ফুড ডাটা লোড করা
+  const fetchAuthor = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await NetworkServices.Author.index();
+      if (response && response.status === 200) {
+        const result = response.data.data.map((item, index) => {
+          return {
+            label: item.author_name,
+            value: item.author_name,
+            ...item,
+          };
+        });
+        setAuthor(result);
+      }
+    } catch (error) {
+      console.error("Fetch Author Error:", error);
+    }
+    setLoading(false); // End loading (handled in both success and error)
+  }, []);
+
+  // category api fetch
+  useEffect(() => {
+    fetchAuthor();
+  }, [fetchAuthor]);
+
   const newsData = useCallback(async () => {
     setLoading(true);
     try {
@@ -62,7 +87,8 @@ const EditNews = () => {
         const newsData = response?.data?.data?.data;
         setNews(newsData);
 
-        setValue("category_id", news.category_id);
+        setValue("category_id", news?.category_id);
+        setValue("author_id", news?.author_id);
         setValue("subtitle", news?.subtitle);
         setValue("title", news?.title);
 
@@ -80,6 +106,7 @@ const EditNews = () => {
     newsId,
     setValue,
     news.category_id,
+    news.author_id,
     news?.content,
     news?.status,
     news?.subtitle,
@@ -100,16 +127,29 @@ const EditNews = () => {
   }, [fetchCategory, newsData, newsId]);
 
   const onFormSubmit = async (data) => {
+    console.log("Data", data);
     setLoading(true);
-    const payload = {
-      ...data,
-      status: data.status ? 1 : 0,
-    };
+
+    const formData = new FormData();
+
+    // Append form fields to FormData
+    formData.append("category_id", data?.category_id);
+    formData.append("author_id", data?.author_id);
+    formData.append("title", data?.title);
+    formData.append("subtitle", data?.subtitle);
+    formData.append("content", editorValue); // Assuming editor value holds content
+    formData.append("status", data?.status ? 1 : 0);
+
+ 
+    formData.append("article_image", data?.article_image); // Assuming it's an image file
+  
+    formData.append("_method", "PUT");
+    console.log("formData", formData);
 
     try {
-      const response = await NetworkServices.Food.update(newsId, payload);
+      const response = await NetworkServices.News.update(newsId, formData);
       if (response?.status === 200) {
-        Toastify.Success("Food Updated Successfully.");
+        Toastify.Success("News Updated Successfully.");
         navigate("/dashboard/food");
       }
     } catch (error) {
@@ -140,12 +180,11 @@ const EditNews = () => {
               name="categories"
               control={control}
               options={categories}
-              rules={{ required: "Category selection is required" }}
               onSelected={(selected) =>
                 setValue("category_id", selected?.category_id)
               }
               placeholder={news?.show_category?.category_name}
-              error={errors.category?.message}
+              error={errors.categories?.message}
               label="Choose category *"
               isClearable={true}
               // error={errors} // Pass an error message if validation fails
@@ -156,13 +195,12 @@ const EditNews = () => {
             <SingleSelect
               name="author"
               control={control}
-              options={categories}
-              rules={{ required: "Category selection is required" }}
+              options={author}
               onSelected={(selected) =>
                 setValue("author_id", selected?.author_id)
               }
-              placeholder="Select a Author "
-              error={errors.category?.message}
+              placeholder={news?.show_author?.author_name}
+              error={errors.author?.message}
               label="Choose Author*"
               isClearable={true}
               // error={errors} // Pass an error message if validation fails
@@ -193,7 +231,7 @@ const EditNews = () => {
             // required
             onUpload={(file) => setValue("article_image", file)}
             imgUrl={news?.article_image}
-            error={errors.article_image?.message}
+            error={errors.article_imagee?.message}
           />
         </div>
         {/* multiple image Upload */}
@@ -212,18 +250,18 @@ const EditNews = () => {
 
         <div className="mt-4  ">
           <label htmlFor="editor" className="block text-sm  text-gray-500 mb-1">
-            Content * {/* This is your label */}
+            Content * 
           </label>
           <ReactQuill
-            className="h-[100px] mb-24 md:mb-20 lg:mb-16"
+            className="h-[200px] mb-24 md:mb-20 lg:mb-16 "
             id="editor"
-            name="content" // Optional, to link the label with the editor
-            value={editorValue} // Value bound to state
+            name="content" 
+            value={editorValue} 
             onChange={(value) => {
               setEditorValue(value);
-              setValue("content", value); // React Hook Form-এও আপডেট করো
+              setValue("content", value); 
             }}
-            theme="snow" // Theme for the editor
+            theme="snow" 
             modules={{
               toolbar: [
                 [{ header: "1" }, { header: "2" }, { font: [] }],

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { IoIosList } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
-
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
@@ -16,11 +15,18 @@ import { PageHeader } from "../../components/pageHandle/pagehandle";
 export const NewsList = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  console.log("first", news);
+  const [expandedRows, setExpandedRows] = useState([]);
+  const handleExpandClick = (rowId) => {
+    // Toggle the row expansion
+    setExpandedRows((prev) =>
+      prev.includes(rowId)
+        ? prev.filter((id) => id !== rowId)
+        : [...prev, rowId]
+    );
+  };
 
   // Fetch categories from API
-  const fetchfood = useCallback(async () => {
+  const fetchNews = useCallback(async () => {
     setLoading(true);
     try {
       const response = await NetworkServices.News.index();
@@ -36,15 +42,14 @@ export const NewsList = () => {
   }, []);
 
   useEffect(() => {
-    fetchfood();
-  }, [fetchfood]);
+    fetchNews();
+  }, [fetchNews]);
 
   // Handle single category deletion
   const destroy = (id) => {
-    console.log("iddd", id);
     confirmAlert({
       title: "Confirm Delete",
-      message: "Are you sure you want to delete this Artical?",
+      message: "Are you sure you want to delete this News?",
       buttons: [
         {
           label: "Yes",
@@ -52,8 +57,8 @@ export const NewsList = () => {
             try {
               const response = await NetworkServices.News.destroy(id);
               if (response?.status === 200) {
-                Toastify.Info("Artical deleted successfully.");
-                fetchfood();
+                Toastify.Info("News deleted successfully.");
+                fetchNews();
               }
             } catch (error) {
               networkErrorHandeller(error);
@@ -93,24 +98,41 @@ export const NewsList = () => {
         />
       ),
     },
-    // {
-    //   name: "Content Name",
-    //   cell: (row) => (
-    //     <div dangerouslySetInnerHTML={{ __html: row.content }} />
-    //   ),
-    // },
+
     {
       name: "Content Name",
+      selector: (row) => row.content,
       cell: (row) => {
-        const contentText = row.content.replace(/<[^>]+>/g, ""); // HTML ট্যাগ রিমুভ
+        const contentText = row.content.replace(/<[^>]+>/g, ""); // Remove HTML tags
         const shortContent =
           contentText.length > 300
-            ? contentText.substring(0, 300) + "..."
+            ? contentText.substring(0, 300)
             : contentText;
 
-        return <div dangerouslySetInnerHTML={{ __html: shortContent }} />;
+        return (
+          <div>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: expandedRows.includes(row?.article_id)
+                  ? contentText
+                  : shortContent,
+              }}
+            />
+            {contentText.length > 300 && (
+              <button
+                onClick={() => handleExpandClick(row?.article_id)}
+                className="text-blue-500 hover:underline"
+              >
+                {expandedRows.includes(row?.article_id)
+                  ? "See Less"
+                  : "See More"}
+              </button>
+            )}
+          </div>
+        );
       },
     },
+
     {
       name: "Action",
       cell: (row) => (
