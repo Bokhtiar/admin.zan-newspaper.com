@@ -22,13 +22,13 @@ export const PageHeader = ({ propsData }) => {
   // console.log("propsData", propsData);
 
   return (
-    <section className="flex items-center justify-between shadow-md p-4 rounded-lg bg-white my-3">
+    <section className="flex items-center justify-between shadow-md p-4 rounded-lg bg-white dark:bg-gray-400  my-3">
       <div>
-        <p className="flex items-center gap-2 font-semibold text-gray-700 text-lg capitalize">
+        <p className="flex items-center gap-2 font-semibold dark:text-white text-gray-700 text-lg capitalize">
           {propsData?.pageIcon} 
           <span>{propsData?.pageTitle}</span>
         </p>
-        <p className="text-sm text-gray-500 lowercase">
+        <p className="text-sm text-gray-500 dark:text-white lowercase">
           Here is {propsData?.pageTitle} page
         </p>
       </div>

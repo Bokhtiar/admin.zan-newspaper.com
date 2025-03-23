@@ -1,29 +1,33 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { IoIosList } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
-import { networkErrorHandeller } from "../../utils/helper";
+import { formatDateInBengali, networkErrorHandeller } from "../../utils/helper";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
-import DataTable from "react-data-table-component";
+import DataTable, { createTheme } from "react-data-table-component";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
+import { ThemeContext } from "../../components/ThemeContext";
 
 export const NewsList = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [expandedRows, setExpandedRows] = useState([]);
-  const handleExpandClick = (rowId) => {
-    // Toggle the row expansion
-    setExpandedRows((prev) =>
-      prev.includes(rowId)
-        ? prev.filter((id) => id !== rowId)
-        : [...prev, rowId]
-    );
-  };
+   const { theme } = useContext(ThemeContext);
+
+   console.log("news",news)
+  // const [expandedRows, setExpandedRows] = useState([]);
+  // const handleExpandClick = (rowId) => {
+  //   // Toggle the row expansion
+  //   setExpandedRows((prev) =>
+  //     prev.includes(rowId)
+  //       ? prev.filter((id) => id !== rowId)
+  //       : [...prev, rowId]
+  //   );
+  // };
 
   // Fetch categories from API
   const fetchNews = useCallback(async () => {
@@ -92,10 +96,27 @@ export const NewsList = () => {
       name: "Artical Image",
       cell: (row) => (
         <img
-          className="w-28 h-28 rounded-full border"
-          src={row?.article_image ? `${row?.article_image}` : ""}
+          className="w-20 h-20 rounded-full border"
+          src={
+            row?.article_image
+              ? `${process.env.REACT_APP_API_SERVER}${row?.article_image}`
+              : ""
+          }
           alt="images"
         />
+      ),
+    },
+    {
+      name: "Title & Date",
+      cell: (row) => (
+        <div className="flex flex-col space-y-1">
+          {" "}
+          {/* 🆕 এটি লাইন স্পেস ঠিক করবে */}
+          <span className="font-semibold">{row?.title}</span>
+          <span className=" text-sm">
+            {formatDateInBengali(row?.updated_at)}
+          </span>
+        </div>
       ),
     },
 
@@ -104,34 +125,23 @@ export const NewsList = () => {
       selector: (row) => row.content,
       cell: (row) => {
         const contentText = row.content.replace(/<[^>]+>/g, ""); // Remove HTML tags
-        const shortContent =
-          contentText.length > 300
-            ? contentText.substring(0, 300)
-            : contentText;
-
+    
         return (
-          <div>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: expandedRows.includes(row?.article_id)
-                  ? contentText
-                  : shortContent,
-              }}
-            />
-            {contentText.length > 300 && (
-              <button
-                onClick={() => handleExpandClick(row?.article_id)}
-                className="text-blue-500 hover:underline"
+          <div className="">
+            <p className="line-clamp-2 mb-2">{contentText}</p> {/* Limit the content to 2 lines */}
+           
+              <Link
+                to={`/dashboard/single-content/${row?.article_id}`}
+                className=" text-green-600 dark:text-gray-700 hover:underline mt-2"
               >
-                {expandedRows.includes(row?.article_id)
-                  ? "See Less"
-                  : "See More"}
-              </button>
-            )}
+                See More
+              </Link>
+            
           </div>
         );
       },
-    },
+    }
+,    
 
     {
       name: "Action",
@@ -149,10 +159,22 @@ export const NewsList = () => {
     },
   ];
 
+    createTheme("lightTheme", {
+      text: { primary: "#000", secondary: "#555" },
+      background: { default: "#ffffff" },
+      divider: { default: "#ddd" },
+    });
+  
+    createTheme("darkTheme", {
+      text: { primary: "#ffffff", secondary: "#bbb" },
+      background: { default: "#9CA3AF" },
+      divider: { default: "#444" },
+    });
+
   return (
     <>
       <PageHeader propsData={propsData} />
-      <DataTable columns={columns} data={news} pagination />
+      <DataTable columns={columns}  theme={theme === "dark" ? "darkTheme" : "lightTheme"} data={news} pagination />
     </>
   );
 };

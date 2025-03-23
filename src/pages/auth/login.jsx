@@ -12,7 +12,7 @@ import { Toastify } from "../../components/toastify";
 export default function Login() {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [rocketPosition, setRocketPosition] = useState({ left: 0, bottom: 0 });
+  const [rocketPosition, setRocketPosition] = useState({ left: 30, bottom: 10 });
   const navigate = useNavigate();
 
   const {
@@ -22,6 +22,7 @@ export default function Login() {
   } = useForm();
 
   useEffect(() => {
+
     let interval;
 
     if (loading) {
@@ -46,7 +47,7 @@ export default function Login() {
   }, [loading]);
 
   const onSubmit = async (data) => {
-    console.log("data", data);
+
     setLoading(true); // Set loading to true
     try {
       setLoading(true);
@@ -58,6 +59,7 @@ export default function Login() {
 
       // API call
       const response = await NetworkServices.Authentication.login(formData);
+      
 
       console.log("response",response)
 
@@ -80,8 +82,8 @@ export default function Login() {
       <div
         className="absolute"
         style={{
-          left: `${rocketPosition.left}px`,
-          bottom: `${rocketPosition.bottom}px`,
+          left: `${rocketPosition.left}%`,
+          bottom: `${rocketPosition.bottom}%`,
         }}
       >
         <FaRocket className="w-20 h-20 text-white " />

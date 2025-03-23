@@ -12,7 +12,7 @@ import { Toastify } from "../../components/toastify";
 export default function Register() {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [rocketPosition, setRocketPosition] = useState({ left: 0, bottom: 0 });
+  const [rocketPosition, setRocketPosition] = useState({ left: 30, bottom: 10  });
   const navigate = useNavigate();
 
   const {
@@ -81,8 +81,8 @@ export default function Register() {
       <div
         className="absolute"
         style={{
-          left: `${rocketPosition.left}px`,
-          bottom: `${rocketPosition.bottom}px`,
+          left: `${rocketPosition.left}%`,
+          bottom: `${rocketPosition.bottom}%`,
         }}
       >
         <FaRocket className="w-20 h-20 text-white " />

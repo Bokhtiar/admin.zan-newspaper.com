@@ -1,14 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { IoMdCreate } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
-
 import { useNavigate } from "react-router-dom";
-import ReactQuill from "react-quill"; // React Quill import
-import "react-quill/dist/quill.snow.css";
-
 import {
   ImageUpload,
   SingleSelect,
@@ -19,33 +15,48 @@ import { networkErrorHandeller } from "../../utils/helper";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // import styles
+
 const CreateNews = () => {
   const [categories, setCategories] = useState([]);
   const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [editorValue, setEditorValue] = useState("");
+  const [editValue, seteditValue] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const quillRef = useRef(null);
+  const [singleCategory, setSingleCategory] = useState([]);
 
+  console.log("categories",categories)
 
-  console.log("author",author)
-  console.log("editorValue",editorValue)
+  const handleChange = (newValue) => {
+    seteditValue(newValue); // Save editor content
+  };
+
+  const handleImageUpload = (file) => {
+    const quill = quillRef.current.getEditor();
+    const range = quill.getSelection();
+
+    if (range) {
+      const index = range.index;
+
+      // Insert the image at the current cursor position
+      const reader = new FileReader();
+      reader.onload = () => {
+        const imageUrl = reader.result;
+        // Insert the image into the editor
+        quill.insertEmbed(index, "image", imageUrl);
+
+       
+        quill.setSelection(index + 1);
+      };
+      reader.readAsDataURL(file); 
+    }
+  };
 
   const navigate = useNavigate();
 
-  // কার্সারের সমস্যা ফিক্স করা
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setTimeout(() => {
-        const quill = document.querySelector(".ql-editor");
-        if (quill) {
-          quill.focus(); // কার্সার ঠিকমতো ফোকাস করবে
-        }
-      }, 0);
-    }
-  }, [editorValue]); // যখনই value আপডেট হবে, তখন এটি চলবে
 
-  const handleChange = (value) => {
-    setEditorValue(value);
-  };
 
   const {
     handleSubmit,
@@ -58,6 +69,9 @@ const CreateNews = () => {
       status: 0,
     },
   });
+
+  const selectedCategory = watch("category_id");
+  console.log("selectedCategory",selectedCategory)
 
   const fetchCategory = useCallback(async () => {
     setLoading(true);
@@ -83,6 +97,26 @@ const CreateNews = () => {
   useEffect(() => {
     fetchCategory();
   }, [fetchCategory]);
+
+  const fatchSingleCategory = useCallback(async () => {
+      try {
+        const response = await NetworkServices.Category.show(selectedCategory);
+        console.log("666",response)
+        if (response?.status === 200) {
+          const result = response?.data?.data?.map((item) => ({
+            label: item.category_name,
+            value: item.category_id,
+          }));
+          setSingleCategory(result);
+        }
+      } catch (error) {
+        console.error("Fetch Category Error:", error);
+      }
+    }, []);
+
+    useEffect(() => {
+      fatchSingleCategory();
+    }, [fatchSingleCategory,selectedCategory ]);
 
   const fetchAuthor = useCallback(async () => {
     setLoading(true);
@@ -133,42 +167,41 @@ const CreateNews = () => {
   // };
 
   const onFormSubmit = async (data) => {
-
-    console.log("data",data)
+    console.log("data", data);
     const formData = new FormData();
-  
+
     // ফর্মের অন্যান্য ডাটা FormData তে অ্যাড করুন
     formData.append("category_id", data.category_id);
-    formData.append("author_id", data.author_id); // যদি থাকে
+    formData.append("author_id", data.author_id);
     formData.append("title", data.title);
     formData.append("subtitle", data.subtitle);
-    
+
     formData.append("status", data.status ? "1" : "0");
-    formData.append("content", editorValue);
-  
+    formData.append("content", editValue);
+
     // ফাইল আপলোডের জন্য
     if (data.article_image) {
       formData.append("article_image", data.article_image);
     }
-    
-  
+
     try {
       setLoading(true);
       const response = await NetworkServices.News.store(formData);
 
-      console.log("response",response)
+      console.log("response", response);
       if (response && response.status === 200) {
-        navigate("/dashboard/news");
+        // navigate("/dashboard/news");
         return Toastify.Success("News Created Successfully.");
       }
     } catch (error) {
       console.log("Error:", error);
       networkErrorHandeller(error);
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
+
   };
-  
+
 
   if (loading) {
     return (
@@ -200,7 +233,7 @@ const CreateNews = () => {
               name="categories"
               control={control}
               options={categories}
-              rules={{ required: "Category selection is required" }}
+              // rules={{ required: "Category selection is required" }}
               onSelected={(selected) =>
                 setValue("category_id", selected?.category_id)
               }
@@ -217,19 +250,19 @@ const CreateNews = () => {
               name="author"
               control={control}
               options={author}
-              rules={{ required: "Category selection is required" }}
+              // rules={{ required: "Category selection is required" }}
               onSelected={(selected) =>
                 setValue("author_id", selected?.author_id)
               }
               placeholder="Select a Author "
-              error={errors.category?.message}
+              error={errors.author?.message}
               label="Choose Author*"
               isClearable={true}
               // error={errors} // Pass an error message if validation fails
             />
           </div>
 
-          {/* Total Questions */}
+          {/* category */}
           <div className="mt-4">
             <TextInput
               name="title"
@@ -237,10 +270,35 @@ const CreateNews = () => {
               label="Title Name *"
               type="text"
               placeholder="Create Title"
-              rules={{ required: "Title is required" }} // Validation rule
+              // rules={{ required: "Title is required" }}
               error={errors.title?.message} // Show error message
             />
           </div>
+          {/* video title*/}
+          {/* <div className="mt-4">
+            <TextInput
+              name="videoUrl"
+              control={control}
+              label="Video URL *"
+              type="text"
+              placeholder="Url"
+              rules={{ required: "Title is required" }}
+              error={errors.videoUrl?.message} // Show error message
+            />
+          </div> */}
+          {selectedCategory == "14" && (
+            <div className="mt-4">
+              <TextInput
+                name="videoUrl"
+                control={control}
+                label="Video URL *"
+                type="text"
+                placeholder="Enter Video URL"
+                rules={{ required: "Video URL is required" }}
+                error={errors.videoUrl?.message} // Show error message
+              />
+            </div>
+          )}
         </div>
 
         {/* Thumbnail Upload */}
@@ -264,54 +322,38 @@ const CreateNews = () => {
             label="subtitle *"
             type="text"
             placeholder="Enter subtitle"
-            rules={{ required: "subtitle is required" }} // Validation rule
+            // rules={{ required: "subtitle is required" }}
             error={errors.subtitle?.message} // Show error message
           />
         </div>
 
-        <div className="mt-4">
-          <label
-            htmlFor="editor"
-            className="block text-sm  text-gray-500 mb-1"
-          >
-            Content * {/* This is your label */}
-          </label>
+
+        <div>
           <ReactQuill
-            id="editor"
-            name="content" // Optional, to link the label with the editor
-            className="h-[200px] mb-24 md:mb-20 lg:mb-16"
-            value={editorValue} // Value bound to state
-            onChange={handleChange} // Handle change events
-            theme="snow" // Theme for the editor
+            value={editValue}
+            onChange={handleChange}
             modules={{
               toolbar: [
                 [{ header: "1" }, { header: "2" }, { font: [] }],
                 [{ list: "ordered" }, { list: "bullet" }],
-                ["bold", "italic", "underline", "strike"],
+                ["bold", "italic", "underline"],
+                ["link", "image"], // Image button in the toolbar
                 [{ align: [] }],
-                ["link", "image"],
-                [{ color: [] }, { background: [] }],
-                [{ script: "sub" }, { script: "super" }],
-                ["blockquote", "code-block"],
               ],
             }}
             formats={[
               "header",
               "font",
-              "list",
               "bold",
               "italic",
               "underline",
-              "strike",
-              "align",
+              "list",
               "link",
               "image",
-              "color",
-              "background",
-              "script",
-              "blockquote",
-              "code-block",
+              "align",
             ]}
+            ref={quillRef}
+            onImageUpload={handleImageUpload} // Handle image upload
           />
         </div>
 
@@ -339,7 +381,7 @@ const CreateNews = () => {
           }`}
           disabled={loading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Create Artical"}
+          {loading ? "Loading..." : "Create News"}
         </button>
       </form>
     </>
@@ -347,3 +389,4 @@ const CreateNews = () => {
 };
 
 export default CreateNews;
+

@@ -6,12 +6,12 @@ import { Toastify } from "../../components/toastify";
 
 import { useNavigate } from "react-router-dom";
 
-import { ImageUpload, SingleSelect, TextInput } from "../../components/input";
+import { ImageUpload, MultiSelect, SingleSelect, TextInput } from "../../components/input";
 import { networkErrorHandeller } from "../../utils/helper";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 
-const CreateCategory = () => {
+const CreateHomePage = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -75,33 +75,45 @@ const CreateCategory = () => {
   const onFormSubmit = async (data) => {
     console.log("Submitted Data:", data);
 
+  const array_category =data?.categories?.map((item)=>item?.category_id)
+
+  console.log("array_category",array_category)
+
+
     try {
       setLoading(true);
 
       // Create FormData object
       const formData = new FormData();
-      formData.append("category_name", data.category_name);
+      formData.append("section_category_id",JSON.stringify(array_category));
+      
       formData.append("status", data?.status ? "1" : "0");
-      formData.append("isNavber", data?.navber ? "1" : "0");
-
-      // Append parent_id if exists
-      if (data?.singleSelect?.category_id) {
-        formData.append("parent_id", data?.singleSelect?.category_id);
-      }
-
+      
       // Append category image if exists
-      if (data?.category_image) {
-        formData.append("category_image", data?.category_image);
+      if (data?.category_image1) {
+        formData.append("category_image1", data?.category_image1);
+      }
+      if (data?.category_image2) {
+        formData.append("category_image2", data?.category_image2);
+      }
+      if (data?.category_image3) {
+        formData.append("category_image3", data?.category_image3);
+      }
+      if (data?.category_image4) {
+        formData.append("category_image4", data?.category_image4);
+      }
+      if (data?.category_image5) {
+        formData.append("category_image5", data?.category_image5);
       }
 
-      console.log("FormData Entries:", [...formData.entries()]); // Debugging log
+      console.log("FormData Entries:", [...formData.entries()]); 
 
       // Send data to API
-      const response = await NetworkServices.Category.store(formData);
+      const response = await NetworkServices.HomeNews.store(formData);
       console.log("API Response:", response);
 
       if (response && response.status === 200) {
-        navigate("/dashboard/category");
+        navigate("/dashboard/home-news");
         Toastify.Success("Category Created.");
       }
     } catch (error) {
@@ -137,59 +149,80 @@ const CreateCategory = () => {
         className="mx-auto p-4 border border-gray-200 rounded-lg"
       >
         <div className="mb-4">
-          <SingleSelect
-            name="singleSelect"
+          <MultiSelect
+            name="categories"
             control={control}
             options={categories}
-            onSelected={(selected) =>
-              setValue("category_id", selected?.category_id)
-            }
+    
             placeholder="Select a category "
-            error={errors.singleSelect?.message}
+            error={errors.categories?.message}
             label="Choose Parent category *"
             isClearable={true}
             // error={errors} // Pass an error message if validation fails
           />
         </div>
 
-        {/* Total Questions */}
-        <div>
-          <TextInput
-            name="category_name"
-            control={control}
-            label="Category *"
-            type="text"
-            placeholder="Create Category"
-            rules={{ required: "Category is required" }} // Validation rule
-            error={errors.category_name?.message} // Show error message
-          />
-        </div>
-
-        {/* Thumbnail Upload */}
-        <div className="mt-4 cursor-pointer">
-          <ImageUpload
-            name="category_image"
-            control={control}
-            label="Category Picture"
-            file="image *"
-            // required
-            onUpload={(file) => setValue("category_image", file)}
-            error={errors.category_image?.message}
-          />
-        </div>
-
-        <div className="flex items-center gap-2 mt-4">
-          <TextInput
-            type="checkbox"
-            name="navber"
-            className="w-5 h-5"
-            control={control}
-            onChange={(e) => setValue("isNavber", e.target.checked ? 1 : 0)}
-            checked={watch("status") === 1}
-          />
-          <label htmlFor="status" className="text-sm text-gray-700">
-            Is Navber
-          </label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 ">
+          {/* Thumbnail Upload */}
+          <div className="mt-4 cursor-pointer">
+            <ImageUpload
+              name="section_image1"
+              control={control}
+              label="Category Picture"
+              file="image *"
+              // required
+              onUpload={(file) => setValue("section_image1", file)}
+              error={errors.category_image1?.message}
+            />
+          </div>
+          {/* Thumbnail Upload */}
+          <div className="mt-4 cursor-pointer">
+            <ImageUpload
+              name="section_image2"
+              control={control}
+              label="Category Picture"
+              file="image *"
+              // required
+              onUpload={(file) => setValue("section_image2", file)}
+              error={errors.category_image2?.message}
+            />
+          </div>
+          {/* Thumbnail Upload */}
+          <div className="mt-4 cursor-pointer">
+            <ImageUpload
+              name="section_image3"
+              control={control}
+              label="Category Picture"
+              file="image *"
+              // required
+              onUpload={(file) => setValue("section_image3", file)}
+              error={errors.category_image3?.message}
+            />
+          </div>
+          {/* Thumbnail Upload */}
+          <div className="mt-4 cursor-pointer">
+            <ImageUpload
+              name="section_image4"
+              control={control}
+              label="Category Picture"
+              file="image *"
+              // required
+              onUpload={(file) => setValue("section_image4", file)}
+              error={errors.category_image4?.message}
+            />
+          </div>
+          {/* Thumbnail Upload */}
+          <div className="mt-4 cursor-pointer">
+            <ImageUpload
+              name="section_image5"
+              control={control}
+              label="Category Picture"
+              file="image *"
+              // required
+              onUpload={(file) => setValue("section_image5", file)}
+              error={errors.category_image5?.message}
+            />
+          </div>
         </div>
 
         <div className="flex items-center gap-2 mt-4">
@@ -223,4 +256,4 @@ const CreateCategory = () => {
   );
 };
 
-export default CreateCategory;
+export default CreateHomePage;

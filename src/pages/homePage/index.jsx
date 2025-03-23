@@ -1,34 +1,30 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { NetworkServices } from "../../network";
+import { networkErrorHandeller } from "../../utils/helper";
+import { confirmAlert } from "react-confirm-alert";
+import { Toastify } from "../../components/toastify";
+import { SkeletonTable } from "../../components/loading/skeleton-table";
+import { IoIosList } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
-import { IoIosList } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
-
-import { NetworkServices } from "../../network";
-import { Toastify } from "../../components/toastify";
-import { networkErrorHandeller } from "../../utils/helper";
-
-import { SkeletonTable } from "../../components/loading/skeleton-table";
-import DataTable, { createTheme } from "react-data-table-component";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
-import { confirmAlert } from "react-confirm-alert";
-import { ThemeContext } from "../../components/ThemeContext";
+import DataTable from "react-data-table-component";
 
-export const CategoryList = () => {
-  const [categories, setCategories] = useState([]);
+const HomePage = () => {
+  const [homeNews, setHomeNews] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { theme } = useContext(ThemeContext);
 
-  console.log("categories",categories)
+  console.log("homeNews", homeNews);
 
   // Fetch categories from API
-  const fetchCategory = useCallback(async () => {
+  const fetchHomeNews = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await NetworkServices.Category.index();
-      console.log(response);
+      const response = await NetworkServices.HomeNews.index();
+      console.log("rr", response);
       if (response && response.status === 200) {
-        setCategories(response?.data?.data || []);
+        setHomeNews(response?.data?.data?.categories || []);
       }
     } catch (error) {
       console.log(error);
@@ -38,8 +34,8 @@ export const CategoryList = () => {
   }, []);
 
   useEffect(() => {
-    fetchCategory();
-  }, [fetchCategory]);
+    fetchHomeNews();
+  }, [fetchHomeNews]);
 
   // Handle single category deletion
   const destroy = (id) => {
@@ -51,10 +47,10 @@ export const CategoryList = () => {
           label: "Yes",
           onClick: async () => {
             try {
-              const response = await NetworkServices.Category.destroy(id);
+              const response = await NetworkServices.HomeNews.destroy(id);
               if (response?.status === 200) {
-                Toastify.Info("Category deleted successfully.");
-                fetchCategory();
+                Toastify.Info("Home News deleted successfully.");
+                fetchHomeNews();
               }
             } catch (error) {
               networkErrorHandeller(error);
@@ -76,10 +72,10 @@ export const CategoryList = () => {
   }
 
   const propsData = {
-    pageTitle: "Category List",
+    pageTitle: "Home page News List",
     pageIcon: <IoIosList />,
-    buttonName: "Create New Category",
-    buttonUrl: "/dashboard/create-category",
+    buttonName: "Create New Home News",
+    buttonUrl: "/dashboard/create-homenews",
     type: "add",
   };
 
@@ -119,28 +115,16 @@ export const CategoryList = () => {
     },
   ];
 
-  createTheme("lightTheme", {
-    text: { primary: "#000", secondary: "#555" },
-    background: { default: "#ffffff" },
-    divider: { default: "#ddd" },
-  });
-
-  createTheme("darkTheme", {
-    text: { primary: "#ffffff", secondary: "#bbb" },
-    background: { default: "#9CA3AF" },
-    divider: { default: "#444" },
-  });
-
   return (
-    <>
+    <div>
       <PageHeader propsData={propsData} />
-
       <DataTable
-        columns={columns}
-        theme={theme === "dark" ? "darkTheme" : "lightTheme"}
-        data={categories}
+        columns={columns}    
+        data={homeNews}
         pagination
       />
-    </>
+    </div>
   );
 };
+
+export default HomePage;

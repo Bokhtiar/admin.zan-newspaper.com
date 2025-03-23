@@ -4,7 +4,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { NetworkServices } from "../../network";
 import { networkErrorHandeller } from "../../utils/helper";
 import { Toastify } from "../../components/toastify";
-import { ImageUpload, SingleSelect,  TextCheckbox,  TextInput } from "../../components/input";
+import {
+  ImageUpload,
+  SingleSelect,
+  TextCheckbox,
+  TextInput,
+} from "../../components/input";
 import { FaRegEdit } from "react-icons/fa";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
@@ -19,7 +24,6 @@ const EditCategory = () => {
   console.log("categorycategory", categoryId);
 
   const {
-    
     handleSubmit,
     setValue,
     formState: { errors },
@@ -66,8 +70,8 @@ const EditCategory = () => {
         setCategory(category);
 
         setValue("category_name", category.category_name);
-        setValue("parent_id", category.parent_id)
-        setValue("status", category?.status=== 1 ? true : false);
+        setValue("parent_id", category.parent_id);
+        setValue("status", category?.status === 1 ? true : false);
       }
     } catch (error) {
       // console.error("Error fetching category:", error);
@@ -83,11 +87,11 @@ const EditCategory = () => {
   }, [categoryId]);
   // edit category api
   const onFormSubmit = async (data) => {
-    
     const formData = new FormData();
     console.log("object", data);
     data.parent_id && formData.append("parent_id", data.parent_id);
     formData.append("category_name", data.category_name);
+    formData.append("isNavber", data?.navber ? "1" : "0");
     formData.append("status", data?.status ? "1" : "0");
     formData.append("_method", "PUT");
 
@@ -119,16 +123,15 @@ const EditCategory = () => {
     type: "list",
   };
 
-    if (loading) {
-      return (
-        <div className="text-center">
-          {" "}
-          <SkeletonTable/>
-          <br />
-  
-        </div>
-      );
-    }
+  if (loading) {
+    return (
+      <div className="text-center">
+        {" "}
+        <SkeletonTable />
+        <br />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -181,18 +184,32 @@ const EditCategory = () => {
             imgUrl={category?.category_image}
           />
         </div>
+
+        <div className="flex items-center gap-2 mt-4">
+          <TextCheckbox
+            type="checkbox"
+            name="navber"
+            className="w-5 h-5"
+            control={control}
+            onChange={(e) => setValue("isNavber", e.target.checked ? 1 : 0)}
+            checked={watch("isNavber") == 1}
+          />
+          <label htmlFor="navber" className="text-sm text-gray-700">
+            Is Navber
+          </label>
+        </div>
         {/* Status (Checkbox) */}
 
         <div className="flex items-center  mt-4 gap-2 ">
           <TextCheckbox
             type="checkbox"
             name="status"
-            className=""
+            className="w-5 h-5"
             control={control}
             onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
             checked={watch("status") == 1} // If status is 1, checked = true
           />
-          <label htmlFor="status" className="text-sm text-gray-700 -mt-5">
+          <label htmlFor="status" className="text-sm text-gray-700 ">
             Status
           </label>
         </div>

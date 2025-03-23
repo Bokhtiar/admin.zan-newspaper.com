@@ -3,6 +3,7 @@ import { HiBars3 } from "react-icons/hi2";
 import { MdNewspaper } from "react-icons/md";
 import { FaImage } from "react-icons/fa";
 import { FaPerson } from "react-icons/fa6";
+import { IoHome } from "react-icons/io5";
 
 export const menuData = [
   {
@@ -30,5 +31,9 @@ export const menuData = [
     icon: <FaImage />,
     path: "/dashboard/singleaddimage",
   },
-
+  {
+    title: "Home Page",
+    icon: <IoHome />,
+    path: "/dashboard/home-news",
+  },
 ];
