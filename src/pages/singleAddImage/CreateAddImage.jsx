@@ -59,13 +59,13 @@ const uploadedImage = watch("article_image"); // Image Upload ট্র্যা
   const fetchNews = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await NetworkServices.SingleItem.index();
+      const response = await NetworkServices.News.index();
       console.log("response", response);
       if (response && response.status === 200) {
-        const result = response.data.data.map((item) => {
+        const result = response?.data?.data?.map((item) => {
           return {
-            label: item.news,
-            value: item.news,
+            label: item.title,
+            value: item.title,
             ...item,
           };
         });
@@ -116,7 +116,7 @@ const uploadedImage = watch("article_image"); // Image Upload ট্র্যা
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           <div className="mt-4">
             <SingleSelect
-              name="news"
+              name="newss"
               control={control}
               options={news}
               rules={{ required: "News selection is required" }}

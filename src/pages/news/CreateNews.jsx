@@ -23,11 +23,12 @@ const CreateNews = () => {
   const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editValue, seteditValue] = useState("");
-  const [imageFile, setImageFile] = useState(null);
   const quillRef = useRef(null);
   const [singleCategory, setSingleCategory] = useState([]);
+  const [smallloading, setSmallLoading] = useState(false);
 
-  console.log("categories",categories)
+  console.log("categories", categories);
+  console.log("singleCategory", singleCategory);
 
   const handleChange = (newValue) => {
     seteditValue(newValue); // Save editor content
@@ -47,16 +48,13 @@ const CreateNews = () => {
         // Insert the image into the editor
         quill.insertEmbed(index, "image", imageUrl);
 
-       
         quill.setSelection(index + 1);
       };
-      reader.readAsDataURL(file); 
+      reader.readAsDataURL(file);
     }
   };
 
   const navigate = useNavigate();
-
-
 
   const {
     handleSubmit,
@@ -71,7 +69,8 @@ const CreateNews = () => {
   });
 
   const selectedCategory = watch("category_id");
-  console.log("selectedCategory",selectedCategory)
+  const selectedCategoryNumber = Number(selectedCategory); // Convert to number
+  console.log("selectedCategory", selectedCategoryNumber);
 
   const fetchCategory = useCallback(async () => {
     setLoading(true);
@@ -99,24 +98,25 @@ const CreateNews = () => {
   }, [fetchCategory]);
 
   const fatchSingleCategory = useCallback(async () => {
-      try {
-        const response = await NetworkServices.Category.show(selectedCategory);
-        console.log("666",response)
-        if (response?.status === 200) {
-          const result = response?.data?.data?.map((item) => ({
-            label: item.category_name,
-            value: item.category_id,
-          }));
-          setSingleCategory(result);
-        }
-      } catch (error) {
-        console.error("Fetch Category Error:", error);
-      }
-    }, []);
+    setSmallLoading(true);
+    try {
+      const response = await NetworkServices.Category.show(
+        selectedCategoryNumber
+      );
 
-    useEffect(() => {
-      fatchSingleCategory();
-    }, [fatchSingleCategory,selectedCategory ]);
+      if (response?.status === 200) {
+        const result = response?.data?.data?.category_name;
+        setSingleCategory(result);
+      }
+    } catch (error) {
+      console.error("Fetch Category Error:", error);
+    }
+    setSmallLoading(false);
+  }, [selectedCategoryNumber]);
+
+  useEffect(() => {
+    fatchSingleCategory();
+  }, [fatchSingleCategory]);
 
   const fetchAuthor = useCallback(async () => {
     setLoading(true);
@@ -183,6 +183,9 @@ const CreateNews = () => {
     if (data.article_image) {
       formData.append("article_image", data.article_image);
     }
+    if (data.video_url) {
+      formData.append("video_url", data.video_url);
+    }
 
     try {
       setLoading(true);
@@ -199,10 +202,7 @@ const CreateNews = () => {
     } finally {
       setLoading(false);
     }
-
   };
-
-
   if (loading) {
     return (
       <div className="text-center">
@@ -275,29 +275,23 @@ const CreateNews = () => {
             />
           </div>
           {/* video title*/}
-          {/* <div className="mt-4">
-            <TextInput
-              name="videoUrl"
-              control={control}
-              label="Video URL *"
-              type="text"
-              placeholder="Url"
-              rules={{ required: "Title is required" }}
-              error={errors.videoUrl?.message} // Show error message
-            />
-          </div> */}
-          {selectedCategory == "14" && (
+          {singleCategory === "ভিডিও" ? (
             <div className="mt-4">
               <TextInput
-                name="videoUrl"
+                name="video_url"
                 control={control}
                 label="Video URL *"
                 type="text"
                 placeholder="Enter Video URL"
-                rules={{ required: "Video URL is required" }}
-                error={errors.videoUrl?.message} // Show error message
+                error={errors.video_url?.message} // Show error message
               />
             </div>
+          ) : smallloading ? (
+            <div className="w-[300px] h-[20px]">
+              <SkeletonTable />
+            </div>
+          ) : (
+            ""
           )}
         </div>
 
@@ -326,7 +320,6 @@ const CreateNews = () => {
             error={errors.subtitle?.message} // Show error message
           />
         </div>
-
 
         <div>
           <ReactQuill
@@ -389,4 +382,3 @@ const CreateNews = () => {
 };
 
 export default CreateNews;
-
