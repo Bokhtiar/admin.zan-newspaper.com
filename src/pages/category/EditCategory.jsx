@@ -91,7 +91,7 @@ const EditCategory = () => {
     console.log("object", data);
     data.parent_id && formData.append("parent_id", data.parent_id);
     formData.append("category_name", data.category_name);
-    formData.append("isNavber", data?.navber ? "1" : "0");
+    formData.append("isNavbar", data?.navber ? "1" : "0");
     formData.append("status", data?.status ? "1" : "0");
     formData.append("_method", "PUT");
 
