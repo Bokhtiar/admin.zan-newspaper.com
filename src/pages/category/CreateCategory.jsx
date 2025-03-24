@@ -76,13 +76,13 @@ const CreateCategory = () => {
     console.log("Submitted Data:", data);
 
     try {
-      setLoading(true);
+      // setLoading(true);
 
       // Create FormData object
       const formData = new FormData();
       formData.append("category_name", data.category_name);
       formData.append("status", data?.status ? "1" : "0");
-      formData.append("isNavber", data?.navber ? "1" : "0");
+      formData.append("isNavbar", data?.isNavber ? "1" : "0");
 
       // Append parent_id if exists
       if (data?.singleSelect?.category_id) {
@@ -101,7 +101,7 @@ const CreateCategory = () => {
       console.log("API Response:", response);
 
       if (response && response.status === 200) {
-        navigate("/dashboard/category");
+        // navigate("/dashboard/category");
         Toastify.Success("Category Created.");
       }
     } catch (error) {
@@ -181,11 +181,11 @@ const CreateCategory = () => {
         <div className="flex items-center gap-2 mt-4">
           <TextInput
             type="checkbox"
-            name="navber"
+            name="isNavber"
             className="w-5 h-5"
             control={control}
             onChange={(e) => setValue("isNavber", e.target.checked ? 1 : 0)}
-            checked={watch("status") === 1}
+            checked={watch("isNavber") === 1}
           />
           <label htmlFor="status" className="text-sm text-gray-700">
             Is Navber

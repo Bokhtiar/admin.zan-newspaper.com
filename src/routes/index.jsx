@@ -17,6 +17,12 @@ import SingleContent from "../pages/news/SingleContent";
 import HomePage from "../pages/homePage";
 import CreateHomePage from "../pages/homePage/CreateHomePage";
 import EditHomePage from "../pages/homePage/EditHomePage";
+import { GiHeron } from "react-icons/gi";
+
+import CreateHero from "../pages/hero/CreateHero";
+import EditHero from "../pages/hero/EditHero";
+import { HeroList } from "../pages/hero";
+
 
 const appRoutes = [
   {
@@ -43,10 +49,15 @@ const appRoutes = [
       // single add image
       { path: "singleaddimage", element: <SingleItemList /> },
       { path: "create-singleaddimage", element: <CreateAddImage /> },
+      // { path: "edit-singleaddimage/:id", element: <EditAddImage/> },
       /** home */
       { path: "home-news", element: <HomePage/> },
       { path: "create-homenews", element: <CreateHomePage/> },
       { path: "edit-homenews/:id", element: <EditHomePage/> },
+      /** hero */
+      { path: "hero", element: <HeroList/> },
+      { path: "create-hero", element: <CreateHero/> },
+      { path: "edit-hero/:id", element: <EditHero/> },
 
       // /** product */
       // { path: "product", element:  <Product /> },

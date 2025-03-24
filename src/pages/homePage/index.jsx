@@ -99,20 +99,6 @@ const HomePage = () => {
       cell: (row) => row?.category_name,
     },
 
-    {
-      name: "Action",
-      cell: (row) => (
-        <div className="flex gap-2">
-          <Link to={`/dashboard/edit-category/${row?.category_id}`}>
-            <FaEdit className="text-primary text-xl" />
-          </Link>
-          <MdDelete
-            className="text-red-500 text-xl cursor-pointer"
-            onClick={() => destroy(row?.category_id)}
-          />
-        </div>
-      ),
-    },
   ];
 
   return (

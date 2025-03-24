@@ -137,7 +137,7 @@ const CreateHomePage = () => {
     pageTitle: " Create Category ",
     pageIcon: <IoMdCreate />,
     buttonName: "Category List",
-    buttonUrl: "/dashboard/category",
+    buttonUrl: "/dashboard/home-news",
     type: "list", // This indicates the page type for the button
   };
   return (
@@ -249,7 +249,7 @@ const CreateHomePage = () => {
           }`}
           disabled={loading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Create Category"}
+          {loading ? "Loading..." : "Create Home "}
         </button>
       </form>
     </>

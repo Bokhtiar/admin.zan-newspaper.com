@@ -6,7 +6,7 @@ import { networkErrorHandeller } from "../../utils/helper";
 import { confirmAlert } from "react-confirm-alert";
 import { Toastify } from "../../components/toastify";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import DataTable from "react-data-table-component";
@@ -14,6 +14,7 @@ import DataTable from "react-data-table-component";
 const SingleItemList = () => {
   const [loading, setLoading] = useState(false);
   const [imageItem, setimageItem] = useState([]);
+  const navigate = useNavigate();
   const propsData = {
     pageTitle: "Single Item List",
     pageIcon: <IoIosList />,
@@ -27,9 +28,9 @@ const SingleItemList = () => {
     setLoading(true);
     try {
       const response = await NetworkServices.SingleItem.index();
-      console.log(response);
+      console.log("uuu",response);
       if (response && response.status === 200) {
-        setimageItem(response?.data?.data || []);
+        setimageItem([response?.data?.data] || []);
       }
     } catch (error) {
       console.log(error);
@@ -44,6 +45,7 @@ const SingleItemList = () => {
 
   // Handle single category deletion
   const destroy = (id) => {
+    
     confirmAlert({
       title: "Confirm Delete",
       message: "Are you sure you want to delete this?",
@@ -54,7 +56,9 @@ const SingleItemList = () => {
             try {
               const response = await NetworkServices.SingleItem.destroy(id);
               if (response?.status === 200) {
+               
                 Toastify.Info(" deleted successfully.");
+                navigate("/dashboard/create-singleaddimage");
                 fetchSingleItem();
               }
             } catch (error) {
@@ -82,8 +86,8 @@ const SingleItemList = () => {
             <img
               className="w-10 h-10 rounded-full border"
               src={
-                row?.category_image
-                  ? `${process.env.REACT_APP_API_SERVER}${row?.category_image}`
+                row?.image_url
+                  ? `${process.env.REACT_APP_API_SERVER}${row?.image_url}`
                   : ""
               }
               alt="images"
@@ -91,20 +95,18 @@ const SingleItemList = () => {
           ),
         },
         {
-          name: "Category Name",
-          cell: (row) => row?.category_name,
+          name: "Image Type",
+          cell: (row) => row?.image_type,
         },
   
         {
           name: "Action",
           cell: (row) => (
             <div className="flex gap-2">
-              <Link to={`/dashboard/edit-category/${row?.category_id}`}>
-                <FaEdit className="text-primary text-xl" />
-              </Link>
+
               <MdDelete
                 className="text-red-500 text-xl cursor-pointer"
-                onClick={() => destroy(row?.category_id)}
+                onClick={() => destroy(row?.homePageSingleImage_id)}
               />
             </div>
           ),

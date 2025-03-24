@@ -188,11 +188,11 @@ const EditCategory = () => {
         <div className="flex items-center gap-2 mt-4">
           <TextCheckbox
             type="checkbox"
-            name="navber"
+            name="isNavber"
             className="w-5 h-5"
             control={control}
             onChange={(e) => setValue("isNavber", e.target.checked ? 1 : 0)}
-            checked={watch("isNavber") == 1}
+            checked={watch("isNavber") === 1}
           />
           <label htmlFor="navber" className="text-sm text-gray-700">
             Is Navber
