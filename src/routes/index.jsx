@@ -17,7 +17,7 @@ import SingleContent from "../pages/news/SingleContent";
 import HomePage from "../pages/homePage";
 import CreateHomePage from "../pages/homePage/CreateHomePage";
 import EditHomePage from "../pages/homePage/EditHomePage";
-import { GiHeron } from "react-icons/gi";
+
 
 import CreateHero from "../pages/hero/CreateHero";
 import EditHero from "../pages/hero/EditHero";

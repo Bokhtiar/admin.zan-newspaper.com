@@ -23,14 +23,16 @@ const SingleItemList = () => {
     type: "add",
   };
 
+  console.log("imageItem", imageItem);
+
   // Fetch categories from API
   const fetchSingleItem = useCallback(async () => {
     setLoading(true);
     try {
       const response = await NetworkServices.SingleItem.index();
-      console.log("uuu",response);
+      console.log("uuu", response);
       if (response && response.status === 200) {
-        setimageItem([response?.data?.data] || []);
+        setimageItem(response?.data?.data || {});
       }
     } catch (error) {
       console.log(error);
@@ -44,34 +46,7 @@ const SingleItemList = () => {
   }, [fetchSingleItem]);
 
   // Handle single category deletion
-  const destroy = (id) => {
-    
-    confirmAlert({
-      title: "Confirm Delete",
-      message: "Are you sure you want to delete this?",
-      buttons: [
-        {
-          label: "Yes",
-          onClick: async () => {
-            try {
-              const response = await NetworkServices.SingleItem.destroy(id);
-              if (response?.status === 200) {
-               
-                Toastify.Info(" deleted successfully.");
-                navigate("/dashboard/create-singleaddimage");
-                fetchSingleItem();
-              }
-            } catch (error) {
-              networkErrorHandeller(error);
-            }
-          },
-        },
-        {
-          label: "No",
-        },
-      ],
-    });
-  };
+
   if (loading) {
     return (
       <div>
@@ -79,43 +54,40 @@ const SingleItemList = () => {
       </div>
     );
   }
-      const columns = [
-        {
-          name: "Thumbnail",
-          cell: (row) => (
-            <img
-              className="w-10 h-10 rounded-full border"
-              src={
-                row?.image_url
-                  ? `${process.env.REACT_APP_API_SERVER}${row?.image_url}`
-                  : ""
-              }
-              alt="images"
-            />
-          ),
-        },
-        {
-          name: "Image Type",
-          cell: (row) => row?.image_type,
-        },
-  
-        {
-          name: "Action",
-          cell: (row) => (
-            <div className="flex gap-2">
 
-              <MdDelete
-                className="text-red-500 text-xl cursor-pointer"
-                onClick={() => destroy(row?.homePageSingleImage_id)}
-              />
-            </div>
-          ),
-        },
-      ];
   return (
     <>
       <PageHeader propsData={propsData} />
-      <DataTable columns={columns} data={imageItem} pagination />
+      <table
+  border="1"
+  cellPadding="10"
+  style={{ width: "100%", marginTop: "20px", textAlign: "left" }}
+>
+  <thead>
+    <tr>
+      <th>Image</th>
+      <th>Image Type</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        {imageItem?.image_url ? (
+          <img src={`${process.env.REACT_APP_API_SERVER}${imageItem.image_url}`} alt="Uploaded" width="100" />
+        ) : (
+          <span>No Image</span>
+        )}
+      </td>
+      <td>{imageItem?.image_type}</td>
+      {/* <td>{item.name}</td>
+      <td>{item.age}</td>
+      <td>{item.profession}</td> */}
+    </tr>
+  </tbody>
+</table>
+
+
     </>
   );
 };

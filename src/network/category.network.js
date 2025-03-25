@@ -2,12 +2,15 @@ import { privateRequest } from '../config/axios.config'
 
 /* list of resource */
 export const index = async () => {
-    return await privateRequest.get('/admin/category');
+    return await privateRequest.get('/category');
 };
 
 /* resource store */
 export const store = async(data) => {
     return await privateRequest.post('/admin/category', data)
+}
+export const priorityNav = async(data) => {
+    return await privateRequest.post('admin/category/priority', data)
 }
 
 /* resource show */

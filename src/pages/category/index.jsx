@@ -18,8 +18,28 @@ export const CategoryList = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const { theme } = useContext(ThemeContext);
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
-  console.log("categories",categories)
+  console.log("selectedCategories", selectedCategories);
+
+  // Fetch categories from API
+  const priorityNavber = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await NetworkServices.Category.priorityNav({
+        priority_id: JSON.stringify(selectedCategories),
+      });
+      console.log("pp", response);
+      if (response && response.status === 200) {
+        Toastify.Success(" Created.");
+        fetchCategory()
+      }
+    } catch (error) {
+      console.log(error);
+      networkErrorHandeller(error);
+    }
+    setLoading(false);
+  }, [selectedCategories]);
 
   // Fetch categories from API
   const fetchCategory = useCallback(async () => {
@@ -82,8 +102,25 @@ export const CategoryList = () => {
     buttonUrl: "/dashboard/create-category",
     type: "add",
   };
-
+  const handleCheckboxChange = (categoryId) => {
+    setSelectedCategories((prev) =>
+      prev.includes(categoryId)
+        ? prev.filter((id) => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
   const columns = [
+    {
+      name: "priority Navber",
+      cell: (row) => (
+        <input
+          type="checkbox"
+          className="w-4 h-4"
+          checked={selectedCategories.includes(row?.category_id)}
+          onChange={() => handleCheckboxChange(row?.category_id)}
+        />
+      ),
+    },
     {
       name: "Thumbnail",
       cell: (row) => (
@@ -134,7 +171,14 @@ export const CategoryList = () => {
   return (
     <>
       <PageHeader propsData={propsData} />
-
+      {selectedCategories.length > 0 && (
+        <button
+          className="bg-blue-400 px-2 py-3 rounded-md"
+          onClick={priorityNavber}
+        >
+          Priority Navbar
+        </button>
+      )}
       <DataTable
         columns={columns}
         theme={theme === "dark" ? "darkTheme" : "lightTheme"}

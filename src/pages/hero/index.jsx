@@ -78,10 +78,10 @@ export const HeroList = () => {
   }
 
   const propsData = {
-    pageTitle: "Category List",
+    pageTitle: "Hero List",
     pageIcon: <IoIosList />,
-    buttonName: "Create New Category",
-    buttonUrl: "/dashboard/create-category",
+    buttonName: "Create New Hero",
+    buttonUrl: "/dashboard/create-hero",
     type: "add",
   };
 

@@ -32,6 +32,7 @@ const EditCategory = () => {
   } = useForm({
     defaultValues: {
       status: 0,
+      isNavbar: 0,
     },
   });
   const fetchCategorys = useCallback(async () => {
@@ -70,8 +71,9 @@ const EditCategory = () => {
         setCategory(category);
 
         setValue("category_name", category.category_name);
-        setValue("parent_id", category.parent_id);
+        setValue("parent_id", category?.parent_id);
         setValue("status", category?.status === 1 ? true : false);
+        setValue("isNavbar", category?.isNavbar === 1 ? true : false);
       }
     } catch (error) {
       // console.error("Error fetching category:", error);
@@ -89,9 +91,9 @@ const EditCategory = () => {
   const onFormSubmit = async (data) => {
     const formData = new FormData();
     console.log("object", data);
-    data.parent_id && formData.append("parent_id", data.parent_id);
+    data?.singleSelect?.category_id && formData.append("parent_id",data?.singleSelect?.category_id);
     formData.append("category_name", data.category_name);
-    formData.append("isNavbar", data?.navber ? "1" : "0");
+    formData.append("isNavbar", data?.isNavbar ? "1" : "0");
     formData.append("status", data?.status ? "1" : "0");
     formData.append("_method", "PUT");
 
@@ -188,11 +190,11 @@ const EditCategory = () => {
         <div className="flex items-center gap-2 mt-4">
           <TextCheckbox
             type="checkbox"
-            name="isNavber"
+            name="isNavbar"
             className="w-5 h-5"
             control={control}
-            onChange={(e) => setValue("isNavber", e.target.checked ? 1 : 0)}
-            checked={watch("isNavber") === 1}
+            onChange={(e) => setValue("isNavbar", e.target.checked ? 1 : 0)}
+            checked={watch("isNavbar") == 1}
           />
           <label htmlFor="navber" className="text-sm text-gray-700">
             Is Navber

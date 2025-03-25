@@ -34,7 +34,7 @@ export const menuData = [
   {
     title: "Single add image",
     icon: <FaImage />,
-    path: "/dashboard/create-singleaddimage",
+    path: "/dashboard/singleaddimage",
   },
   {
     title: "Hero Page",

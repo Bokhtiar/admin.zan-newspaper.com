@@ -101,7 +101,7 @@ const CreateCategory = () => {
       console.log("API Response:", response);
 
       if (response && response.status === 200) {
-        // navigate("/dashboard/category");
+        navigate("/dashboard/category");
         Toastify.Success("Category Created.");
       }
     } catch (error) {
