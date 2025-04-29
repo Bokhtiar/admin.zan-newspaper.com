@@ -91,19 +91,19 @@ const CreateHomePage = () => {
       
       // Append category image if exists
       if (data?.category_image1) {
-        formData.append("category_image1", data?.category_image1);
+        formData.append("section_image1", data?.category_image1);
       }
       if (data?.category_image2) {
-        formData.append("category_image2", data?.category_image2);
+        formData.append("section_image2", data?.category_image2);
       }
       if (data?.category_image3) {
-        formData.append("category_image3", data?.category_image3);
+        formData.append("section_image3", data?.category_image3);
       }
       if (data?.category_image4) {
-        formData.append("category_image4", data?.category_image4);
+        formData.append("section_image4", data?.category_image4);
       }
       if (data?.category_image5) {
-        formData.append("category_image5", data?.category_image5);
+        formData.append("section_image5", data?.category_image5);
       }
 
       console.log("FormData Entries:", [...formData.entries()]); 

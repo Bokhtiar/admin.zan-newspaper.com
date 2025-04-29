@@ -32,7 +32,7 @@ const appRoutes = [
     children: [
       { path: "*", element: <Navigate to="/404" /> },
       // dashboard
-      { index:true, element: <Dashboard /> },
+      // { index:true, element: <Dashboard /> },
 
       /** category */
       { path: "category", element: <CategoryList /> },

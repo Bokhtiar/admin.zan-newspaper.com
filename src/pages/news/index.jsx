@@ -266,7 +266,7 @@ export const NewsList = () => {
           <DatePicker
             selected={startDate ? new Date(startDate) : null}
             onChange={(date) => {
-              const formattedDate = date.toISOString().split("T")[0]; // Format to YYYY-MM-DD
+              const formattedDate = date.toISOString().split("T")[0]; 
               setStartDate(formattedDate);
             }}
             dateFormat="yyyy-MM-dd"
@@ -280,7 +280,7 @@ export const NewsList = () => {
           <DatePicker
             selected={endDate ? new Date(endDate) : null}
             onChange={(date) => {
-              const formattedDate = date.toISOString().split("T")[0]; // Format to YYYY-MM-DD
+              const formattedDate = date.toISOString().split("T")[0]; 
               setEndDate(formattedDate);
             }}
             dateFormat="yyyy-MM-dd"
