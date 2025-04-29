@@ -90,20 +90,20 @@ const CreateHomePage = () => {
       formData.append("status", data?.status ? "1" : "0");
       
       // Append category image if exists
-      if (data?.category_image1) {
-        formData.append("section_image1", data?.category_image1);
+      if (data?.section_image1) {
+        formData.append("section_image1", data?.section_image1);
       }
-      if (data?.category_image2) {
-        formData.append("section_image2", data?.category_image2);
+      if (data?.section_image2) {
+        formData.append("section_image2", data?.section_image2);
       }
-      if (data?.category_image3) {
-        formData.append("section_image3", data?.category_image3);
+      if (data?.section_image3) {
+        formData.append("section_image3", data?.section_image3);
       }
-      if (data?.category_image4) {
-        formData.append("section_image4", data?.category_image4);
+      if (data?.section_image4) {
+        formData.append("section_image4", data?.section_image4);
       }
-      if (data?.category_image5) {
-        formData.append("section_image5", data?.category_image5);
+      if (data?.section_image5) {
+        formData.append("section_image5", data?.section_image5);
       }
 
       console.log("FormData Entries:", [...formData.entries()]); 
@@ -114,7 +114,7 @@ const CreateHomePage = () => {
 
       if (response && response.status === 200) {
         navigate("/dashboard/home-news");
-        Toastify.Success("Category Created.");
+        Toastify.Success(" Create Home Image");
       }
     } catch (error) {
       console.log("Error:", error);
