@@ -13,9 +13,11 @@ import DataTable from "react-data-table-component";
 
 const HomePage = () => {
   const [homeNews, setHomeNews] = useState([]);
+  const [homeSection, setHomeSection] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  console.log("homeNews", homeNews);
+  console.log("homeNews", homeSection);
+  // console.log("homeNews", homeNews);
 
   // Fetch categories from API
   const fetchHomeNews = useCallback(async () => {
@@ -24,6 +26,7 @@ const HomePage = () => {
       const response = await NetworkServices.HomeNews.index();
       console.log("rr", response);
       if (response && response.status === 200) {
+        setHomeSection(response?.data?.data?.home_section || []);
         setHomeNews(response?.data?.data?.categories || []);
       }
     } catch (error) {
@@ -36,33 +39,9 @@ const HomePage = () => {
   useEffect(() => {
     fetchHomeNews();
   }, [fetchHomeNews]);
+  
 
-  // Handle single category deletion
-  const destroy = (id) => {
-    confirmAlert({
-      title: "Confirm Delete",
-      message: "Are you sure you want to delete this category?",
-      buttons: [
-        {
-          label: "Yes",
-          onClick: async () => {
-            try {
-              const response = await NetworkServices.HomeNews.destroy(id);
-              if (response?.status === 200) {
-                Toastify.Info("Home News deleted successfully.");
-                fetchHomeNews();
-              }
-            } catch (error) {
-              networkErrorHandeller(error);
-            }
-          },
-        },
-        {
-          label: "No",
-        },
-      ],
-    });
-  };
+
   if (loading) {
     return (
       <div>
@@ -98,17 +77,27 @@ const HomePage = () => {
       name: "Category Name",
       cell: (row) => row?.category_name,
     },
-
+    {
+      name: "Action",
+      cell: (row) => (
+        <div className="flex gap-2">
+          <Link to={`/dashboard/edit-homenews/${homeSection.home_section_id
+}`}>
+            <FaEdit className="text-primary text-xl" />
+          </Link>
+          {/* <MdDelete
+            className="text-red-500 text-xl cursor-pointer"
+            onClick={() => destroy(row?.category_id)}
+          /> */}
+        </div>
+      ),
+    },
   ];
 
   return (
     <div>
       <PageHeader propsData={propsData} />
-      <DataTable
-        columns={columns}    
-        data={homeNews}
-        pagination
-      />
+      <DataTable columns={columns} data={homeNews} pagination />
     </div>
   );
 };
