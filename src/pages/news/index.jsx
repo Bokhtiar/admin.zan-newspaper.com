@@ -12,42 +12,98 @@ import { SkeletonTable } from "../../components/loading/skeleton-table";
 import DataTable, { createTheme } from "react-data-table-component";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { ThemeContext } from "../../components/ThemeContext";
+import { DateInput, SingleSelect } from "../../components/input";
+import { useForm } from "react-hook-form";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export const NewsList = () => {
   const [news, setNews] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-   const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
 
-   console.log("news",news)
-  // const [expandedRows, setExpandedRows] = useState([]);
-  // const handleExpandClick = (rowId) => {
-  //   // Toggle the row expansion
-  //   setExpandedRows((prev) =>
-  //     prev.includes(rowId)
-  //       ? prev.filter((id) => id !== rowId)
-  //       : [...prev, rowId]
-  //   );
-  // };
+  // console.log("news", news);
+  const {
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+    getValues,
+    control,
+  } = useForm({
+    defaultValues: {
+      status: 0,
+    },
+  });
+  const category = watch("category_id");
+  const [title, setTitle] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
-  // Fetch categories from API
-  const fetchNews = useCallback(async () => {
+  console.log("first", startDate);
+  console.log("first", endDate);
+
+  const handleTextChange = (e) => {
+    const name = e.target.value;
+    console.log(name);
+    setTimeout(() => {
+      setTitle(name);
+    }, 500);
+    // setTitle(e.target.value);
+  };
+
+  const fetchNews = async () => {
     setLoading(true);
     try {
-      const response = await NetworkServices.News.index();
-      console.log(response);
+      // Construct the query parameters
+      const queryParams = new URLSearchParams();
+      if (title) queryParams.append("title", title);
+      if (category) queryParams.append("category_id", category);
+
+      if (startDate) queryParams.append("start_date", startDate);
+      if (endDate) queryParams.append("end_date", endDate);
+
+      const response = await NetworkServices.News.index(queryParams.toString());
+      // console.log(response);
+
       if (response && response.status === 200) {
-        setNews(response?.data?.data || []);
+        setNews(response?.data?.data?.data || []);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       networkErrorHandeller(error);
     }
     setLoading(false);
-  }, []);
-
+  };
   useEffect(() => {
     fetchNews();
-  }, [fetchNews]);
+  }, [title, category, endDate]);
+
+  const fetchCategory = useCallback(async () => {
+    // setLoading(true);
+    try {
+      const response = await NetworkServices.Category.index();
+      if (response && response.status === 200) {
+        const result = response.data.data.map((item, index) => {
+          return {
+            label: item.category_name,
+            value: item.category_name,
+            ...item,
+          };
+        });
+        setCategories(result);
+      }
+    } catch (error) {
+      console.error("Fetch Category Error:", error);
+    }
+    setLoading(false); // End loading (handled in both success and error)
+  }, []);
+
+  // category api fetch
+  useEffect(() => {
+    fetchCategory();
+  }, [fetchCategory]);
 
   // Handle single category deletion
   const destroy = (id) => {
@@ -125,24 +181,21 @@ export const NewsList = () => {
       selector: (row) => row.content,
       cell: (row) => {
         const contentText = row.content.replace(/<[^>]+>/g, ""); // Remove HTML tags
-    
+
         return (
           <div className="">
-            <p className="line-clamp-2 mb-2">{contentText}</p> {/* Limit the content to 2 lines */}
-           
-              <Link
-                to={`/dashboard/single-content/${row?.article_id}`}
-                className=" text-green-600 dark:text-gray-700 hover:underline mt-2"
-              >
-                See More
-              </Link>
-            
+            <p className="line-clamp-2 mb-2">{contentText}</p>{" "}
+            {/* Limit the content to 2 lines */}
+            <Link
+              to={`/dashboard/single-content/${row?.article_id}`}
+              className=" text-green-600 dark:text-gray-700 hover:underline mt-2"
+            >
+              See More
+            </Link>
           </div>
         );
       },
-    }
-,    
-
+    },
     {
       name: "Action",
       cell: (row) => (
@@ -159,22 +212,90 @@ export const NewsList = () => {
     },
   ];
 
-    createTheme("lightTheme", {
-      text: { primary: "#000", secondary: "#555" },
-      background: { default: "#ffffff" },
-      divider: { default: "#ddd" },
-    });
-  
-    createTheme("darkTheme", {
-      text: { primary: "#ffffff", secondary: "#bbb" },
-      background: { default: "#9CA3AF" },
-      divider: { default: "#444" },
-    });
+  createTheme("lightTheme", {
+    text: { primary: "#000", secondary: "#555" },
+    background: { default: "#ffffff" },
+    divider: { default: "#ddd" },
+  });
+
+  createTheme("darkTheme", {
+    text: { primary: "#ffffff", secondary: "#bbb" },
+    background: { default: "#9CA3AF" },
+    divider: { default: "#444" },
+  });
 
   return (
     <>
       <PageHeader propsData={propsData} />
-      <DataTable columns={columns}  theme={theme === "dark" ? "darkTheme" : "lightTheme"} data={news} pagination />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <SingleSelect
+          name="categories"
+          control={control}
+          options={categories}
+          rules={{ required: "Category selection is required" }}
+          onSelected={(selected) =>
+            setValue("category_id", selected?.category_id)
+          }
+          placeholder="Select a category "
+          error={errors.category?.message}
+          label="Choose category *"
+          isClearable={true}
+          // error={errors} // Pass an error message if validation fails
+        />
+        <div className="mb-6">
+          <label
+            htmlFor="textInput"
+            className="block text-sm  text-gray-500 mb-1"
+          >
+            Text Input:
+          </label>
+          <input
+            id="textInput"
+            type="text"
+            // value={title}
+            onChange={handleTextChange}
+            className="w-full px-4 py-3 border rounded-lg   focus:outline-none"
+            placeholder="Enter text"
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-sm text-gray-500 mb-1">
+            Start Date:
+          </label>
+          <DatePicker
+            selected={startDate ? new Date(startDate) : null}
+            onChange={(date) => {
+              const formattedDate = date.toISOString().split("T")[0]; // Format to YYYY-MM-DD
+              setStartDate(formattedDate);
+            }}
+            dateFormat="yyyy-MM-dd"
+            placeholderText="Select start date"
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none"
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-sm text-gray-500 mb-1">End Date:</label>
+          <DatePicker
+            selected={endDate ? new Date(endDate) : null}
+            onChange={(date) => {
+              const formattedDate = date.toISOString().split("T")[0]; // Format to YYYY-MM-DD
+              setEndDate(formattedDate);
+            }}
+            dateFormat="yyyy-MM-dd"
+            placeholderText="Select end date"
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none"
+          />
+        </div>
+      </div>
+
+      <DataTable
+        columns={columns}
+        theme={theme === "dark" ? "darkTheme" : "lightTheme"}
+        data={news}
+        pagination
+      />
     </>
   );
 };

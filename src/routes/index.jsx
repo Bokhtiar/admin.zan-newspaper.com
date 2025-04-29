@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
-// import { Dashboard } from '../components/dashboard'
+
 import { CategoryList } from "../pages/category/index";
 import { DashboardLayout } from "../layouts/dashboard.layout";
-import { Dashboard } from "../pages/Dashboard";
+
 import CreateCategory from "../pages/category/CreateCategory";
 import EditCategory from "../pages/category/EditCategory";
 import CreateNews from "../pages/news/CreateNews";
@@ -22,6 +22,7 @@ import EditHomePage from "../pages/homePage/EditHomePage";
 import CreateHero from "../pages/hero/CreateHero";
 import EditHero from "../pages/hero/EditHero";
 import { HeroList } from "../pages/hero";
+import Dashboard from "../pages/Dashboard/Dashboard";
 
 
 const appRoutes = [
@@ -31,7 +32,7 @@ const appRoutes = [
     children: [
       { path: "*", element: <Navigate to="/404" /> },
       // dashboard
-      { path: "", element: <Dashboard /> },
+      { index:true, element: <Dashboard /> },
 
       /** category */
       { path: "category", element: <CategoryList /> },

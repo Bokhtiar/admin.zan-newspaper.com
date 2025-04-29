@@ -34,21 +34,50 @@ const CreateNews = () => {
     seteditValue(newValue); // Save editor content
   };
 
-  const handleImageUpload = (file) => {
+  const handlePaste = (e) => {
+    e.preventDefault(); // Prevent default paste behavior
+
+    // Get the pasted content
+    const pastedContent = e.clipboardData.getData("text/plain");
+
+    // Sanitize the pasted content (Remove non-ASCII characters or unwanted symbols)
+    const sanitizedText = pastedContent.replace(/[^\x20-\x7E]/g, ""); // Keep only ASCII characters
+
+    // Get Quill editor and the current selection
+    const quill = quillRef.current.getEditor();
+    const range = quill.getSelection();
+
+    if (range) {
+      // Ensure cursor position is within valid bounds (not beyond the document length)
+      const maxIndex = quill.getLength(); // Get the current length of content
+      const validIndex = Math.min(range.index, maxIndex - 1); // Prevent inserting content beyond the editor's length
+
+      // Insert sanitized content at the current cursor position
+      quill.insertText(validIndex, sanitizedText);
+
+      // Adjust the selection after inserting the text
+      quill.setSelection(validIndex + sanitizedText.length);
+    }
+  };
+const handleImageUpload = (file) => {
     const quill = quillRef.current.getEditor();
     const range = quill.getSelection();
 
     if (range) {
       const index = range.index;
 
-      // Insert the image at the current cursor position
+      // Ensure cursor position is within the valid range of the document length
+      const maxIndex = quill.getLength();
+      const validIndex = Math.min(index, maxIndex - 1);
+
+      // Insert image at the valid index
       const reader = new FileReader();
       reader.onload = () => {
         const imageUrl = reader.result;
-        // Insert the image into the editor
-        quill.insertEmbed(index, "image", imageUrl);
+        quill.insertEmbed(validIndex, "image", imageUrl);
 
-        quill.setSelection(index + 1);
+        // Adjust the selection after inserting the image
+        quill.setSelection(validIndex + 1);
       };
       reader.readAsDataURL(file);
     }
@@ -193,7 +222,7 @@ const CreateNews = () => {
 
       console.log("response", response);
       if (response && response.status === 200) {
-        // navigate("/dashboard/news");
+        navigate("/dashboard/news");
         return Toastify.Success("News Created Successfully.");
       }
     } catch (error) {
@@ -233,7 +262,7 @@ const CreateNews = () => {
               name="categories"
               control={control}
               options={categories}
-              // rules={{ required: "Category selection is required" }}
+              rules={{ required: "Category selection is required" }}
               onSelected={(selected) =>
                 setValue("category_id", selected?.category_id)
               }
@@ -250,7 +279,7 @@ const CreateNews = () => {
               name="author"
               control={control}
               options={author}
-              // rules={{ required: "Category selection is required" }}
+              rules={{ required: "Category selection is required" }}
               onSelected={(selected) =>
                 setValue("author_id", selected?.author_id)
               }
@@ -270,7 +299,7 @@ const CreateNews = () => {
               label="Title Name *"
               type="text"
               placeholder="Create Title"
-              // rules={{ required: "Title is required" }}
+              rules={{ required: "Title is required" }}
               error={errors.title?.message} // Show error message
             />
           </div>
@@ -313,7 +342,7 @@ const CreateNews = () => {
           <TextAreaInput
             name="subtitle"
             control={control}
-            label="subtitle *"
+            label="subtitle "
             type="text"
             placeholder="Enter subtitle"
             // rules={{ required: "subtitle is required" }}
@@ -321,8 +350,12 @@ const CreateNews = () => {
           />
         </div>
 
-        <div>
+        <div className="">
+          <label className="block mb-2 text-sm font-medium text-gray-700 mt-4 ">
+            Content
+          </label>
           <ReactQuill
+            className="font-bangla  "
             value={editValue}
             onChange={handleChange}
             modules={{

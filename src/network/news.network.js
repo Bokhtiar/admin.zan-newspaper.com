@@ -1,10 +1,17 @@
 import { privateRequest } from '../config/axios.config'
 
 /* list of resource */
-export const index = async () => {
-    return await privateRequest.get('/admin/news');
-};
-
+/* list of resource */
+export const index = async (queryParams) => {
+    console.log(queryParams,"my query params")
+    try {
+      const response = await privateRequest.get(`/admin/news?${queryParams}`);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+  
 /* resource store */
 export const store = async(data) => {
     return await privateRequest.post('/admin/news', data)

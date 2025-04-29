@@ -1,28 +1,60 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "../components/DashboardSidebar/DashboardSidebar";
-import {Header} from '../components/dashboardNavbar/index'
-
-
+import Sidebar from "../components/menu-bar/sidebar";
+import Header from "../components/menu-bar/header";
 import { useState } from "react";
 
 export const DashboardLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(true);
+  const [menuStyle, setMenuStyle] = useState("hover");
+  const [menuPosition, setMenuPosition] = useState("fixed");
+
+  console.log("menuStyle", menuStyle);
+  console.log("menuPosition", menuPosition);
+
+  const toggleSidebar = () => {
+    console.log("first");
+    setMenuOpen(!menuOpen);
+  };
+
   return (
     // <div className="dark:bg-boxdark-2 dark:text-bodydark">
-      <div className="bg-white dark:bg-gray-500 text-black dark:text-white"> 
+    <div>
       <div className="flex h-screen overflow-hidden ">
         {/* sidbar start  */}
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        <div className="relative flex flex-1  flex-col overflow-y-auto overflow-x-hidden">
+        <Sidebar
+          toggleSidebar={toggleSidebar}
+          menuOpen={menuOpen}
+          menuStyle={menuStyle}
+          setMenuStyle={setMenuStyle}
+
+        />
+        <div className=" relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden  ">
+          {/* relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden  */}
           {/* Header start  */}
-          <Header  sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          
+            {" "}
+            <Header
+              toggleSidebar={toggleSidebar}
+              menuOpen={menuOpen}
+              menuStyle={menuStyle}
+              setMenuStyle={setMenuStyle}
+              menuPosition={menuPosition}
+              setMenuPosition={setMenuPosition}
+            />
+         
           <main>
-            <div className="mx-auto max-w-screen-2xl px-2 m-5">
+            <div
+              className={`mx-auto w-full p-2 md:p-4 2xl:p-6 bg-light dark:bg-dark    ${
+                menuPosition === "fixed"
+                  ? "mt-16"
+                  : ""
+              } `}
+            >
               <Outlet />
             </div>
           </main>
         </div>
       </div>
-  </div>
-);
+    </div>
+  );
 };

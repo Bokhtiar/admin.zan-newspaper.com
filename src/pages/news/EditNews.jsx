@@ -150,7 +150,7 @@ const EditNews = () => {
       const response = await NetworkServices.News.update(newsId, formData);
       if (response?.status === 200) {
         Toastify.Success("News Updated Successfully.");
-        navigate("/dashboard/food");
+        navigate("/dashboard/news");
       }
     } catch (error) {
       console.error("Update Error:", error);
@@ -240,7 +240,7 @@ const EditNews = () => {
           <TextAreaInput
             name="subtitle"
             control={control}
-            label="subtitle *"
+            label="subtitle"
             type="text"
             placeholder="Enter subtitle"
             rules={{ required: "subtitle is required" }} // Validation rule
