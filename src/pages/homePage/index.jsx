@@ -10,6 +10,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import DataTable from "react-data-table-component";
+import ListSkeleton from "../../components/loading/ListSkeleton";
 
 const HomePage = () => {
   const [homeNews, setHomeNews] = useState([]);
@@ -45,7 +46,7 @@ const HomePage = () => {
   if (loading) {
     return (
       <div>
-        <SkeletonTable />
+        <ListSkeleton />
       </div>
     );
   }

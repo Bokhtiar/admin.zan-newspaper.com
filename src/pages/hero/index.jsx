@@ -15,6 +15,7 @@ import DataTable, { createTheme } from "react-data-table-component";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { confirmAlert } from "react-confirm-alert";
 import { ThemeContext } from "../../components/ThemeContext";
+import ListSkeleton from "../../components/loading/ListSkeleton";
 
 export const HeroList = () => {
   const [categories, setCategories] = useState([]);
@@ -72,7 +73,7 @@ export const HeroList = () => {
   if (loading) {
     return (
       <div>
-        <SkeletonTable />
+        <ListSkeleton />
       </div>
     );
   }

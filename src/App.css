@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  /* background-color: #282c34; */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -36,3 +36,103 @@
     transform: rotate(360deg);
   }
 }
+
+.rdt_Table {
+  @apply bg-light text-dark border-lightBorder;  
+}
+
+.rdt_TableHead {
+  @apply bg-light text-lightTitle;  
+}
+
+.rdt_TableRow {
+  @apply bg-light text-lightTitle border-b border-lightBorder;  
+}
+
+.rdt_TableRow:hover {
+  @apply bg-light text-lightTitle;  
+}
+
+/* Dark Mode Styles */
+.dark body {
+  background-color: #111827; 
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark .rdt_Table {
+  @apply bg-dark text-darkTitle border-darkBorder;  
+}
+
+.dark .rdt_TableHead {
+  @apply bg-dark text-darkTitle;  
+}
+.dark .rdt_TableHeadRow {
+  @apply bg-darkCard text-darkTitle;  
+}
+
+.dark .rdt_TableRow {
+  @apply bg-darkCard text-darkTitle border-b border-darkBorder; 
+}
+.dark .rdt_TableRow {
+  @apply border; 
+}
+.dark .kgpTAk {
+  @apply bg-darkCard text-white; 
+}
+
+.dark .rdt_TableRow:hover {
+  @apply bg-darkCard text-darkTitle ;  
+}
+
+.dark .rdt_Pagination{
+  @apply bg-darkCard text-darkTitle
+}
+.dark .css-yqyng-control{
+  @apply border border-darkBorder
+}
+.dark #pagination-last-page,
+.dark #pagination-next-page,
+.dark #pagination-previous-page,
+.dark #pagination-first-page {
+  fill: white;
+}
+
+.dark .css-1dg3e3x-control{
+  @apply bg-darkCard text-darkTitle ; 
+} 
+
+.dark .css-uguckl-control{
+  @apply bg-darkCard text-darkTitle ; 
+}
+  
+.dark .css-1nmdiq5-menu{
+  @apply bg-darkCard text-darkTitle ; 
+}
+.dark .css-fmqkmq-control{
+  @apply bg-darkCard text-darkTitle ; 
+}
+.dark .rbc-btn-group{
+  @apply bg-gray-300; 
+}
+.dark .rbc-off-range-bg{
+  @apply bg-black; 
+}
+.dark .rbc-today{
+  @apply bg-gray-600; 
+}
+
+  
+.rdt_Table,
+.rdt_TableHead,
+.rdt_TableRow {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.react-datepicker-wrapper {
+  width: 100% ;
+}
+.react-datepicker__input-container input {
+  width: 100%  ;
+  border-radius:8px;
+}
+

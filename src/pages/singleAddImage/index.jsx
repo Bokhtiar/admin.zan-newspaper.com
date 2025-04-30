@@ -10,6 +10,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import DataTable from "react-data-table-component";
+import ListSkeleton from "../../components/loading/ListSkeleton";
 
 const SingleItemList = () => {
   const [loading, setLoading] = useState(false);
@@ -50,7 +51,7 @@ const SingleItemList = () => {
   if (loading) {
     return (
       <div>
-        <SkeletonTable />
+        <ListSkeleton />
       </div>
     );
   }

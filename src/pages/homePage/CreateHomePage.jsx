@@ -15,10 +15,13 @@ import {
 import { networkErrorHandeller } from "../../utils/helper";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 
 const CreateHomePage = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [btnloading, setBtnLoading] = useState(false);
 
   const navigate = useNavigate();
   const {
@@ -72,7 +75,7 @@ const CreateHomePage = () => {
     console.log("array_category", array_category);
 
     try {
-      setLoading(true);
+      setBtnLoading(true);
 
       // Create FormData object
       const formData = new FormData();
@@ -116,17 +119,16 @@ const CreateHomePage = () => {
       console.log("Error:", error);
       networkErrorHandeller(error);
     } finally {
-      setLoading(false);
+      setBtnLoading(false);
     }
   };
-
   if (loading) {
     return (
-      <div className="text-center">
-        {" "}
-        <SkeletonTable />
+      <>
+        <PageHeaderSkeleton />
         <br />
-      </div>
+        <CategoryFormSkeleton />
+      </>
     );
   }
   const propsData = {
@@ -163,7 +165,7 @@ const CreateHomePage = () => {
             <ImageUpload
               name="section_image1"
               control={control}
-              label="Category Picture"
+              label="Ads 1"
               file="image *"
               // required
               onUpload={(file) => setValue("section_image1", file)}
@@ -189,7 +191,7 @@ const CreateHomePage = () => {
             <ImageUpload
               name="section_image2"
               control={control}
-              label="Category Picture"
+              label="Ads 2"
               file="image *"
               // required
               onUpload={(file) => setValue("section_image2", file)}
@@ -214,7 +216,7 @@ const CreateHomePage = () => {
             <ImageUpload
               name="section_image3"
               control={control}
-              label="Category Picture"
+              label="Ads 3"
               file="image *"
               // required
               onUpload={(file) => setValue("section_image3", file)}
@@ -239,7 +241,7 @@ const CreateHomePage = () => {
             <ImageUpload
               name="section_image4"
               control={control}
-              label="Category Picture"
+              label="Ads 4"
               file="image *"
               // required
               onUpload={(file) => setValue("section_image4", file)}
@@ -264,7 +266,7 @@ const CreateHomePage = () => {
             <ImageUpload
               name="section_image5"
               control={control}
-              label="Category Picture"
+              label="Ads 5"
               file="image *"
               // required
               onUpload={(file) => setValue("section_image5", file)}
@@ -304,13 +306,13 @@ const CreateHomePage = () => {
         <button
           type="submit"
           className={`px-4 py-2 text-white rounded-md transition mt-4 ${
-            loading
+            btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={loading} // Disable button when loading
+          disabled={btnloading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Create Home "}
+          {btnloading ? "Loading..." : "Create Home "}
         </button>
       </form>
     </>

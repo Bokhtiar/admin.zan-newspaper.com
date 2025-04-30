@@ -14,14 +14,15 @@ import {
 import { networkErrorHandeller } from "../../utils/helper";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
-
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // import styles
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 
 const CreateHero = () => {
   const [categories, setCategories] = useState([]);
   const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [btnloading, setBtnLoading] = useState(false);
   const [editValue, seteditValue] = useState("");
   const quillRef = useRef(null);
   const [singleCategory, setSingleCategory] = useState([]);
@@ -214,7 +215,7 @@ const CreateHero = () => {
     }
 
     try {
-      setLoading(true);
+      setBtnLoading(true);
       const response = await NetworkServices.News.store(formData);
 
       console.log("response", response);
@@ -226,16 +227,16 @@ const CreateHero = () => {
       console.log("Error:", error);
       networkErrorHandeller(error);
     } finally {
-      setLoading(false);
+      setBtnLoading(false);
     }
   };
   if (loading) {
     return (
-      <div className="text-center">
-        {" "}
-        <SkeletonTable />
+      <>
+        <PageHeaderSkeleton />
         <br />
-      </div>
+        <CategoryFormSkeleton />
+      </>
     );
   }
   const propsData = {
@@ -288,10 +289,6 @@ const CreateHero = () => {
           </div>
         </div>
 
-
-
-
-
         <div className="flex items-center gap-2 mt-4">
           <TextInput
             type="checkbox"
@@ -310,13 +307,13 @@ const CreateHero = () => {
         <button
           type="submit"
           className={`px-4 py-2 text-white rounded-md transition mt-4 ${
-            loading
+            btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={loading} // Disable button when loading
+          disabled={btnloading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Create News"}
+          {btnloading ? "Loading..." : "Create News"}
         </button>
       </form>
     </>

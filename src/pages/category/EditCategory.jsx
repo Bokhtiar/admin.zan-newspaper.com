@@ -13,12 +13,15 @@ import {
 import { FaRegEdit } from "react-icons/fa";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 
 const EditCategory = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [btnloading, setBtnLoading] = useState(false);
   const [category, setCategory] = useState({});
 
   console.log("categorycategory", categoryId);
@@ -102,6 +105,7 @@ const EditCategory = () => {
     }
 
     try {
+      setBtnLoading(true);
       const response = await NetworkServices.Category.update(
         categoryId,
         formData
@@ -114,6 +118,8 @@ const EditCategory = () => {
       }
     } catch (error) {
       networkErrorHandeller(error);
+    }finally{
+      setBtnLoading(false);
     }
   };
 
@@ -127,11 +133,11 @@ const EditCategory = () => {
 
   if (loading) {
     return (
-      <div className="text-center">
-        {" "}
-        <SkeletonTable />
+      <>
+        <PageHeaderSkeleton />
         <br />
-      </div>
+        <CategoryFormSkeleton />
+      </>
     );
   }
 
@@ -219,9 +225,14 @@ const EditCategory = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md transition mt-4"
+          className={`px-4 py-2 text-white rounded-md transition mt-4 cursor-pointer ${
+            btnloading
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
+          disabled={btnloading} // Disable button when loading
         >
-          Update Category
+          {btnloading ? "Loading..." : "Update Category"}
         </button>
       </form>
     </>

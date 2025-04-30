@@ -17,11 +17,14 @@ import { PageHeader } from "../../components/pageHandle/pagehandle";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // import styles
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 
 const CreateNews = () => {
   const [categories, setCategories] = useState([]);
   const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [btnloading, setBtnLoading] = useState(false);
   const [editValue, seteditValue] = useState("");
   const quillRef = useRef(null);
   const [singleCategory, setSingleCategory] = useState([]);
@@ -217,7 +220,7 @@ const handleImageUpload = (file) => {
     }
 
     try {
-      setLoading(true);
+      setBtnLoading(true);
       const response = await NetworkServices.News.store(formData);
 
       console.log("response", response);
@@ -229,16 +232,16 @@ const handleImageUpload = (file) => {
       console.log("Error:", error);
       networkErrorHandeller(error);
     } finally {
-      setLoading(false);
+      setBtnLoading(false);
     }
   };
   if (loading) {
     return (
-      <div className="text-center">
-        {" "}
-        <SkeletonTable />
+      <>
+        <PageHeaderSkeleton />
         <br />
-      </div>
+        <CategoryFormSkeleton />
+      </>
     );
   }
   const propsData = {
@@ -401,13 +404,13 @@ const handleImageUpload = (file) => {
         <button
           type="submit"
           className={`px-4 py-2 text-white rounded-md transition mt-4 ${
-            loading
+            btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={loading} // Disable button when loading
+          disabled={btnloading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Create News"}
+          {btnloading ? "Loading..." : "Create News"}
         </button>
       </form>
     </>

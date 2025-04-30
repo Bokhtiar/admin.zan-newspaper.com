@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { NetworkServices } from "../../network";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
 import { formatDateInBengali } from "../../utils/helper";
+import ListSkeleton from "../../components/loading/ListSkeleton";
 
 const SingleContent = () => {
   const { id } = useParams();
@@ -30,7 +31,7 @@ const SingleContent = () => {
   }, [fetchNewsData]);
 
   if (loading) {
-    return <SkeletonTable></SkeletonTable>;
+    return <ListSkeleton />;
   }
 
   if (!newsData) {
