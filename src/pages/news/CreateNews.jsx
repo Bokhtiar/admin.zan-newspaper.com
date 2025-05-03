@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-
+import { useEditor, EditorContent } from '@tiptap/react'
 import { IoMdCreate } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
@@ -17,6 +17,17 @@ import { PageHeader } from "../../components/pageHandle/pagehandle";
 
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // import styles
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import TextStyle from "@tiptap/extension-text-style";
+import Color from "@tiptap/extension-color";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableHeader from "@tiptap/extension-table-header";
+import TableCell from "@tiptap/extension-table-cell";
+import Link from "@tiptap/extension-link";
+import TextAlign from "@tiptap/extension-text-align";
+import Image from "@tiptap/extension-image";
 
 const CreateNews = () => {
   const [categories, setCategories] = useState([]);
@@ -27,8 +38,8 @@ const CreateNews = () => {
   const [singleCategory, setSingleCategory] = useState([]);
   const [smallloading, setSmallLoading] = useState(false);
 
-  console.log("categories", categories);
-  console.log("singleCategory", singleCategory);
+  // console.log("categories", categories);
+  // console.log("singleCategory", singleCategory);
 
   const handleChange = (newValue) => {
     seteditValue(newValue); // Save editor content
@@ -99,10 +110,10 @@ const handleImageUpload = (file) => {
 
   const selectedCategory = watch("category_id");
   const selectedCategoryNumber = Number(selectedCategory); // Convert to number
-  console.log("selectedCategory", selectedCategoryNumber);
+  // console.log("selectedCategory", selectedCategoryNumber);
 
   const fetchCategory = useCallback(async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const response = await NetworkServices.Category.index();
       if (response && response.status === 200) {
@@ -127,7 +138,7 @@ const handleImageUpload = (file) => {
   }, [fetchCategory]);
 
   const fatchSingleCategory = useCallback(async () => {
-    setSmallLoading(true);
+    // setSmallLoading(true);
     try {
       const response = await NetworkServices.Category.show(
         selectedCategoryNumber
@@ -148,7 +159,7 @@ const handleImageUpload = (file) => {
   }, [fatchSingleCategory]);
 
   const fetchAuthor = useCallback(async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const response = await NetworkServices.Author.index();
       if (response && response.status === 200) {
@@ -217,7 +228,7 @@ const handleImageUpload = (file) => {
     }
 
     try {
-      setLoading(true);
+      // setLoading(true);
       const response = await NetworkServices.News.store(formData);
 
       console.log("response", response);
@@ -380,6 +391,7 @@ const handleImageUpload = (file) => {
             ]}
             ref={quillRef}
             onImageUpload={handleImageUpload} // Handle image upload
+            theme="snow"
           />
         </div>
 
@@ -409,9 +421,132 @@ const handleImageUpload = (file) => {
         >
           {loading ? "Loading..." : "Create News"}
         </button>
+        <EditorSection seteditValue={seteditValue}/>
+        {editValue}
       </form>
     </>
   );
 };
 
 export default CreateNews;
+
+const EditorSection =({seteditValue})=>{
+  const [value,setValue] = useState("")
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      TextStyle,
+      Color,
+      Image,
+      Table.configure({
+        resizable: true,
+      }),
+      Link.configure({
+        openOnClick: false,
+      }),
+      TextAlign.configure({
+        types: ['paragraph', 'heading'], // Optional: Define which types you want to apply alignment to
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
+      
+    ],
+    content: '<p>Paste your styled content here…</p>',
+   
+    editorProps: {
+      handlePaste(view, event) {
+        const clipboardData = event.clipboardData || window.clipboardData
+        const pastedContent = clipboardData.getData('text/html')
+
+        // Log the pasted HTML content
+        console.log('Pasted content:', pastedContent)
+        seteditValue(pastedContent)
+        setValue(pastedContent)
+        // If you want to handle the paste in a custom way, you can modify this content
+        // For now, let's allow the default behavior (return false to not prevent paste)
+        return false
+      },
+    },
+    onUpdate({editor}){
+      const editorContent = editor.getHTML()
+
+      console.log('Editor content updated:', editorContent)
+
+      // Update state to reflect real-time changes while typing
+      seteditValue(editorContent)
+      setValue(editorContent)
+    }
+ 
+  })
+  const handleImageUpload = (event) => {
+    const file = event.target.files?.[0]
+    if (file && editor) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        editor.chain().focus().setImage({ src: reader.result }).run()
+      }
+      reader.readAsDataURL(file) // For local preview; use server upload if needed
+    }
+  }
+  const insertImageFromUrl = () => {
+    const url = prompt('Enter image URL')
+    if (url) {
+      editor.chain().focus().setImage({ src: url }).run()
+    }
+  }
+  return(
+    <div>
+      <button onClick={insertImageFromUrl} className="bg-blue-500 text-white px-3 py-1 rounded">
+          Insert Image from URL
+        </button>
+        <input type="file" accept="image/*" onChange={handleImageUpload} />
+      <button onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
+  H1
+</button>
+<button onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
+  H2
+</button>
+<button onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}>
+  H3
+</button>
+
+      <button onClick={() => editor.chain().focus().setTextAlign('left').run()}>Left</button>
+<button onClick={() => editor.chain().focus().setTextAlign('center').run()}>Center</button>
+<button onClick={() => editor.chain().focus().setTextAlign('right').run()}>Right</button>
+       <button
+  onClick={() => {
+    const url = window.prompt('Enter URL')
+    if (url) {
+      editor?.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+    }
+  }}
+>
+  Set Link
+</button>
+
+      {/* {value} */}
+      <button onClick={() => editor?.chain().focus().toggleBulletList().run()}>
+        Bullet List
+      </button>
+      <button onClick={() => editor?.chain().focus().toggleOrderedList().run()}>
+        Ordered List
+      </button>
+      <input type="color" onChange={(e) => editor.chain().focus().setColor(e.target.value).run()} />
+      <button onClick={() => editor.chain().focus().toggleBold().run()}>Bold</button>
+      <button onClick={() => editor.chain().focus().toggleItalic().run()}>Italic</button>
+      <button onClick={() => editor.chain().focus().toggleUnderline().run()}>Underline</button>
+    
+      <button onClick={() => editor.chain().focus().insertTable({ rows: 2, cols: 2, withHeaderRow: true }).run()}>
+        Insert Table
+      </button>
+      <button onClick={() => editor.chain().focus().addColumnAfter().run()}>Add Column</button>
+      <button onClick={() => editor.chain().focus().addRowAfter().run()}>Add Row</button>
+      <button onClick={() => editor.chain().focus().deleteTable().run()}>Delete Table</button>
+      <div dangerouslySetInnerHTML={{ __html: value }}></div>
+      <h1>sdfsdfsfsdfsdsdfsd</h1>
+       <EditorContent editor={editor}  className="border border-gray-300 p-4 rounded-md min-h-[200px] focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+    </div>
+  )
+}

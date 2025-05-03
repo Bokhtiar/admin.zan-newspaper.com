@@ -8,3 +8,12 @@
 .font-bangla {
   font-family: 'Noto Sans Bengali', sans-serif;
 }
+
+ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+ol {
+  list-style-type: decimal;
+  padding-left: 20px;
+}

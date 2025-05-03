@@ -13,6 +13,7 @@ const SingleContent = () => {
 
   const fetchNewsData = useCallback(async () => {
     setLoading(true);
+    if(!id) return;
     try {
       const response = await NetworkServices.News.show(id);
       if (response?.status === 200) {
