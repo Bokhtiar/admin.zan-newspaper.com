@@ -16,6 +16,7 @@ import { DateInput, SingleSelect } from "../../components/input";
 import { useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import ListSkeleton from "../../components/loading/ListSkeleton";
 
 export const NewsList = () => {
   const [news, setNews] = useState([]);
@@ -41,12 +42,12 @@ export const NewsList = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  console.log("first", startDate);
-  console.log("first", endDate);
+  // console.log("first", startDate);
+  // console.log("first", endDate);
 
   const handleTextChange = (e) => {
     const name = e.target.value;
-    console.log(name);
+    // console.log(name);
     setTimeout(() => {
       setTitle(name);
     }, 500);
@@ -134,7 +135,7 @@ export const NewsList = () => {
   if (loading) {
     return (
       <div>
-        <SkeletonTable />
+        <ListSkeleton/>
       </div>
     );
   }

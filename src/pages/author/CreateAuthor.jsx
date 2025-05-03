@@ -3,17 +3,17 @@ import { IoMdCreate } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
-
 import { useNavigate } from "react-router-dom";
-
 import { ImageUpload, SingleSelect, TextInput } from "../../components/input";
 import { networkErrorHandeller } from "../../utils/helper";
-import { SkeletonTable } from "../../components/loading/skeleton-table";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 
 const CreateAuthor = () => {
  
   const [loading, setLoading] = useState(false);
+  const [btnloading, setBtnLoading] = useState(false);
 
   const navigate = useNavigate();
   const {
@@ -52,7 +52,7 @@ const CreateAuthor = () => {
     console.log("Submitted Data:", data);
 
     try {
-      setLoading(true);
+      setBtnLoading(true);
 
       // Create FormData object
       const formData = new FormData();
@@ -78,17 +78,17 @@ const CreateAuthor = () => {
       console.log("Error:", error);
       networkErrorHandeller(error);
     } finally {
-      setLoading(false);
+      setBtnLoading(false); 
     }
   };
 
   if (loading) {
     return (
-      <div className="text-center">
-        {" "}
-        <SkeletonTable />
+      <>
+        <PageHeaderSkeleton />
         <br />
-      </div>
+        <CategoryFormSkeleton />
+      </>
     );
   }
   const propsData = {
@@ -114,7 +114,7 @@ const CreateAuthor = () => {
             label="Author Name *"
             type="text"
             placeholder="Enter Author Name"
-            rules={{ required: "Category is required" }} // Validation rule
+            rules={{ required: "Author name is required" }} // Validation rule
             error={errors.author_name?.message} // Show error message
           />
         </div>
@@ -170,13 +170,13 @@ const CreateAuthor = () => {
         <button
           type="submit"
           className={`px-4 py-2 text-white rounded-md transition mt-4 ${
-            loading
+            btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={loading} // Disable button when loading
+          disabled={btnloading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Create Author"}
+          {btnloading ? "Loading..." : "Create Author"}
         </button>
       </form>
     </>

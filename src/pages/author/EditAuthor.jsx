@@ -9,11 +9,14 @@ import { ImageUpload, SingleSelect,  TextCheckbox,  TextInput } from "../../comp
 import { FaRegEdit } from "react-icons/fa";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 
 const EditAuthor = () => {
   const { authorId } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [btnloading, setBtnLoading] = useState(false);
   const [author, setAuthor] = useState([]);
 
   console.log("categorycategory", author);
@@ -74,6 +77,7 @@ const EditAuthor = () => {
     formData.append("_method", "PUT");
 
     try {
+      setBtnLoading(true);
       const response = await NetworkServices.Author.update(
         authorId,
         formData
@@ -86,6 +90,8 @@ const EditAuthor = () => {
       }
     } catch (error) {
       networkErrorHandeller(error);
+    }finally{
+      setBtnLoading(false);
     }
   };
 
@@ -97,16 +103,15 @@ const EditAuthor = () => {
     type: "list",
   };
 
-    if (loading) {
-      return (
-        <div className="text-center">
-          {" "}
-          <SkeletonTable/>
-          <br />
-  
-        </div>
-      );
-    }
+  if (loading) {
+    return (
+      <>
+        <PageHeaderSkeleton />
+        <br />
+        <CategoryFormSkeleton />
+      </>
+    );
+  }
 
   return (
     <>
@@ -181,13 +186,13 @@ const EditAuthor = () => {
         <button
           type="submit"
           className={`px-4 py-2 text-white rounded-md transition mt-4 ${
-            loading
+            btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={loading} // Disable button when loading
+          disabled={btnloading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Create Author"}
+          {btnloading ? "Loading..." : "Create Author"}
         </button>
       </form>
     </>

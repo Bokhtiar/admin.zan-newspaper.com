@@ -17,3 +17,22 @@ ol {
   list-style-type: decimal;
   padding-left: 20px;
 }
+.tiptap ,.ProseMirror {
+  height: 220px;
+  outline: 0;
+  padding: 8px;
+  border: 2px dotted gray;
+   overflow-y: auto;
+}
+/* h1{
+  font-size: 36px;
+}
+h2{
+  font-size: 28px;
+}
+h3{
+  font-size: 20px;
+}
+p{
+  font-size: 14px;
+} */

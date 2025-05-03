@@ -14,12 +14,15 @@ import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import ReactQuill from "react-quill";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 
 const EditNews = () => {
   const [categories, setCategories] = useState([]);
   const [news, setNews] = useState([]);
   const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [btnloading, setBtnLoading] = useState(false);
   const { newsId } = useParams(); // URL থেকে ID নেওয়া
   const navigate = useNavigate();
   const [editorValue, setEditorValue] = useState("");
@@ -35,8 +38,8 @@ const EditNews = () => {
       status: 0,
     },
   });
-  console.log("cate", categories);
-  console.log("news", news);
+  // console.log("cate", categories);
+  // console.log("news", news);
 
   // ক্যাটাগরি লোড করা
   const fetchCategory = useCallback(async () => {
@@ -127,7 +130,7 @@ const EditNews = () => {
   }, [fetchCategory, newsData, newsId]);
 
   const onFormSubmit = async (data) => {
-    console.log("Data", data);
+    // console.log("Data", data);
     setLoading(true);
 
     const formData = new FormData();
@@ -144,9 +147,10 @@ const EditNews = () => {
     formData.append("article_image", data?.article_image); // Assuming it's an image file
   
     formData.append("_method", "PUT");
-    console.log("formData", formData);
+    // console.log("formData", formData);
 
     try {
+      setBtnLoading(true)
       const response = await NetworkServices.News.update(newsId, formData);
       if (response?.status === 200) {
         Toastify.Success("News Updated Successfully.");
@@ -156,7 +160,7 @@ const EditNews = () => {
       console.error("Update Error:", error);
       networkErrorHandeller(error);
     }
-    setLoading(false);
+    setBtnLoading(false);
   };
 
   const propsData = {
@@ -166,6 +170,16 @@ const EditNews = () => {
     buttonUrl: "/dashboard/news",
     type: "list",
   };
+  if (loading) {
+    return (
+      <>
+        <PageHeaderSkeleton />
+        <br />
+        <CategoryFormSkeleton />
+      </>
+    );
+  }
+
 
   return (
     <>
@@ -325,13 +339,13 @@ const EditNews = () => {
         <button
           type="submit"
           className={`px-4 py-2 text-white rounded-md transition mt-4 ${
-            loading
+            btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={loading} // Disable button when loading
+          disabled={btnloading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Update Artical"}
+          {btnloading ? "Loading..." : "Update Artical"}
         </button>
       </form>
     </>

@@ -10,13 +10,14 @@ import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import DataTable from "react-data-table-component";
+import ListSkeleton from "../../components/loading/ListSkeleton";
 
 const HomePage = () => {
   const [homeNews, setHomeNews] = useState([]);
   const [homeSection, setHomeSection] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  console.log("homeNews", homeSection);
+  // console.log("homeNews", homeSection);
   // console.log("homeNews", homeNews);
 
   // Fetch categories from API
@@ -24,13 +25,13 @@ const HomePage = () => {
     setLoading(true);
     try {
       const response = await NetworkServices.HomeNews.index();
-      console.log("rr", response);
+      // console.log("rr", response);
       if (response && response.status === 200) {
         setHomeSection(response?.data?.data?.home_section || []);
         setHomeNews(response?.data?.data?.categories || []);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       networkErrorHandeller(error);
     }
     setLoading(false);
@@ -45,7 +46,7 @@ const HomePage = () => {
   if (loading) {
     return (
       <div>
-        <SkeletonTable />
+        <ListSkeleton />
       </div>
     );
   }

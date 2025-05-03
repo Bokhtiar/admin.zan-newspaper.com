@@ -13,6 +13,7 @@ import DataTable, { createTheme } from "react-data-table-component";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { confirmAlert } from "react-confirm-alert";
 import { ThemeContext } from "../../components/ThemeContext";
+import ListSkeleton from "../../components/loading/ListSkeleton";
 
 export const CategoryList = () => {
   const [categories, setCategories] = useState([]);
@@ -32,7 +33,7 @@ export const CategoryList = () => {
       console.log("pp", response);
       if (response && response.status === 200) {
         Toastify.Success(" Created.");
-        fetchCategory()
+        fetchCategory();
       }
     } catch (error) {
       console.log(error);
@@ -87,13 +88,7 @@ export const CategoryList = () => {
       ],
     });
   };
-  if (loading) {
-    return (
-      <div>
-        <SkeletonTable />
-      </div>
-    );
-  }
+
 
   const propsData = {
     pageTitle: "Category List",
@@ -170,21 +165,22 @@ export const CategoryList = () => {
 
   return (
     <>
-      <PageHeader propsData={propsData} />
-      {selectedCategories.length > 0 && (
-        <button
-          className="bg-blue-400 px-2 py-3 rounded-md"
-          onClick={priorityNavber}
-        >
-          Priority Navbar
-        </button>
+      {loading ? (
+        <ListSkeleton />
+      ) : (
+        <>
+          <PageHeader propsData={propsData} />
+          {selectedCategories.length > 0 && (
+            <button
+              className="bg-blue-400 px-2 py-3 rounded-md"
+              onClick={priorityNavber}
+            >
+              Priority Navbar
+            </button>
+          )}
+          <DataTable columns={columns} data={categories} pagination />
+        </>
       )}
-      <DataTable
-        columns={columns}
-        theme={theme === "dark" ? "darkTheme" : "lightTheme"}
-        data={categories}
-        pagination
-      />
     </>
   );
 };

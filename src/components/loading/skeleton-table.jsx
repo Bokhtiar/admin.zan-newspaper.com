@@ -1,72 +1,75 @@
 export const SkeletonTable = () => {
-    return <div>
-        <tr className='w-full flex gap-10 my-5'>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-        </tr>
+    return (
+        <div className="w-full h-screen flex items-center justify-center">
+            <table className="w-full h-full border-collapse">
+                <tbody className="w-full h-full flex flex-col justify-center space-y-4">
+                    <tr className="flex justify-center space-x-4">
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                    </tr>
+                    <tr className="flex justify-center space-x-4">
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                    </tr>
+                    <tr className="flex justify-center space-x-4">
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                    </tr>
+                    <tr className="flex justify-center space-x-4">
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                    </tr>
+                    <tr className="flex justify-center space-x-4">
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                        <td className="animate-pulse rounded-full bg-slate-200 h-4 w-60 p-4"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    );
+};
 
-        <tr className='w-full flex gap-10 my-5 py-0'>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60 py-0'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-        </tr>
 
-        <tr className='w-full flex gap-10 my-5'>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-        </tr>
-
-        <tr className='w-full flex gap-10 my-5 py-0'>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60 py-0'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-        </tr>
-
-        <tr className='w-full flex gap-10 my-5'>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-            <td className='animate-pulse rounded-full bg-slate-200 h-2 w-60'></td>
-        </tr>
-
-    </div>
-}
 
 export const SkeletonForm = () => {
     return <>
         <section className="my-5">
-            <div class="h-5 bg-slate-200 rounded col-span-1 w-96"></div>
-            <div class="grid grid-cols-3 gap-4 my-5">
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
+            <div className="h-5 bg-slate-200 rounded col-span-1 w-96"></div>
+            <div className="grid grid-cols-3 gap-4 my-5">
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
             </div>
 
-            <div class="grid grid-cols-3 gap-4 my-5">
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
+            <div className="grid grid-cols-3 gap-4 my-5">
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
             </div>
 
-            <div class="grid grid-cols-3 gap-4 my-5">
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
+            <div className="grid grid-cols-3 gap-4 my-5">
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
             </div>
 
-            <div class="grid grid-cols-3 gap-4 my-5">
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
+            <div className="grid grid-cols-3 gap-4 my-5">
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
             </div>
             <div className='text-center'>
-                <button class="h-7 bg-slate-200 w-32 rounded col-span-1"></button>
+                <button className="h-7 bg-slate-200 w-32 rounded col-span-1"></button>
             </div>
         </section>
     </>

@@ -4,7 +4,7 @@ import {
   RiMenuFold4Fill,
 
 } from "react-icons/ri";
-import logo from "../../assets/icon/JPG Logo.jpg";
+import logo from "../../assets/assets/logo/Symbol.png";
 import {menuData} from "../menu-bar/menuData"
 
 const Sidebar = ({ toggleSidebar, menuOpen, menuStyle }) => {
@@ -26,9 +26,9 @@ const Sidebar = ({ toggleSidebar, menuOpen, menuStyle }) => {
           {/* Logo */}
           <div className="flex items-center space-x-2 pb-[15px] border-b border-gray-300 pl-4 ">
             {/* <div className="text-blue-500 text-2xl font-bold">R</div> */}
-            <img src={logo} alt="" className="w-12 h-12 rounded-full  " />
+            <img src={logo} alt="" className="w-12 h-12   " />
             <span className="text-lg font-semibold hidden group-hover:block fixed left-20">
-              Zan Vision
+            Bengal Channel24
             </span>
           </div>
 
@@ -114,12 +114,12 @@ const Sidebar = ({ toggleSidebar, menuOpen, menuStyle }) => {
           }`}
         >
           {/* Logo */}
-          <div className="flex items-center justify-between w-full p-[15px] border-b border-gray-300">
+          <div className="flex items-center justify-between w-full p-[11px] border-b border-gray-300">
             {/* Logo */}
-            <img src={logo} alt="Logo" className="w-12 h-12 rounded-full" />
+            <img src={logo} alt="Logo" className="w-12 h-12  mr-4" />
 
             {/* Title */}
-            <span className="text-lg font-semibold">Zav Vision </span>
+            <span className="text-lg font-semibold">Bengal Channel24 </span>
 
             {/* Toggle Button */}
             <button

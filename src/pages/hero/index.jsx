@@ -15,25 +15,26 @@ import DataTable, { createTheme } from "react-data-table-component";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { confirmAlert } from "react-confirm-alert";
 import { ThemeContext } from "../../components/ThemeContext";
+import ListSkeleton from "../../components/loading/ListSkeleton";
 
 export const HeroList = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const { theme } = useContext(ThemeContext);
 
-  console.log("categories",categories)
+ 
 
   // Fetch categories from API
   const fetchCategory = useCallback(async () => {
     setLoading(true);
     try {
       const response = await NetworkServices.Category.index();
-      console.log(response);
+     
       if (response && response.status === 200) {
         setCategories(response?.data?.data || []);
       }
     } catch (error) {
-      console.log(error);
+   
       networkErrorHandeller(error);
     }
     setLoading(false);
@@ -72,7 +73,7 @@ export const HeroList = () => {
   if (loading) {
     return (
       <div>
-        <SkeletonTable />
+        <ListSkeleton />
       </div>
     );
   }

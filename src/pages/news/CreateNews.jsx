@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useEditor, EditorContent } from '@tiptap/react'
+import { useEditor, EditorContent, mergeAttributes, Mark } from "@tiptap/react";
 import { IoMdCreate } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
@@ -14,9 +14,7 @@ import {
 import { networkErrorHandeller } from "../../utils/helper";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
-
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; // import styles
+import Select from "react-select";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import TextStyle from "@tiptap/extension-text-style";
@@ -28,11 +26,25 @@ import TableCell from "@tiptap/extension-table-cell";
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 import Image from "@tiptap/extension-image";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
+import {
+  FaBold,
+  FaCloudUploadAlt,
+  FaImage,
+  FaItalic,
+  FaLink,
+  FaListOl,
+  FaListUl,
+  FaUnderline,
+} from "react-icons/fa";
+import Heading from "@tiptap/extension-heading";
 
 const CreateNews = () => {
   const [categories, setCategories] = useState([]);
   const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [btnloading, setBtnLoading] = useState(false);
   const [editValue, seteditValue] = useState("");
   const quillRef = useRef(null);
   const [singleCategory, setSingleCategory] = useState([]);
@@ -70,7 +82,7 @@ const CreateNews = () => {
       quill.setSelection(validIndex + sanitizedText.length);
     }
   };
-const handleImageUpload = (file) => {
+  const handleImageUpload = (file) => {
     const quill = quillRef.current.getEditor();
     const range = quill.getSelection();
 
@@ -207,7 +219,7 @@ const handleImageUpload = (file) => {
   // };
 
   const onFormSubmit = async (data) => {
-    console.log("data", data);
+    // console.log("data", data);
     const formData = new FormData();
 
     // ফর্মের অন্যান্য ডাটা FormData তে অ্যাড করুন
@@ -231,25 +243,25 @@ const handleImageUpload = (file) => {
       // setLoading(true);
       const response = await NetworkServices.News.store(formData);
 
-      console.log("response", response);
+      // console.log("response", response);
       if (response && response.status === 200) {
         navigate("/dashboard/news");
         return Toastify.Success("News Created Successfully.");
       }
     } catch (error) {
-      console.log("Error:", error);
+      // console.log("Error:", error);
       networkErrorHandeller(error);
     } finally {
-      setLoading(false);
+      setBtnLoading(false);
     }
   };
   if (loading) {
     return (
-      <div className="text-center">
-        {" "}
-        <SkeletonTable />
+      <>
+        <PageHeaderSkeleton />
         <br />
-      </div>
+        <CategoryFormSkeleton />
+      </>
     );
   }
   const propsData = {
@@ -267,8 +279,19 @@ const handleImageUpload = (file) => {
         onSubmit={handleSubmit(onFormSubmit)}
         className="mx-auto p-4 border border-gray-200 rounded-lg "
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className="mt-4">
+        <div className="flex lg:flex-row flex-col   gap-4 ">
+          <div className="mt-4 w-full">
+            <TextInput
+              name="title"
+              control={control}
+              label="Title Name *"
+              type="text"
+              placeholder="Create Title"
+              rules={{ required: "Title is required" }}
+              error={errors.title?.message} // Show error message
+            />
+          </div>
+          <div className="mt-4 w-full">
             <SingleSelect
               name="categories"
               control={control}
@@ -285,7 +308,7 @@ const handleImageUpload = (file) => {
             />
           </div>
 
-          <div className="mt-4">
+          <div className="mt-4 w-full">
             <SingleSelect
               name="author"
               control={control}
@@ -303,20 +326,10 @@ const handleImageUpload = (file) => {
           </div>
 
           {/* category */}
-          <div className="mt-4">
-            <TextInput
-              name="title"
-              control={control}
-              label="Title Name *"
-              type="text"
-              placeholder="Create Title"
-              rules={{ required: "Title is required" }}
-              error={errors.title?.message} // Show error message
-            />
-          </div>
+
           {/* video title*/}
           {singleCategory === "ভিডিও" ? (
-            <div className="mt-4">
+            <div className="mt-4 w-full">
               <TextInput
                 name="video_url"
                 control={control}
@@ -334,9 +347,19 @@ const handleImageUpload = (file) => {
             ""
           )}
         </div>
-
+        <div className="mt-4">
+          <TextAreaInput
+            name="subtitle"
+            control={control}
+            label="subtitle "
+            type="text"
+            placeholder="Enter subtitle"
+            // rules={{ required: "subtitle is required" }}
+            error={errors.subtitle?.message} // Show error message
+          />
+        </div>
         {/* Thumbnail Upload */}
-        <div className="mt-4 cursor-pointer">
+        <div className="mt-4 cursor-pointer mb-4">
           <ImageUpload
             name="article_imagee"
             control={control}
@@ -349,52 +372,8 @@ const handleImageUpload = (file) => {
         </div>
         {/* multiple image Upload */}
 
-        <div className="mt-4">
-          <TextAreaInput
-            name="subtitle"
-            control={control}
-            label="subtitle "
-            type="text"
-            placeholder="Enter subtitle"
-            // rules={{ required: "subtitle is required" }}
-            error={errors.subtitle?.message} // Show error message
-          />
-        </div>
-
-        <div className="">
-          <label className="block mb-2 text-sm font-medium text-gray-700 mt-4 ">
-            Content
-          </label>
-          <ReactQuill
-            className="font-bangla  "
-            value={editValue}
-            onChange={handleChange}
-            modules={{
-              toolbar: [
-                [{ header: "1" }, { header: "2" }, { font: [] }],
-                [{ list: "ordered" }, { list: "bullet" }],
-                ["bold", "italic", "underline"],
-                ["link", "image"], // Image button in the toolbar
-                [{ align: [] }],
-              ],
-            }}
-            formats={[
-              "header",
-              "font",
-              "bold",
-              "italic",
-              "underline",
-              "list",
-              "link",
-              "image",
-              "align",
-            ]}
-            ref={quillRef}
-            onImageUpload={handleImageUpload} // Handle image upload
-            theme="snow"
-          />
-        </div>
-
+        
+        <EditorSection seteditValue={seteditValue} />
         <div className="flex items-center gap-2 mt-4">
           <TextInput
             type="checkbox"
@@ -413,16 +392,14 @@ const handleImageUpload = (file) => {
         <button
           type="submit"
           className={`px-4 py-2 text-white rounded-md transition mt-4 ${
-            loading
+            btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={loading} // Disable button when loading
+          disabled={btnloading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Create News"}
+          {btnloading ? "Loading..." : "Create News"}
         </button>
-        <EditorSection seteditValue={seteditValue}/>
-        {editValue}
       </form>
     </>
   );
@@ -430,8 +407,8 @@ const handleImageUpload = (file) => {
 
 export default CreateNews;
 
-const EditorSection =({seteditValue})=>{
-  const [value,setValue] = useState("")
+const EditorSection = ({ seteditValue }) => {
+  const [value, setValue] = useState("");
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -446,107 +423,253 @@ const EditorSection =({seteditValue})=>{
         openOnClick: false,
       }),
       TextAlign.configure({
-        types: ['paragraph', 'heading'], // Optional: Define which types you want to apply alignment to
+        types: ["paragraph", "heading"], // Optional: Define which types you want to apply alignment to
       }),
       TableRow,
       TableHeader,
       TableCell,
-      
+      FontSize,
+      CustomHeading
     ],
-    content: '<p>Paste your styled content here…</p>',
-   
+    content: "<p>এখানে লিখুন...</p>",
+
     editorProps: {
       handlePaste(view, event) {
-        const clipboardData = event.clipboardData || window.clipboardData
-        const pastedContent = clipboardData.getData('text/html')
+        const clipboardData = event.clipboardData || window.clipboardData;
+        const pastedContent = clipboardData.getData("text/html");
 
         // Log the pasted HTML content
-        console.log('Pasted content:', pastedContent)
-        seteditValue(pastedContent)
-        setValue(pastedContent)
+        // console.log('Pasted content:', pastedContent)
+        seteditValue(pastedContent);
+        setValue(pastedContent);
         // If you want to handle the paste in a custom way, you can modify this content
         // For now, let's allow the default behavior (return false to not prevent paste)
-        return false
+        return false;
       },
     },
-    onUpdate({editor}){
-      const editorContent = editor.getHTML()
+    onUpdate({ editor }) {
+      const editorContent = editor.getHTML();
 
-      console.log('Editor content updated:', editorContent)
+      console.log("Editor content updated:", editorContent);
 
       // Update state to reflect real-time changes while typing
-      seteditValue(editorContent)
-      setValue(editorContent)
-    }
- 
-  })
+      seteditValue(editorContent);
+      setValue(editorContent);
+    },
+  });
+  const fileInputRef = useRef(null);
+
+  const handleButtonClick = () => {
+    fileInputRef.current.click();
+  };
   const handleImageUpload = (event) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (file && editor) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onload = () => {
-        editor.chain().focus().setImage({ src: reader.result }).run()
-      }
-      reader.readAsDataURL(file) // For local preview; use server upload if needed
+        editor.chain().focus().setImage({ src: reader.result }).run();
+      };
+      reader.readAsDataURL(file); // For local preview; use server upload if needed
     }
-  }
+  };
   const insertImageFromUrl = () => {
-    const url = prompt('Enter image URL')
+    const url = prompt("Enter image URL");
     if (url) {
-      editor.chain().focus().setImage({ src: url }).run()
+      editor.chain().focus().setImage({ src: url }).run();
     }
-  }
-  return(
+  };
+  const [selectedOption, setSelectedOption] = useState(null);
+  const options = [
+    { value: "left", label: "left" },
+    { value: "center", label: "center" },
+    { value: "right", label: "right" },
+  ];
+  const handleChange = (selected) => {
+    editor.chain().focus().setTextAlign(selected?.value).run();
+    setSelectedOption(selected);
+  };
+  return (
     <div>
-      <button onClick={insertImageFromUrl} className="bg-blue-500 text-white px-3 py-1 rounded">
-          Insert Image from URL
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }
+        >
+          H1
         </button>
-        <input type="file" accept="image/*" onChange={handleImageUpload} />
-      <button onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}>
-  H1
-</button>
-<button onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
-  H2
-</button>
-<button onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}>
-  H3
-</button>
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }
+        >
+          H2
+        </button>
+        <button
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 3 }).run()
+          }
+        >
+          H3
+        </button>
+        <button
+          onClick={insertImageFromUrl}
+          className="text-blue-500   px-3 py-1 rounded"
+          title="Insert Image from URL"
+        >
+          <FaImage />
+        </button>
+        <div className=" ">
+          {/* Hidden File Input */}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            ref={fileInputRef}
+            className="hidden"
+          />
 
-      <button onClick={() => editor.chain().focus().setTextAlign('left').run()}>Left</button>
-<button onClick={() => editor.chain().focus().setTextAlign('center').run()}>Center</button>
-<button onClick={() => editor.chain().focus().setTextAlign('right').run()}>Right</button>
-       <button
-  onClick={() => {
-    const url = window.prompt('Enter URL')
-    if (url) {
-      editor?.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
-    }
-  }}
->
-  Set Link
-</button>
+          {/* Upload Button */}
+          <button
+            type="button"
+            onClick={handleButtonClick}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold  rounded-lg shadow transition-all duration-200"
+          >
+            <FaCloudUploadAlt />
+          </button>
+        </div>
 
-      {/* {value} */}
-      <button onClick={() => editor?.chain().focus().toggleBulletList().run()}>
-        Bullet List
-      </button>
-      <button onClick={() => editor?.chain().focus().toggleOrderedList().run()}>
-        Ordered List
-      </button>
-      <input type="color" onChange={(e) => editor.chain().focus().setColor(e.target.value).run()} />
-      <button onClick={() => editor.chain().focus().toggleBold().run()}>Bold</button>
-      <button onClick={() => editor.chain().focus().toggleItalic().run()}>Italic</button>
-      <button onClick={() => editor.chain().focus().toggleUnderline().run()}>Underline</button>
-    
-      <button onClick={() => editor.chain().focus().insertTable({ rows: 2, cols: 2, withHeaderRow: true }).run()}>
-        Insert Table
-      </button>
-      <button onClick={() => editor.chain().focus().addColumnAfter().run()}>Add Column</button>
-      <button onClick={() => editor.chain().focus().addRowAfter().run()}>Add Row</button>
-      <button onClick={() => editor.chain().focus().deleteTable().run()}>Delete Table</button>
+        <Select
+          options={options}
+          value={selectedOption}
+          onChange={handleChange}
+          placeholder="left"
+        />
+
+        <button
+          onClick={() => {
+            const url = window.prompt("Enter URL");
+            if (url) {
+              editor
+                ?.chain()
+                .focus()
+                .extendMarkRange("link")
+                .setLink({ href: url })
+                .run();
+            }
+          }}
+        >
+          <FaLink />
+        </button>
+
+        {/* {value} */}
+        <button
+          onClick={() => editor?.chain().focus().toggleBulletList().run()}
+        >
+          <FaListUl />
+        </button>
+        <button
+          onClick={() => editor?.chain().focus().toggleOrderedList().run()}
+        >
+          <FaListOl />
+        </button>
+        <input
+          type="color"
+          onChange={(e) =>
+            editor.chain().focus().setColor(e.target.value).run()
+          }
+        />
+        <button onClick={() => editor.chain().focus().toggleBold().run()}>
+          <FaBold />
+        </button>
+        <button onClick={() => editor.chain().focus().toggleItalic().run()}>
+          <FaItalic />
+        </button>
+        <button onClick={() => editor.chain().focus().toggleUnderline().run()}>
+          <FaUnderline />
+        </button>
+      </div>
+
+      <EditorContent editor={editor} className=" " />
       <div dangerouslySetInnerHTML={{ __html: value }}></div>
-      <h1>sdfsdfsfsdfsdsdfsd</h1>
-       <EditorContent editor={editor}  className="border border-gray-300 p-4 rounded-md min-h-[200px] focus:outline-none focus:ring-2 focus:ring-blue-500"/>
     </div>
-  )
-}
+  );
+};
+
+const CustomHeading = Heading.extend({
+  renderHTML({ node, HTMLAttributes }) {
+    const level = node.attrs.level;
+    let style = '';
+    let className = '';
+
+    // Set styles based on heading level
+    switch (level) {
+      case 1:
+        className = 'text-3xl font-bold';
+        style = 'font-size: 32px; font-weight: bold;';
+        break;
+      case 2:
+        className = 'text-2xl font-semibold';
+        style = 'font-size: 24px; font-weight: 600;';
+        break;
+      case 3:
+        className = 'text-xl font-medium';
+        style = 'font-size: 20px; font-weight: 500;';
+        break;
+      default:
+        break;
+    }
+
+    return [
+      `h${level}`,
+      mergeAttributes(HTMLAttributes, {
+        class: className,
+        style,
+      }),
+      0,
+    ];
+  },
+});
+
+// extensions/FontSize.js
+ 
+// extensions/FontSize.js
+ 
+const FontSize = Mark.create({
+  name: 'fontSize',
+
+  addAttributes() {
+    return {
+      size: {
+        default: null,
+        parseHTML: element => {
+          const style = element.style.fontSize;
+          if (!style) return null;
+
+          const match = style.match(/^(\d+(?:\.\d+)?)px$/);
+          return match ? match[1] : null;
+        },
+        renderHTML: attributes => {
+          if (!attributes.size) return {};
+          return {
+            style: `font-size: ${attributes.size}px`,
+          };
+        },
+      },
+    };
+  },
+
+  parseHTML() {
+    return [
+      {
+        style: 'font-size',
+      },
+    ];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ['span', mergeAttributes(HTMLAttributes), 0];
+  },
+});
+
+ 

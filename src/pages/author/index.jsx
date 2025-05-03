@@ -7,18 +7,17 @@ import { MdDelete } from "react-icons/md";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
-
-import { SkeletonTable } from "../../components/loading/skeleton-table";
+import ListSkeleton from "../../components/loading/ListSkeleton";
 import DataTable, { createTheme } from "react-data-table-component";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { confirmAlert } from "react-confirm-alert";
-import { ThemeContext } from "../../components/ThemeContext";
+
 
 export const AuthorList = () => {
   const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
   console.log("author", author);
-    const { theme } = useContext(ThemeContext);
+  
 
   // Fetch categories from API
   const fetchAuthor = useCallback(async () => {
@@ -67,13 +66,6 @@ export const AuthorList = () => {
       ],
     });
   };
-  if (loading) {
-    return (
-      <div>
-        <SkeletonTable />
-      </div>
-    );
-  }
 
   const propsData = {
     pageTitle: "Author List",
@@ -136,8 +128,18 @@ export const AuthorList = () => {
 
   return (
     <>
-      <PageHeader propsData={propsData} />
-      <DataTable columns={columns} theme={theme === "dark" ? "darkTheme" : "lightTheme"} data={author} pagination />
+      {loading ? (
+        <ListSkeleton />
+      ) : (
+        <>
+          <PageHeader propsData={propsData} />
+          <DataTable
+            columns={columns}
+            data={author}
+            pagination
+          />
+        </>
+      )}
     </>
   );
 };
