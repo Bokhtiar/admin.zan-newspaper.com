@@ -16,6 +16,8 @@ import { PageHeader } from "../../components/pageHandle/pagehandle";
 import ReactQuill from "react-quill";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
+// import { CKEditor } from "@ckeditor/ckeditor5-react";
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const EditNews = () => {
   const [categories, setCategories] = useState([]);
@@ -26,6 +28,9 @@ const EditNews = () => {
   const { newsId } = useParams(); // URL থেকে ID নেওয়া
   const navigate = useNavigate();
   const [editorValue, setEditorValue] = useState("");
+  const [editorContent, setEditorContent] = useState("");
+
+  console.log("news",news)
 
   const {
     handleSubmit,
@@ -98,7 +103,7 @@ const EditNews = () => {
         setValue("status", news?.status === 1 ? true : false);
         if (news?.content) {
           setValue("content", news?.content);
-          setEditorValue(news?.content);
+          // setEditorValue(news?.content);
         }
       }
     } catch (error) {
@@ -143,14 +148,13 @@ const EditNews = () => {
     formData.append("content", editorValue); // Assuming editor value holds content
     formData.append("status", data?.status ? 1 : 0);
 
- 
     formData.append("article_image", data?.article_image); // Assuming it's an image file
-  
+
     formData.append("_method", "PUT");
     // console.log("formData", formData);
 
     try {
-      setBtnLoading(true)
+      setBtnLoading(true);
       const response = await NetworkServices.News.update(newsId, formData);
       if (response?.status === 200) {
         Toastify.Success("News Updated Successfully.");
@@ -179,7 +183,6 @@ const EditNews = () => {
       </>
     );
   }
-
 
   return (
     <>
@@ -262,7 +265,7 @@ const EditNews = () => {
           />
         </div>
 
-        <div className="mt-4  ">
+        {/* <div className="mt-4  ">
           <label htmlFor="editor" className="block text-sm  text-gray-500 mb-1">
             Content * 
           </label>
@@ -306,7 +309,7 @@ const EditNews = () => {
               "code-block",
             ]}
           />
-        </div>
+        </div> */}
         {/* 
         <div className="flex items-center gap-2 ">
           <TextInput
@@ -321,6 +324,18 @@ const EditNews = () => {
             Status
           </label>
         </div> */}
+
+        {/* <div className="mt-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Article Content *
+          </label>
+          <RichEditor setEditorContent={setEditorContent} />
+        </div> */}
+
+        <div
+          className="px-4"
+          dangerouslySetInnerHTML={{ __html: editorContent }}
+        />
         <div className="flex items-center  mt-4 gap-2 ">
           <TextCheckbox
             type="checkbox"
@@ -353,3 +368,24 @@ const EditNews = () => {
 };
 
 export default EditNews;
+
+// const RichEditor = ({ editorContent, setEditorContent }) => {
+
+//   // console.log("content",content)
+//   return (
+//     <>
+//       <CKEditor
+//         editor={ClassicEditor}
+//         data={editorContent || "<p>Write something...</p>"}
+//         onChange={(event, editor) => {
+//           const data = editor.getData();
+//           console.log(data);
+//           setEditorContent(data);
+//         }}
+//       />
+//       <h3>Output:</h3>
+//       <div dangerouslySetInnerHTML={{ __html: editorContent }} />
+//       {/* <p>editorContent</p> */}
+//     </>
+//   );
+// };

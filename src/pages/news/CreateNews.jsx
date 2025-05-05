@@ -1,6 +1,4 @@
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic"; 
-  
-import React, { useCallback, useEffect, useRef, useState } from "react"; 
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { IoMdCreate } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
@@ -14,20 +12,22 @@ import {
 } from "../../components/input";
 import { networkErrorHandeller } from "../../utils/helper";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
-import { PageHeader } from "../../components/pageHandle/pagehandle"; 
- 
+import { PageHeader } from "../../components/pageHandle/pagehandle";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
-import { CKEditor } from "@ckeditor/ckeditor5-react"; 
+import { EditorSection } from "./RichEditor";
+
+
 const CreateNews = () => {
   const [categories, setCategories] = useState([]);
   const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
   const [btnloading, setBtnLoading] = useState(false);
-  const [editValue, seteditValue] = useState(""); 
+
   const [singleCategory, setSingleCategory] = useState([]);
   const [smallloading, setSmallLoading] = useState(false);
-  
+  const [value,seteditValue]=useState("")
+
   const navigate = useNavigate();
 
   const {
@@ -151,7 +151,7 @@ const CreateNews = () => {
     formData.append("subtitle", data.subtitle);
 
     formData.append("status", data.status ? "1" : "0");
-    formData.append("content", editValue);
+    formData.append("content", value);
 
     // ফাইল আপলোডের জন্য
     if (data.article_image) {
@@ -294,8 +294,19 @@ const CreateNews = () => {
         </div>
         {/* multiple image Upload */}
 
-        
-        <RichEditor seteditValue={seteditValue} />
+        <div className="mt-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2 ">
+            Article Content *
+          </label>
+          <div className="">
+          <EditorSection seteditValue={seteditValue}/>
+          </div>
+        </div>
+
+        {/* <div
+          className="px-4"
+          dangerouslySetInnerHTML={{ __html: value }}
+        /> */}
         <div className="flex items-center gap-2 mt-4">
           <TextInput
             type="checkbox"
@@ -329,23 +340,23 @@ const CreateNews = () => {
 
 export default CreateNews;
 
+// const RichEditor = ({ editorContent, setEditorContent }) => {
 
-const RichEditor = ({ seteditValue }) => {
-  const [content, setContent] = useState('');
-  return(
-    <>
-       <CKEditor
-        editor={ClassicEditor}
-        data="<p>Write something...</p>"
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          console.log(data);
-          setContent(data);
-        }}
-      />
-       <h3>Output:</h3>
-       <div dangerouslySetInnerHTML={{ __html: content }} />
-    </>
-  )
-}
- 
+//   // console.log("content",content)
+//   return (
+//     <>
+//       <CKEditor
+//         editor={ClassicEditor}
+//         data="<p>Write something...</p>"
+//         onChange={(event, editor) => {
+//           const data = editor.getData();
+//           console.log(data);
+//           setEditorContent(data);
+//         }}
+//       />
+//       <h3>Output:</h3>
+//       <div dangerouslySetInnerHTML={{ __html: editorContent }} />
+//       {/* <p>editorContent</p> */}
+//     </>
+//   );
+// };

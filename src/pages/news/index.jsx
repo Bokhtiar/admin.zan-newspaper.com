@@ -24,7 +24,7 @@ export const NewsList = () => {
   const [loading, setLoading] = useState(false);
   const { theme } = useContext(ThemeContext);
 
-  // console.log("news", news);
+  console.log("news", news);
   const {
     handleSubmit,
     formState: { errors },
@@ -188,7 +188,7 @@ export const NewsList = () => {
             <p className="line-clamp-2 mb-2">{contentText}</p>{" "}
             {/* Limit the content to 2 lines */}
             <Link
-              to={`/dashboard/single-content/${row?.article_id}`}
+              to={`/dashboard/single-content/${row?.slug}`}
               className=" text-green-600 dark:text-gray-700 hover:underline mt-2"
             >
               See More
@@ -201,7 +201,7 @@ export const NewsList = () => {
       name: "Action",
       cell: (row) => (
         <div className="flex gap-2">
-          <Link to={`/dashboard/edit-news/${row?.article_id}`}>
+          <Link to={`/dashboard/edit-news/${row?.slug}`}>
             <FaEdit className="text-primary text-xl" />
           </Link>
           <MdDelete
