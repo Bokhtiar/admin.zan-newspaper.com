@@ -16,6 +16,7 @@ import { PageHeader } from "../../components/pageHandle/pagehandle";
 import ReactQuill from "react-quill";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
+import { EditorSection } from "./RichEditor";
 // import { CKEditor } from "@ckeditor/ckeditor5-react";
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
@@ -27,10 +28,11 @@ const EditNews = () => {
   const [btnloading, setBtnLoading] = useState(false);
   const { newsId } = useParams(); // URL থেকে ID নেওয়া
   const navigate = useNavigate();
-  const [editorValue, setEditorValue] = useState("");
-  const [editorContent, setEditorContent] = useState("");
+  // const [editorValue, setEditorValue] = useState("");
+  // const [editorContent, setEditorContent] = useState("");
+   const [value,seteditValue]=useState("")
 
-  console.log("news",news)
+  console.log("news", news);
 
   const {
     handleSubmit,
@@ -88,7 +90,7 @@ const EditNews = () => {
   }, [fetchAuthor]);
 
   const newsData = useCallback(async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const response = await NetworkServices.News.show(newsId);
       if (response?.status === 200) {
@@ -103,7 +105,7 @@ const EditNews = () => {
         setValue("status", news?.status === 1 ? true : false);
         if (news?.content) {
           setValue("content", news?.content);
-          // setEditorValue(news?.content);
+          
         }
       }
     } catch (error) {
@@ -119,6 +121,7 @@ const EditNews = () => {
     news?.status,
     news?.subtitle,
     news?.title,
+    
   ]);
   // useEffect(() => {
   //   if (news?.content) {
@@ -135,8 +138,8 @@ const EditNews = () => {
   }, [fetchCategory, newsData, newsId]);
 
   const onFormSubmit = async (data) => {
-    // console.log("Data", data);
-    setLoading(true);
+    console.log("Data", data);
+    // setLoading(true);
 
     const formData = new FormData();
 
@@ -145,10 +148,10 @@ const EditNews = () => {
     formData.append("author_id", data?.author_id);
     formData.append("title", data?.title);
     formData.append("subtitle", data?.subtitle);
-    formData.append("content", editorValue); // Assuming editor value holds content
+    formData.append("content", value); 
     formData.append("status", data?.status ? 1 : 0);
-
-    formData.append("article_image", data?.article_image); // Assuming it's an image file
+    formData.append("article_image", data?.article_image); 
+    
 
     formData.append("_method", "PUT");
     // console.log("formData", formData);
@@ -265,77 +268,15 @@ const EditNews = () => {
           />
         </div>
 
-        {/* <div className="mt-4  ">
-          <label htmlFor="editor" className="block text-sm  text-gray-500 mb-1">
-            Content * 
-          </label>
-          <ReactQuill
-            className="h-[200px] mb-24 md:mb-20 lg:mb-16 "
-            id="editor"
-            name="content" 
-            value={editorValue} 
-            onChange={(value) => {
-              setEditorValue(value);
-              setValue("content", value); 
-            }}
-            theme="snow" 
-            modules={{
-              toolbar: [
-                [{ header: "1" }, { header: "2" }, { font: [] }],
-                [{ list: "ordered" }, { list: "bullet" }],
-                ["bold", "italic", "underline", "strike"],
-                [{ align: [] }],
-                ["link", "image"],
-                [{ color: [] }, { background: [] }],
-                [{ script: "sub" }, { script: "super" }],
-                ["blockquote", "code-block"],
-              ],
-            }}
-            formats={[
-              "header",
-              "font",
-              "list",
-              "bold",
-              "italic",
-              "underline",
-              "strike",
-              "align",
-              "link",
-              "image",
-              "color",
-              "background",
-              "script",
-              "blockquote",
-              "code-block",
-            ]}
-          />
-        </div> */}
-        {/* 
-        <div className="flex items-center gap-2 ">
-          <TextInput
-            type="checkbox"
-            name="status"
-            className="w-5 h-5 "
-            control={control}
-            onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
-            checked={watch("status") == 1}
-          />
-          <label htmlFor="status" className="text-sm text-gray-700">
-            Status
-          </label>
-        </div> */}
 
-        {/* <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="mt-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2 ">
             Article Content *
           </label>
-          <RichEditor setEditorContent={setEditorContent} />
-        </div> */}
-
-        <div
-          className="px-4"
-          dangerouslySetInnerHTML={{ __html: editorContent }}
-        />
+          <div className="">
+            <EditorSection initialContent={news?.content}  seteditValue={seteditValue} />
+          </div>
+        </div>
         <div className="flex items-center  mt-4 gap-2 ">
           <TextCheckbox
             type="checkbox"

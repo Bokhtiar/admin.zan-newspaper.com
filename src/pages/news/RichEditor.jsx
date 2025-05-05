@@ -1,6 +1,6 @@
 
 import { useEditor, EditorContent, mergeAttributes, Mark } from "@tiptap/react";
-import React, {  useRef, useState } from "react"; 
+import React, {  useEffect, useRef, useState } from "react"; 
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import TextStyle from "@tiptap/extension-text-style";
@@ -25,7 +25,7 @@ import {
 import Heading from "@tiptap/extension-heading";
 
 
-export const EditorSection = ({ seteditValue }) => {
+export const EditorSection = ({ initialContent, seteditValue }) => {
     const [value, setValue] = useState("");
     const editor = useEditor({
       extensions: [
@@ -76,6 +76,11 @@ export const EditorSection = ({ seteditValue }) => {
         setValue(editorContent);
       },
     });
+    useEffect(() => {
+      if (editor && initialContent) {
+        editor.commands.setContent(initialContent);
+      }
+    }, [editor, initialContent]);
     const fileInputRef = useRef(null);
   
     const handleButtonClick = () => {
