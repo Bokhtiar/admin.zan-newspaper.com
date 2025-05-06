@@ -22,7 +22,7 @@ const Sidebar = ({ toggleSidebar, menuOpen, menuStyle }) => {
   return (
     <>
       {menuStyle === "hover" && (
-        <div className=" w-20 hover:w-64 h-screen bg-lightCard dark:bg-darkCard dark:text-darkTitle py-4 group  transition-all duration-300 ease-in-out overflow-hidden  z-50 ">
+        <div className=" w-20 hover:w-52 h-screen bg-lightCard dark:bg-darkCard dark:text-darkTitle py-4 group  transition-all duration-300 ease-in-out overflow-hidden  z-50 ">
           {/* Logo */}
           <div className="flex items-center space-x-2 pb-[15px] border-b border-gray-300 pl-4 ">
             {/* <div className="text-blue-500 text-2xl font-bold">R</div> */}

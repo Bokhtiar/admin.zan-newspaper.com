@@ -26,13 +26,10 @@ const EditNews = () => {
   const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
   const [btnloading, setBtnLoading] = useState(false);
-  const { newsId } = useParams(); // URL থেকে ID নেওয়া
+  const { id } = useParams();
   const navigate = useNavigate();
-  // const [editorValue, setEditorValue] = useState("");
-  // const [editorContent, setEditorContent] = useState("");
-   const [value,seteditValue]=useState("")
-
-  console.log("news", news);
+  const [value, seteditValue] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const {
     handleSubmit,
@@ -92,7 +89,7 @@ const EditNews = () => {
   const newsData = useCallback(async () => {
     // setLoading(true);
     try {
-      const response = await NetworkServices.News.show(newsId);
+      const response = await NetworkServices.News.show(id);
       if (response?.status === 200) {
         const newsData = response?.data?.data?.data;
         setNews(newsData);
@@ -103,17 +100,15 @@ const EditNews = () => {
         setValue("title", news?.title);
 
         setValue("status", news?.status === 1 ? true : false);
-        if (news?.content) {
-          setValue("content", news?.content);
-          
-        }
+
+        setValue("content", news?.content);
       }
     } catch (error) {
       networkErrorHandeller(error);
     }
     setLoading(false);
   }, [
-    newsId,
+    id,
     setValue,
     news.category_id,
     news.author_id,
@@ -121,7 +116,6 @@ const EditNews = () => {
     news?.status,
     news?.subtitle,
     news?.title,
-    
   ]);
   // useEffect(() => {
   //   if (news?.content) {
@@ -132,10 +126,10 @@ const EditNews = () => {
 
   useEffect(() => {
     fetchCategory();
-    if (newsId) {
+    if (id) {
       newsData();
     }
-  }, [fetchCategory, newsData, newsId]);
+  }, [fetchCategory, newsData, id]);
 
   const onFormSubmit = async (data) => {
     console.log("Data", data);
@@ -148,17 +142,22 @@ const EditNews = () => {
     formData.append("author_id", data?.author_id);
     formData.append("title", data?.title);
     formData.append("subtitle", data?.subtitle);
-    formData.append("content", value); 
+    formData.append("content", news?.content);
     formData.append("status", data?.status ? 1 : 0);
-    formData.append("article_image", data?.article_image); 
-    
+
+    if (data.article_image) {
+      formData.append("article_image", data?.article_image);
+    }
 
     formData.append("_method", "PUT");
     // console.log("formData", formData);
 
     try {
       setBtnLoading(true);
-      const response = await NetworkServices.News.update(newsId, formData);
+      const response = await NetworkServices.News.update(
+        news.article_id,
+        formData
+      );
       if (response?.status === 200) {
         Toastify.Success("News Updated Successfully.");
         navigate("/dashboard/news");
@@ -195,7 +194,7 @@ const EditNews = () => {
         className="mx-auto p-4 border border-gray-200 rounded-lg "
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <SingleSelect
               name="categories"
               control={control}
@@ -209,7 +208,46 @@ const EditNews = () => {
               isClearable={true}
               // error={errors} // Pass an error message if validation fails
             />
+          </div> */}
+
+          <div className="mt-4 w-full">
+            <SingleSelect
+              name="category"
+              control={control}
+              options={categories}
+              rules={{ required: "Category selection is required" }}
+              onSelected={(selected) => {
+                setSelectedCategory(selected);
+                setValue("category_id", selected?.category_id);
+              }}
+              placeholder={news?.show_category?.category_name}
+              error={errors.category?.message}
+              label="Choose category *"
+              isClearable={true}
+            />
           </div>
+
+          {/* Show Child Category if exists */}
+          {selectedCategory?.child_category?.length > 0 && (
+            <div className="mt-4 w-full">
+              <SingleSelect
+                name="child_category"
+                control={control}
+                options={selectedCategory.child_category.map((child) => ({
+                  label: child.category_name,
+                  value: child.category_id,
+                }))}
+                rules={{ required: "Sub-category selection is required" }}
+                onSelected={(selected) =>
+                  setValue("child_category_id", selected?.value)
+                }
+                placeholder={`Select a sub-category of ${selectedCategory.category_name}`}
+                error={errors.child_category?.message}
+                label={`Choose sub-category *`}
+                isClearable={true}
+              />
+            </div>
+          )}
 
           <div className="mt-4">
             <SingleSelect
@@ -244,14 +282,14 @@ const EditNews = () => {
         {/* Thumbnail Upload */}
         <div className="mt-4 cursor-pointer">
           <ImageUpload
-            name="article_imagee"
+            name="article_image"
             control={control}
             label="Article Image"
             file="image *"
             // required
             onUpload={(file) => setValue("article_image", file)}
             imgUrl={news?.article_image}
-            error={errors.article_imagee?.message}
+            error={errors.article_image?.message}
           />
         </div>
         {/* multiple image Upload */}
@@ -268,13 +306,15 @@ const EditNews = () => {
           />
         </div>
 
-
         <div className="mt-4">
           <label className="block text-sm font-medium text-gray-700 mb-2 ">
             Article Content *
           </label>
           <div className="">
-            <EditorSection initialContent={news?.content}  seteditValue={seteditValue} />
+            <EditorSection
+              initialContent={news?.content}
+              seteditValue={seteditValue}
+            />
           </div>
         </div>
         <div className="flex items-center  mt-4 gap-2 ">
@@ -286,7 +326,7 @@ const EditNews = () => {
             onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
             checked={watch("status") == 1} // If status is 1, checked = true
           />
-          <label htmlFor="status" className="text-sm text-gray-700 -mt-5">
+          <label htmlFor="status" className="text-sm text-gray-700 ">
             Status
           </label>
         </div>

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { IoIosList } from "react-icons/io";
@@ -8,20 +8,62 @@ import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
 
-import { SkeletonTable } from "../../components/loading/skeleton-table";
-import DataTable, { createTheme } from "react-data-table-component";
+
+import DataTable from "react-data-table-component";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { confirmAlert } from "react-confirm-alert";
-import { ThemeContext } from "../../components/ThemeContext";
+
 import ListSkeleton from "../../components/loading/ListSkeleton";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 
 export const CategoryList = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { theme } = useContext(ThemeContext);
+  
   const [selectedCategories, setSelectedCategories] = useState([]);
 
-  console.log("selectedCategories", selectedCategories);
+  const [expandedRows, setExpandedRows] = useState([]); // <-- Moved inside
+
+  const toggleRow = (id) => {
+    setExpandedRows((prev) =>
+      prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
+    );
+  };
+
+  const renderCategoryName = (row) => {
+    const hasChild = row.child_category && row.child_category.length > 0;
+    const isExpanded = expandedRows.includes(row.category_id);
+
+    return (
+      <div>
+        <div className="flex items-center gap-3">
+        <span className="font-medium">{row.category_name}</span>
+          {hasChild && (
+            <button
+              onClick={() => toggleRow(row.category_id)}
+              className="text-xs"
+            >
+              {isExpanded ? <FaChevronDown /> : <FaChevronRight />}
+            </button>
+          )}
+          
+        </div>
+
+        {hasChild && isExpanded && (
+          <div className="ml-10 mt-1 space-y-1">
+            {row.child_category.map((child) => (
+              <div key={child.category_id} className="text-sm text-gray-600">
+                └ {child.category_name}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+
+  console.log("categories", categories);
 
   // Fetch categories from API
   const priorityNavber = useCallback(async () => {
@@ -30,7 +72,7 @@ export const CategoryList = () => {
       const response = await NetworkServices.Category.priorityNav({
         priority_id: JSON.stringify(selectedCategories),
       });
-      console.log("pp", response);
+     
       if (response && response.status === 200) {
         Toastify.Success(" Created.");
         fetchCategory();
@@ -104,6 +146,7 @@ export const CategoryList = () => {
         : [...prev, categoryId]
     );
   };
+
   const columns = [
     {
       name: "priority Navber",
@@ -132,9 +175,8 @@ export const CategoryList = () => {
     },
     {
       name: "Category Name",
-      cell: (row) => row?.category_name,
+      cell: (row) => renderCategoryName(row),
     },
-
     {
       name: "Action",
       cell: (row) => (
@@ -149,20 +191,7 @@ export const CategoryList = () => {
         </div>
       ),
     },
-  ];
-
-  createTheme("lightTheme", {
-    text: { primary: "#000", secondary: "#555" },
-    background: { default: "#ffffff" },
-    divider: { default: "#ddd" },
-  });
-
-  createTheme("darkTheme", {
-    text: { primary: "#ffffff", secondary: "#bbb" },
-    background: { default: "#9CA3AF" },
-    divider: { default: "#444" },
-  });
-
+  ]
   return (
     <>
       {loading ? (
@@ -184,3 +213,5 @@ export const CategoryList = () => {
     </>
   );
 };
+
+

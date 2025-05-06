@@ -27,18 +27,19 @@ export const menuData = [
     path: "/dashboard/news",
   },
   {
-    title: "Home Page",
+    title: "Home Layout",
     icon: <IoHome />,
     path: "/dashboard/home-news",
   },
   {
-    title: "Single add image",
-    icon: <FaImage />,
-    path: "/dashboard/singleaddimage",
-  },
-  {
-    title: "Hero Page",
+    title: "Hero Part",
     icon: <FaAddressCard />,
     path: "/dashboard/hero",
   },
+  {
+    title: "Ads",
+    icon: <FaImage />,
+    path: "/dashboard/singleaddimage",
+  },
+ 
 ];

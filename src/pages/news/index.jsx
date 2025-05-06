@@ -135,7 +135,7 @@ export const NewsList = () => {
   if (loading) {
     return (
       <div>
-        <ListSkeleton/>
+        <ListSkeleton />
       </div>
     );
   }
@@ -243,7 +243,7 @@ export const NewsList = () => {
           isClearable={true}
           // error={errors} // Pass an error message if validation fails
         />
-        <div className="mb-6">
+        <div className="">
           <label
             htmlFor="textInput"
             className="block text-sm  text-gray-500 mb-1"
@@ -260,14 +260,14 @@ export const NewsList = () => {
           />
         </div>
 
-        <div className="mb-6">
+        <div className="">
           <label className="block text-sm text-gray-500 mb-1">
             Start Date:
           </label>
           <DatePicker
             selected={startDate ? new Date(startDate) : null}
             onChange={(date) => {
-              const formattedDate = date.toISOString().split("T")[0]; 
+              const formattedDate = date.toISOString().split("T")[0];
               setStartDate(formattedDate);
             }}
             dateFormat="yyyy-MM-dd"
@@ -276,12 +276,12 @@ export const NewsList = () => {
           />
         </div>
 
-        <div className="mb-6">
+        <div className="">
           <label className="block text-sm text-gray-500 mb-1">End Date:</label>
           <DatePicker
             selected={endDate ? new Date(endDate) : null}
             onChange={(date) => {
-              const formattedDate = date.toISOString().split("T")[0]; 
+              const formattedDate = date.toISOString().split("T")[0];
               setEndDate(formattedDate);
             }}
             dateFormat="yyyy-MM-dd"
@@ -291,12 +291,9 @@ export const NewsList = () => {
         </div>
       </div>
 
-      <DataTable
-        columns={columns}
-        theme={theme === "dark" ? "darkTheme" : "lightTheme"}
-        data={news}
-        pagination
-      />
+      <div className="mt-5">
+        <DataTable columns={columns} data={news} pagination />
+      </div>
     </>
   );
 };

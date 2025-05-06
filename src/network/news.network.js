@@ -24,6 +24,7 @@ export const show = async(id) => {
 
 /* reosurce update */
 export const update = async(id, data) => {
+  console.log("ggggg",id)
     return await privateRequest.post(`/admin/news/${id}`, data)
 }
 

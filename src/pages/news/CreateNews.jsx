@@ -17,7 +17,6 @@ import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 import { EditorSection } from "./RichEditor";
 
-
 const CreateNews = () => {
   const [categories, setCategories] = useState([]);
   const [author, setAuthor] = useState([]);
@@ -26,9 +25,13 @@ const CreateNews = () => {
 
   const [singleCategory, setSingleCategory] = useState([]);
   const [smallloading, setSmallLoading] = useState(false);
-  const [value,seteditValue]=useState("")
+  const [value, seteditValue] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const navigate = useNavigate();
+
+  console.log("categories", categories);
+  console.log("selectedCategory", selectedCategory);
 
   const {
     handleSubmit,
@@ -42,7 +45,7 @@ const CreateNews = () => {
     },
   });
 
-  const selectedCategory = watch("category_id");
+  // const selectedCategory = watch("category_id");
   const selectedCategoryNumber = Number(selectedCategory); // Convert to number
   // console.log("selectedCategory", selectedCategoryNumber);
 
@@ -117,38 +120,19 @@ const CreateNews = () => {
     fetchAuthor();
   }, [fetchAuthor]);
 
-  // const onFormSubmit = async (data) => {
 
-  //   const payload = {
-  //     ...data,
-  //     status: data.status ? 1 : 0,
-  //   };
-
-  //   console.log("payload", payload);
-  //   try {
-  //     setLoading(true);
-  //     const response = await NetworkServices.Food.store(payload);
-  //     console.log("objecttt", response);
-  //     if (response && response.status === 200) {
-  //       navigate("/dashboard/food");
-  //       return Toastify.Success("Category Created.");
-  //     }
-  //   } catch (error) {
-  //     console.log("error", error);
-  //     networkErrorHandeller(error);
-  //   }
-  //   setLoading(false);
-  // };
 
   const onFormSubmit = async (data) => {
     // console.log("data", data);
     const formData = new FormData();
 
     // ফর্মের অন্যান্য ডাটা FormData তে অ্যাড করুন
-    formData.append("category_id", data.category_id);
+    const categoryToSend = data.child_category_id ? data.child_category_id : data.category_id;
+    formData.append("category_id", categoryToSend);
     formData.append("author_id", data.author_id);
     formData.append("title", data.title);
     formData.append("subtitle", data.subtitle);
+    // formData.append("child_category_id", data.child_category_id);
 
     formData.append("status", data.status ? "1" : "0");
     formData.append("content", value);
@@ -213,7 +197,7 @@ const CreateNews = () => {
               error={errors.title?.message} // Show error message
             />
           </div>
-          <div className="mt-4 w-full">
+          {/* <div className="mt-4 w-full">
             <SingleSelect
               name="categories"
               control={control}
@@ -228,7 +212,46 @@ const CreateNews = () => {
               isClearable={true}
               // error={errors} // Pass an error message if validation fails
             />
+          </div> */}
+          {/* Main Category Selection */}
+          <div className="mt-4 w-full">
+            <SingleSelect
+              name="category"
+              control={control}
+              options={categories}
+              rules={{ required: "Category selection is required" }}
+              onSelected={(selected) => {
+                setSelectedCategory(selected); 
+                setValue("category_id", selected?.category_id); 
+              }}
+              placeholder="Select a category"
+              error={errors.category?.message}
+              label="Choose category *"
+              isClearable={true}
+            />
           </div>
+
+          {/* Show Child Category if exists */}
+          {selectedCategory?.child_category?.length > 0 && (
+            <div className="mt-4 w-full">
+              <SingleSelect
+                name="child_category"
+                control={control}
+                options={selectedCategory.child_category.map((child) => ({
+                  label: child.category_name,
+                  value: child.category_id,
+                }))}
+                rules={{ required: "Sub-category selection is required" }}
+                onSelected={(selected) =>
+                  setValue("child_category_id", selected?.value)
+                }
+                placeholder={`Select a sub-category of ${selectedCategory.category_name}`}
+                error={errors.child_category?.message}
+                label={`Choose sub-category *`}
+                isClearable={true}
+              />
+            </div>
+          )}
 
           <div className="mt-4 w-full">
             <SingleSelect
@@ -299,7 +322,7 @@ const CreateNews = () => {
             Article Content *
           </label>
           <div className="">
-          <EditorSection seteditValue={seteditValue}/>
+            <EditorSection seteditValue={seteditValue} />
           </div>
         </div>
 

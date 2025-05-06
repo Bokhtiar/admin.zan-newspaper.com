@@ -45,7 +45,7 @@ const appRoutes = [
       /** news */
       { path: "news", element: <NewsList /> },
       { path: "create-news", element: <CreateNews /> },
-      { path: "edit-news/:newsId", element: <EditNews /> },
+      { path: "edit-news/:id", element: <EditNews /> },
       { path: "single-content/:id", element: <SingleContent /> },
       // single add image
       { path: "singleaddimage", element: <SingleItemList /> },

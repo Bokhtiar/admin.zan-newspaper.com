@@ -49,7 +49,7 @@ export const EditorSection = ({ initialContent, seteditValue }) => {
         FontSize,
         CustomHeading
       ],
-      content: "<p>এখানে লিখুন...</p>",
+      // content: "<p>এখানে লিখুন...</p>",
       
   
       editorProps: {
@@ -215,7 +215,7 @@ export const EditorSection = ({ initialContent, seteditValue }) => {
         </div>
   
         <EditorContent editor={editor} className=" " />
-        <div dangerouslySetInnerHTML={{ __html: value }}></div>
+        {/* <div dangerouslySetInnerHTML={{ __html: value }}></div> */}
       </div>
     );
   };
