@@ -95,6 +95,7 @@ const EditNews = () => {
         setNews(newsData);
 
         setValue("category_id", news?.category_id);
+        setValue("child_category", news?.category_id);
         setValue("author_id", news?.author_id);
         setValue("subtitle", news?.subtitle);
         setValue("title", news?.title);
@@ -227,27 +228,28 @@ const EditNews = () => {
             />
           </div>
 
+
           {/* Show Child Category if exists */}
-          {selectedCategory?.child_category?.length > 0 && (
+          {/* {selectedCategory?.child_category?.length > 0 && ( */}
             <div className="mt-4 w-full">
               <SingleSelect
                 name="child_category"
                 control={control}
-                options={selectedCategory.child_category.map((child) => ({
-                  label: child.category_name,
-                  value: child.category_id,
-                }))}
+                // options={selectedCategory.child_category.map((child) => ({
+                //   label: child.category_name,
+                //   value: child.category_id,
+                // }))}
                 rules={{ required: "Sub-category selection is required" }}
                 onSelected={(selected) =>
                   setValue("child_category_id", selected?.value)
                 }
-                placeholder={`Select a sub-category of ${selectedCategory.category_name}`}
+                // placeholder={`Select a sub-category of ${selectedCategory.category_name}`}
                 error={errors.child_category?.message}
                 label={`Choose sub-category *`}
                 isClearable={true}
               />
             </div>
-          )}
+          {/* )} */}
 
           <div className="mt-4">
             <SingleSelect

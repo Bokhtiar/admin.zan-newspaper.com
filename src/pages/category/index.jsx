@@ -14,7 +14,7 @@ import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { confirmAlert } from "react-confirm-alert";
 
 import ListSkeleton from "../../components/loading/ListSkeleton";
-import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+
 
 export const CategoryList = () => {
   const [categories, setCategories] = useState([]);
@@ -22,52 +22,12 @@ export const CategoryList = () => {
   
   const [selectedCategories, setSelectedCategories] = useState([]);
 
-  const [expandedRows, setExpandedRows] = useState([]); // <-- Moved inside
-
-  const toggleRow = (id) => {
-    setExpandedRows((prev) =>
-      prev.includes(id) ? prev.filter((rowId) => rowId !== id) : [...prev, id]
-    );
-  };
-
-  const renderCategoryName = (row) => {
-    const hasChild = row.child_category && row.child_category.length > 0;
-    const isExpanded = expandedRows.includes(row.category_id);
-
-    return (
-      <div>
-        <div className="flex items-center gap-3">
-        <span className="font-medium">{row.category_name}</span>
-          {hasChild && (
-            <button
-              onClick={() => toggleRow(row.category_id)}
-              className="text-xs"
-            >
-              {isExpanded ? <FaChevronDown /> : <FaChevronRight />}
-            </button>
-          )}
-          
-        </div>
-
-        {hasChild && isExpanded && (
-          <div className="ml-10 mt-1 space-y-1">
-            {row.child_category.map((child) => (
-              <div key={child.category_id} className="text-sm text-gray-600">
-                └ {child.category_name}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  };
-
 
   console.log("categories", categories);
 
   // Fetch categories from API
   const priorityNavber = useCallback(async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const response = await NetworkServices.Category.priorityNav({
         priority_id: JSON.stringify(selectedCategories),
@@ -86,12 +46,13 @@ export const CategoryList = () => {
 
   // Fetch categories from API
   const fetchCategory = useCallback(async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const response = await NetworkServices.Category.index();
       console.log(response);
       if (response && response.status === 200) {
-        setCategories(response?.data?.data || []);
+        const result = response?.data?.data.filter((item)=>!item?.parent_id)
+        setCategories(result || []);
       }
     } catch (error) {
       console.log(error);
@@ -149,6 +110,10 @@ export const CategoryList = () => {
 
   const columns = [
     {
+      name: "Category ID",
+      cell: (row) => row?.category_id,
+    },
+    {
       name: "priority Navber",
       cell: (row) => (
         <input
@@ -175,7 +140,7 @@ export const CategoryList = () => {
     },
     {
       name: "Category Name",
-      cell: (row) => renderCategoryName(row),
+      cell: (row) => row?.category_name,
     },
     {
       name: "Action",
@@ -207,7 +172,22 @@ export const CategoryList = () => {
               Priority Navbar
             </button>
           )}
-          <DataTable columns={columns} data={categories} pagination />
+          <DataTable columns={columns} data={categories} pagination   
+          
+          expandableRows={()=>{
+            console.log("malek is my dst")
+          }}
+          expandableRowsComponent={({ data }) => (
+            <div className="p-2 bg-gray-50">
+              {data?.child_category?.map((item) => (
+                <div key={item?.category_id} className="py-1">
+                  {item?.category_name}
+                </div>
+              ))}
+            </div>
+          )}
+        />
+           
         </>
       )}
     </>

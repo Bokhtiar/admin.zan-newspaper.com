@@ -292,7 +292,7 @@ export const NewsList = () => {
       </div>
 
       <div className="mt-5">
-        <DataTable columns={columns} data={news} pagination />
+        <DataTable    columns={columns} data={news} pagination />
       </div>
     </>
   );
