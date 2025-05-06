@@ -174,9 +174,8 @@ export const CategoryList = () => {
           )}
           <DataTable columns={columns} data={categories} pagination   
           
-          expandableRows={()=>{
-            console.log("malek is my dst")
-          }}
+          expandableRows 
+          expandableRowDisabled={(row) => !row.child_category || row.child_category.length === 0}
           expandableRowsComponent={({ data }) => (
             <div className="p-2 bg-gray-50">
               {data?.child_category?.map((item) => (
