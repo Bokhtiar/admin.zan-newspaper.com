@@ -49,7 +49,7 @@ export const CategoryList = () => {
     // setLoading(true);
     try {
       const response = await NetworkServices.Category.index();
-      console.log(response);
+      console.log("mm",response);
       if (response && response.status === 200) {
         const result = response?.data?.data.filter((item)=>!item?.parent_id)
         setCategories(result || []);
@@ -176,15 +176,53 @@ export const CategoryList = () => {
           
           expandableRows 
           expandableRowDisabled={(row) => !row.child_category || row.child_category.length === 0}
+          // expandableRowsComponent={({ data }) => (
+          //   <div className="p-2 bg-gray-50">
+          //     {data?.child_category?.map((item) => (
+          //       <div key={item?.category_id} className="py-1">
+          //         {item?.category_name}
+          //       </div>
+          //     ))}
+          //   </div>
+          // )}
           expandableRowsComponent={({ data }) => (
-            <div className="p-2 bg-gray-50">
-              {data?.child_category?.map((item) => (
-                <div key={item?.category_id} className="py-1">
-                  {item?.category_name}
-                </div>
-              ))}
+            <div className="p-4 bg-white border border-t-0 border-gray-200 rounded-b-md">
+              <table className="w-full text-sm text-left text-gray-700">
+                {/* <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
+                  <tr>
+                    <th className="px-4 py-2">Category ID</th>
+                    <th className="px-4 py-2">Priority Navber</th>
+                    <th className="px-4 py-2">Thumbnail</th>
+                    <th className="px-4 py-2">Category Name</th>
+                    <th className="px-4 py-2">Action</th>
+                  </tr>
+                </thead> */}
+                <tbody>
+                  {data?.child_category?.map((item) => (
+                    <tr key={item?.category_id} className="border-b hover:bg-gray-50">
+                      <td className="px-4 py-2">{item?.category_id}</td>
+
+
+                      <td className="px-4 py-2">{item?.category_name}</td>
+                      <td className="px-4 py-2">
+                        <div className="flex gap-2">
+                          <Link to={`/dashboard/edit-category/${item?.category_id}`}>
+                            <FaEdit className="text-primary text-xl" />
+                          </Link>
+                          <MdDelete
+                            className="text-red-500 text-xl cursor-pointer"
+                            onClick={() => destroy(item?.category_id)}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
+          
+          
         />
            
         </>
