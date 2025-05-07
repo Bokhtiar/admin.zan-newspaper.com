@@ -220,7 +220,6 @@ const EditNews = () => {
               name="category"
               control={control}
               options={categories}
-              rules={{ required: "Category selection is required" }}
               onSelected={(selected) => {
                 setSelectedCategory(selected);
                 setValue("category_id", selected?.category_id);
