@@ -29,32 +29,7 @@ const CreateHero = () => {
   const [smallloading, setSmallLoading] = useState(false);
   const [news, setNews] = useState([]);
 
-  // console.log("categories", categories);
-  // console.log("singleCategory", singleCategory);
-
-  const handleChange = (newValue) => {
-    seteditValue(newValue); // Save editor content
-  };
-
-  const handleImageUpload = (file) => {
-    const quill = quillRef.current.getEditor();
-    const range = quill.getSelection();
-
-    if (range) {
-      const index = range.index;
-
-      // Insert the image at the current cursor position
-      const reader = new FileReader();
-      reader.onload = () => {
-        const imageUrl = reader.result;
-        // Insert the image into the editor
-        quill.insertEmbed(index, "image", imageUrl);
-
-        quill.setSelection(index + 1);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  console.log("news",news)
 
   const navigate = useNavigate();
 
@@ -69,6 +44,8 @@ const CreateHero = () => {
       status: 0,
     },
   });
+
+  console.log("categories",categories)
 
   const selectedCategory = watch("category_id");
   const selectedCategoryNumber = Number(selectedCategory); // Convert to number
@@ -170,28 +147,7 @@ const CreateHero = () => {
     fetchAuthor();
   }, [fetchAuthor]);
 
-  // const onFormSubmit = async (data) => {
 
-  //   const payload = {
-  //     ...data,
-  //     status: data.status ? 1 : 0,
-  //   };
-
-  //   console.log("payload", payload);
-  //   try {
-  //     setLoading(true);
-  //     const response = await NetworkServices.Food.store(payload);
-  //     console.log("objecttt", response);
-  //     if (response && response.status === 200) {
-  //       navigate("/dashboard/food");
-  //       return Toastify.Success("Category Created.");
-  //     }
-  //   } catch (error) {
-  //     console.log("error", error);
-  //     networkErrorHandeller(error);
-  //   }
-  //   setLoading(false);
-  // };
 
   const onFormSubmit = async (data) => {
     
@@ -243,7 +199,7 @@ const CreateHero = () => {
     pageTitle: " Create News ",
     pageIcon: <IoMdCreate />,
     buttonName: "News List",
-    buttonUrl: "/dashboard/news",
+    buttonUrl: "/dashboard/hero",
     type: "list", // This indicates the page type for the button
   };
   return (

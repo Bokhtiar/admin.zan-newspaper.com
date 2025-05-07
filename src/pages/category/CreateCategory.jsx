@@ -3,12 +3,9 @@ import { IoMdCreate } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
-
 import { useNavigate } from "react-router-dom";
-
 import { ImageUpload, SingleSelect, TextInput } from "../../components/input";
 import { networkErrorHandeller } from "../../utils/helper";
-import { SkeletonTable } from "../../components/loading/skeleton-table";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
@@ -56,27 +53,9 @@ const CreateCategory = () => {
     fetchCategory();
   }, [fetchCategory]);
 
-  // const onFormSubmit = async (data) => {
-  //   console.log("data".data)
-  //   const result = data?.status ? "1" : "0";
-  //   const newObj = { ...data, status: result,parent_id:data?.singleSelect?.category_id};
-  //   console.log("object", newObj);
-  //   try {
-  //     setLoading(true);
-  //     const response = await NetworkServices.Category.store(newObj);
-  //     console.log("objecttt", response);
-  //     if (response && response.status === 200) {
-  //       navigate("/dashboard/category");
-  //       return Toastify.Success("Category Created.");
-  //     }
-  //   } catch (error) {
-  //     console.log("error", error);
-  //     networkErrorHandeller(error);
-  //   }
-  //   setLoading(false);
-  // };
+
   const onFormSubmit = async (data) => {
-    console.log("Submitted Data:", data);
+    // console.log("Submitted Data:", data);
 
     try {
       setBtnLoading(true);

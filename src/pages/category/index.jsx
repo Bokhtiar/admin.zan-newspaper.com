@@ -19,15 +19,11 @@ import ListSkeleton from "../../components/loading/ListSkeleton";
 export const CategoryList = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  
+  const [btnloading, setBtnLoading] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
-
-
-  console.log("categories", categories);
-
   // Fetch categories from API
   const priorityNavber = useCallback(async () => {
-    // setLoading(true);
+    setBtnLoading(true);
     try {
       const response = await NetworkServices.Category.priorityNav({
         priority_id: JSON.stringify(selectedCategories),
@@ -40,13 +36,15 @@ export const CategoryList = () => {
     } catch (error) {
       console.log(error);
       networkErrorHandeller(error);
+    }finally{
+      setBtnLoading(false);
     }
-    setLoading(false);
+    
   }, [selectedCategories]);
 
   // Fetch categories from API
   const fetchCategory = useCallback(async () => {
-    // setLoading(true);
+    setLoading(true);
     try {
       const response = await NetworkServices.Category.index();
       console.log("mm",response);
@@ -169,34 +167,19 @@ export const CategoryList = () => {
               className="bg-blue-400 px-2 py-3 rounded-md"
               onClick={priorityNavber}
             >
-              Priority Navbar
+              
+              {btnloading ? "Loading ...":"Priority Navbar"}
             </button>
           )}
           <DataTable columns={columns} data={categories} pagination   
           
           expandableRows 
           expandableRowDisabled={(row) => !row.child_category || row.child_category.length === 0}
-          // expandableRowsComponent={({ data }) => (
-          //   <div className="p-2 bg-gray-50">
-          //     {data?.child_category?.map((item) => (
-          //       <div key={item?.category_id} className="py-1">
-          //         {item?.category_name}
-          //       </div>
-          //     ))}
-          //   </div>
-          // )}
+
           expandableRowsComponent={({ data }) => (
             <div className="p-4 bg-white border border-t-0 border-gray-200 rounded-b-md">
               <table className="w-full text-sm text-left text-gray-700">
-                {/* <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
-                  <tr>
-                    <th className="px-4 py-2">Category ID</th>
-                    <th className="px-4 py-2">Priority Navber</th>
-                    <th className="px-4 py-2">Thumbnail</th>
-                    <th className="px-4 py-2">Category Name</th>
-                    <th className="px-4 py-2">Action</th>
-                  </tr>
-                </thead> */}
+
                 <tbody>
                   {data?.child_category?.map((item) => (
                     <tr key={item?.category_id} className="border-b hover:bg-gray-50">

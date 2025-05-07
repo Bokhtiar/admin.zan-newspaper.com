@@ -50,7 +50,7 @@ const CreateNews = () => {
   // console.log("selectedCategory", selectedCategoryNumber);
 
   const fetchCategory = useCallback(async () => {
-    // setLoading(true);
+    setLoading(true);
     try {
       const response = await NetworkServices.Category.index();
       if (response && response.status === 200) {
@@ -75,7 +75,7 @@ const CreateNews = () => {
   }, [fetchCategory]);
 
   const fatchSingleCategory = useCallback(async () => {
-    // setSmallLoading(true);
+    setSmallLoading(true);
     try {
       const response = await NetworkServices.Category.show(
         selectedCategoryNumber
@@ -96,7 +96,7 @@ const CreateNews = () => {
   }, [fatchSingleCategory]);
 
   const fetchAuthor = useCallback(async () => {
-    // setLoading(true);
+    setLoading(true);
     try {
       const response = await NetworkServices.Author.index();
       if (response && response.status === 200) {
@@ -146,7 +146,7 @@ const CreateNews = () => {
     }
 
     try {
-      // setLoading(true);
+      setBtnLoading(true);
       const response = await NetworkServices.News.store(formData);
 
       // console.log("response", response);

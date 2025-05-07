@@ -1,13 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { NetworkServices } from "../../network";
 import { networkErrorHandeller } from "../../utils/helper";
-import { confirmAlert } from "react-confirm-alert";
-import { Toastify } from "../../components/toastify";
-import { SkeletonTable } from "../../components/loading/skeleton-table";
 import { IoIosList } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import DataTable from "react-data-table-component";
 import ListSkeleton from "../../components/loading/ListSkeleton";
@@ -54,7 +50,7 @@ const HomePage = () => {
   const propsData = {
     pageTitle: "Home page News List",
     pageIcon: <IoIosList />,
-    buttonName: "Create New Home News",
+    buttonName: "Create New Home Layout",
     buttonUrl: "/dashboard/create-homenews",
     type: "add",
   };

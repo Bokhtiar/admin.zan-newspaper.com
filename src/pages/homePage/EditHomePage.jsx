@@ -132,7 +132,7 @@ const EditHomePage = () => {
 
       if (response && response.status === 200) {
         navigate("/dashboard/home-news");
-        Toastify.Success(" Update Home Image");
+        Toastify.Success(" Update Home Layout");
       }
     } catch (error) {
       

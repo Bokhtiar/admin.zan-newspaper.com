@@ -8,7 +8,6 @@ import { Toastify } from "../../components/toastify";
 import { ImageUpload, SingleSelect,  TextCheckbox,  TextInput } from "../../components/input";
 import { FaRegEdit } from "react-icons/fa";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
-import { SkeletonTable } from "../../components/loading/skeleton-table";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 
@@ -19,7 +18,6 @@ const EditAuthor = () => {
   const [btnloading, setBtnLoading] = useState(false);
   const [author, setAuthor] = useState([]);
 
-  console.log("categorycategory", author);
 
   const {
     
@@ -39,7 +37,7 @@ const EditAuthor = () => {
     setLoading(true);
     try {
       const response = await NetworkServices.Author.show(authorId);
-      console.log("response", response.data.data);
+      
       if (response && response.status === 200) {
         const author = response?.data?.data;
         setAuthor(author);
@@ -82,7 +80,7 @@ const EditAuthor = () => {
         authorId,
         formData
       );
-      console.log("responseresponse", response);
+      
 
       if (response && response.status === 200) {
         navigate("/dashboard/author");
@@ -192,7 +190,7 @@ const EditAuthor = () => {
           }`}
           disabled={btnloading} // Disable button when loading
         >
-          {btnloading ? "Loading..." : "Create Author"}
+          {btnloading ? "Loading..." : "Edit Author"}
         </button>
       </form>
     </>

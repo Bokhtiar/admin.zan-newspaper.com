@@ -12,7 +12,6 @@ import {
 } from "../../components/input";
 import { FaRegEdit } from "react-icons/fa";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
-import { SkeletonTable } from "../../components/loading/skeleton-table";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 
@@ -24,7 +23,7 @@ const EditCategory = () => {
   const [btnloading, setBtnLoading] = useState(false);
   const [category, setCategory] = useState({});
 
-  console.log("categorycategory", categoryId);
+  // console.log("categorycategory", categoryId);
 
   const {
     handleSubmit,
@@ -68,7 +67,7 @@ const EditCategory = () => {
     setLoading(true);
     try {
       const response = await NetworkServices.Category.show(categoryId);
-      console.log("response", response.data.data);
+   
       if (response && response.status === 200) {
         const category = response?.data?.data;
         setCategory(category);
@@ -93,7 +92,7 @@ const EditCategory = () => {
   // edit category api
   const onFormSubmit = async (data) => {
     const formData = new FormData();
-    console.log("object", data);
+    // console.log("object", data);
     data?.singleSelect?.category_id && formData.append("parent_id",data?.singleSelect?.category_id);
     formData.append("category_name", data.category_name);
     formData.append("isNavbar", data?.isNavbar ? "1" : "0");
@@ -110,7 +109,7 @@ const EditCategory = () => {
         categoryId,
         formData
       );
-      console.log("responseresponse", response);
+
 
       if (response && response.status === 200) {
         navigate("/dashboard/category");

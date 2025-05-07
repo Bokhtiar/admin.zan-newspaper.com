@@ -9,18 +9,15 @@ import { MdDelete } from "react-icons/md";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
-
-import { SkeletonTable } from "../../components/loading/skeleton-table";
 import DataTable, { createTheme } from "react-data-table-component";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { confirmAlert } from "react-confirm-alert";
-import { ThemeContext } from "../../components/ThemeContext";
 import ListSkeleton from "../../components/loading/ListSkeleton";
 
 export const HeroList = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { theme } = useContext(ThemeContext);
+ 
 
  
 
@@ -140,7 +137,6 @@ export const HeroList = () => {
 
       <DataTable
         columns={columns}
-        theme={theme === "dark" ? "darkTheme" : "lightTheme"}
         data={categories}
         pagination
       />

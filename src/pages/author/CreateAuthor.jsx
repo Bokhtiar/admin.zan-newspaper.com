@@ -29,25 +29,6 @@ const CreateAuthor = () => {
   });
 
 
-  // const onFormSubmit = async (data) => {
-  //   console.log("data".data)
-  //   const result = data?.status ? "1" : "0";
-  //   const newObj = { ...data, status: result,parent_id:data?.singleSelect?.category_id};
-  //   console.log("object", newObj);
-  //   try {
-  //     setLoading(true);
-  //     const response = await NetworkServices.Category.store(newObj);
-  //     console.log("objecttt", response);
-  //     if (response && response.status === 200) {
-  //       navigate("/dashboard/category");
-  //       return Toastify.Success("Category Created.");
-  //     }
-  //   } catch (error) {
-  //     console.log("error", error);
-  //     networkErrorHandeller(error);
-  //   }
-  //   setLoading(false);
-  // };
   const onFormSubmit = async (data) => {
     console.log("Submitted Data:", data);
 

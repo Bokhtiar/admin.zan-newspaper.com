@@ -16,8 +16,6 @@ import { confirmAlert } from "react-confirm-alert";
 export const AuthorList = () => {
   const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
-  console.log("author", author);
-  
 
   // Fetch categories from API
   const fetchAuthor = useCallback(async () => {

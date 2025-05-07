@@ -9,11 +9,9 @@ import { useNavigate } from "react-router-dom";
 import {
   ImageUpload,
   MultiSelect,
-  SingleSelect,
   TextInput,
 } from "../../components/input";
 import { networkErrorHandeller } from "../../utils/helper";
-import { SkeletonTable } from "../../components/loading/skeleton-table";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
@@ -111,7 +109,7 @@ const CreateHomePage = () => {
 
       if (response && response.status === 200) {
         navigate("/dashboard/home-news");
-        Toastify.Success(" Create Home Image");
+        Toastify.Success(" Create Home Layout");
       }
     } catch (error) {
      

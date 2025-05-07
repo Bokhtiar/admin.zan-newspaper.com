@@ -135,8 +135,8 @@ const EditNews = () => {
   }, [fetchCategory, newsData, id]);
 
   const onFormSubmit = async (data) => {
-    console.log("Data", data);
-    // setLoading(true);
+    
+    
 
     const formData = new FormData();
 
@@ -346,7 +346,7 @@ const EditNews = () => {
           }`}
           disabled={btnloading} // Disable button when loading
         >
-          {btnloading ? "Loading..." : "Update Artical"}
+          {btnloading ? "Loading..." : "Update News"}
         </button>
       </form>
     </>

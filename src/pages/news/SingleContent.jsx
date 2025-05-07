@@ -10,7 +10,7 @@ const SingleContent = () => {
   const [newsData, setNewsData] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state
 
-  console.log("newsData", newsData);
+  // console.log("newsData", newsData);
 
   const fetchNewsData = useCallback(async () => {
     setLoading(true);

@@ -26,11 +26,9 @@ export const NewsList = () => {
 
   console.log("news", news);
   const {
-    handleSubmit,
     formState: { errors },
     setValue,
     watch,
-    getValues,
     control,
   } = useForm({
     defaultValues: {
