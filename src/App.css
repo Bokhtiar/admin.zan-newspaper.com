@@ -52,6 +52,31 @@
 .rdt_TableRow:hover {
   @apply bg-light text-lightTitle;  
 }
+.css-yqyng-control {
+  
+  background: #F9FAFB !important; 
+  color:#F9FAFB !important
+
+}
+.css-197ude0-control {
+  
+  background: #F9FAFB !important; 
+  color:#F9FAFB !important
+
+}
+.dark .css-yqyng-control {
+  
+  background: #111827 !important; 
+  color:#F9FAFB !important
+
+}
+.css-197ude0-control {
+  
+  background: #111827 !important; 
+  color:#F9FAFB !important
+
+}
+
 
 /* Dark Mode Styles */
 .dark body {

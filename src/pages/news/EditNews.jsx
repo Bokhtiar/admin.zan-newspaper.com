@@ -13,7 +13,6 @@ import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
-import ReactQuill from "react-quill";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 import { EditorSection } from "./RichEditor";
@@ -42,8 +41,8 @@ const EditNews = () => {
       status: 0,
     },
   });
-  // console.log("cate", categories);
-  // console.log("news", news);
+  console.log("cate", categories);
+  console.log("news", news);
 
   // ক্যাটাগরি লোড করা
   const fetchCategory = useCallback(async () => {
@@ -53,6 +52,7 @@ const EditNews = () => {
         const result = response.data.data.map((item) => ({
           label: item.category_name,
           value: item.category_id,
+          ...item
         }));
         setCategories(result);
       }
@@ -117,6 +117,8 @@ const EditNews = () => {
     news?.status,
     news?.subtitle,
     news?.title,
+    // categories.child_category_id,
+    // categories.category_id
   ]);
   // useEffect(() => {
   //   if (news?.content) {
@@ -139,7 +141,9 @@ const EditNews = () => {
     const formData = new FormData();
 
     // Append form fields to FormData
-    formData.append("category_id", data?.category_id);
+    const categoryToSend = data.child_category_id ? data.child_category_id : data.category_id;
+    formData.append("category_id", categoryToSend);
+    // formData.append("category_id", data?.category_id);
     formData.append("author_id", data?.author_id);
     formData.append("title", data?.title);
     formData.append("subtitle", data?.subtitle);
@@ -230,15 +234,15 @@ const EditNews = () => {
 
 
           {/* Show Child Category if exists */}
-          {/* {selectedCategory?.child_category?.length > 0 && ( */}
+          {selectedCategory?.child_category?.length > 0 && (
             <div className="mt-4 w-full">
               <SingleSelect
                 name="child_category"
                 control={control}
-                // options={selectedCategory.child_category.map((child) => ({
-                //   label: child.category_name,
-                //   value: child.category_id,
-                // }))}
+                options={selectedCategory.child_category.map((child) => ({
+                  label: child.category_name,
+                  value: child.category_id,
+                }))}
                 rules={{ required: "Sub-category selection is required" }}
                 onSelected={(selected) =>
                   setValue("child_category_id", selected?.value)
@@ -249,7 +253,7 @@ const EditNews = () => {
                 isClearable={true}
               />
             </div>
-          {/* )} */}
+           )} 
 
           <div className="mt-4">
             <SingleSelect
@@ -352,23 +356,4 @@ const EditNews = () => {
 
 export default EditNews;
 
-// const RichEditor = ({ editorContent, setEditorContent }) => {
 
-//   // console.log("content",content)
-//   return (
-//     <>
-//       <CKEditor
-//         editor={ClassicEditor}
-//         data={editorContent || "<p>Write something...</p>"}
-//         onChange={(event, editor) => {
-//           const data = editor.getData();
-//           console.log(data);
-//           setEditorContent(data);
-//         }}
-//       />
-//       <h3>Output:</h3>
-//       <div dangerouslySetInnerHTML={{ __html: editorContent }} />
-//       {/* <p>editorContent</p> */}
-//     </>
-//   );
-// };

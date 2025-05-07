@@ -5,13 +5,15 @@ import {
   FaUsers,
 } from "react-icons/fa";
 import { AreaChart, Area, ResponsiveContainer } from "recharts";
+import { FaRegNewspaper } from "react-icons/fa";
+import { PiNewspaperClipping } from "react-icons/pi";
 
 const stats = [
   {
-    title: "Total Sales",
+    title: " Total Articles",
     value: "34,945",
-    percentage: "1.56%",
-    icon: <FaShoppingBag className="text-white" />,
+    // percentage: "1.56%",
+    icon: <FaRegNewspaper className="text-white" />,
     color: "bg-green-500",
     textColor: "text-green-500",
     chartColor: "#22c55e",
@@ -27,10 +29,9 @@ const stats = [
     ],
   },
   {
-    title: "Total Income",
-    value: "$37,802",
-    percentage: "-1.56%",
-    icon: <FaDollarSign className="text-white" />,
+    title: "Total Reporters",
+    value: "37,802",
+    icon: <FaUsers  className="text-white" />,
     color: "bg-orange-500",
     textColor: "text-red-500",
     chartColor: "#f97316",
@@ -46,9 +47,8 @@ const stats = [
     ],
   },
   {
-    title: "Orders Paid",
+    title: "Approved News",
     value: "34,945",
-    percentage: "0.00%",
     icon: <FaFileInvoice className="text-white" />,
     color: "bg-gray-500",
     textColor: "text-gray-500",
@@ -65,10 +65,9 @@ const stats = [
     ],
   },
   {
-    title: "Total Visitor",
-    value: "34,945",
-    percentage: "1.56%",
-    icon: <FaUsers className="text-white" />,
+    title: "Pending Approval",
+    value: "945",
+    icon: <PiNewspaperClipping className="text-white" />,
     color: "bg-blue-500",
     textColor: "text-blue-500",
     chartColor: "#3b82f6",

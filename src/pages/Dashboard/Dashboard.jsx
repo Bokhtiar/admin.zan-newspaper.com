@@ -12,16 +12,16 @@ const Dashboard = () => {
       <Card />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-8 gap-4 mt-8">
-        <div className="col-span-3 ">
+        <div className="col-span-4 ">
           <CalendarComponent />
           {/* <MyCalendar/> */}
         </div>
-        <div className="col-span-3">
+        <div className="col-span-4">
           <RecentOrderChart />
         </div>
-        <div className="col-span-2">
-          <EarningsChart />
-        </div>
+      </div>
+      <div className="w-1/2 mt-5">
+        <EarningsChart />
       </div>
       <div className="mt-6">
         <ShowTable />

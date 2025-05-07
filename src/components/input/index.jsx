@@ -669,7 +669,7 @@ const customStyles = (error, themeValue) => {
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected
-        ? 'blue'
+        ? '#87CEEB'
         : state.isFocused
         ? '#7FB3F0'
         : '',
@@ -744,8 +744,7 @@ console.log("theme1",theme)
         components={{
           DropdownIndicator: () => null,
           IndicatorSeparator: () => null,
-        }}
-       
+        }}      
         options={props.options}
         onChange={handleSelect}
         isClearable={props.isClearable}

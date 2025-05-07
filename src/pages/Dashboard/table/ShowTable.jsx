@@ -1,137 +1,170 @@
-
 import DataTable from "react-data-table-component";
+import img from "../../../assets/assets/images/exam_category.png";
 
-// Sample Data
-const data = [
+// Updated News Data
+const newsData = [
   {
     id: 1,
-    image: "./image/logo/flagbd.jpg",
-    name: "Patimax Fragrance Long...",
-    items: "100 Items",
-    coupon: "Sflat",
-    flag: "https://flagcdn.com/w40/es.png",
+    image: img,
+    title: "Govt Announces Major Economic Reforms",
+    category: "Politics",
+    time: "10:30 AM",
+    date: "2025-05-07",
+    flag: "https://flagcdn.com/w40/bd.png",
   },
   {
     id: 2,
-    image: "./image/logo/flagbd.jpg",
-    name: "Nulo MedalSeries Adult Cat...",
-    items: "100 Items",
-    coupon: "Sflat",
-    flag: "https://flagcdn.com/w40/de.png",
+    image: img,
+    title: "Tech Conference Highlights AI Breakthroughs",
+    category: "Technology",
+    time: "09:20 AM",
+    date: "2025-05-07",
+    flag: "https://flagcdn.com/w40/us.png",
   },
   {
     id: 3,
-    image: "./image/logo/flagbd.jpg",
-    name: "Pedigree Puppy Dry Dog...",
-    items: "100 Items",
-    coupon: "Sflat",
-    flag: "https://flagcdn.com/w40/gb.png",
-  },
-  {
-    id: 4,
-    image: "./image/logo/flagbd.jpg",
-    name: "Biscoito Premier Cookie...",
-    items: "100 Items",
-    coupon: "Sflat",
+    image: img,
+    title: "New Species Discovered in Amazon Forest",
+    category: "Environment",
+    time: "08:00 AM",
+    date: "2025-05-07",
     flag: "https://flagcdn.com/w40/br.png",
   },
   {
+    id: 4,
+    image: img,
+    title: "Stock Market Hits All-Time High",
+    category: "Business",
+    time: "11:00 AM",
+    date: "2025-05-07",
+    flag: "https://flagcdn.com/w40/de.png",
+  },
+  {
     id: 5,
-    image: "./image/logo/flagbd.jpg",
-    name: "Pedigree Adult Dry Dog...",
-    items: "100 Items",
-    coupon: "Sflat",
+    image: img,
+    title: "International Football Cup Kicks Off Today",
+    category: "Sports",
+    time: "12:45 PM",
+    date: "2025-05-07",
+    flag: "https://flagcdn.com/w40/gb.png",
+  },
+  {
+    id: 6,
+    image: img,
+    title: "Healthcare Reform Bill Passed in Senate",
+    category: "Health",
+    time: "01:15 PM",
+    date: "2025-05-07",
     flag: "https://flagcdn.com/w40/fr.png",
+  },
+  {
+    id: 7,
+    image: img,
+    title: "Film Festival Attracts Global Stars",
+    category: "Entertainment",
+    time: "02:00 PM",
+    date: "2025-05-07",
+    flag: "https://flagcdn.com/w40/in.png",
+  },
+  {
+    id: 8,
+    image: img,
+    title: "New Study Reveals Climate Change Impact",
+    category: "Science",
+    time: "03:10 PM",
+    date: "2025-05-07",
+    flag: "https://flagcdn.com/w40/ca.png",
+  },
+  {
+    id: 9,
+    image: img,
+    title: "Cybersecurity Breach Affects Millions",
+    category: "Technology",
+    time: "04:20 PM",
+    date: "2025-05-07",
+    flag: "https://flagcdn.com/w40/ru.png",
+  },
+  {
+    id: 10,
+    image: img,
+    title: "Local Election Results Announced",
+    category: "Politics",
+    time: "05:00 PM",
+    date: "2025-05-07",
+    flag: "https://flagcdn.com/w40/es.png",
   },
 ];
 
+
 // Table Columns
-const columns = [
+const newsColumns = [
   {
-    name: "Product",
-    selector: (row) => row.name,
+    name: "Category",
+    selector: (row) => row.category,
     cell: (row) => (
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-md  flex items-center justify-center">
-          <img
-            src={row.image}
-            alt="product"
-            className="w-full h-full object-cover rounded-md"
-          />
-        </div>
-        <div>
-          <p className="text-sm font-semibold ">{row.name}</p>
-          <p className="text-xs ">
-            {row.items}
-          </p>
-        </div>
-      </div>
+      <span className="text-sm font-medium">{row.category}</span>
+    ),
+    sortable: true,
+    grow: 1,
+  },
+  {
+    name: "Title",
+    selector: (row) => row.title,
+    cell: (row) => (
+      <span className="text-sm font-semibold">{row.title}</span>
     ),
     grow: 2,
   },
   {
-    name: "Coupon Code",
-    selector: (row) => row.coupon,
+    name: "Image",
+    selector: (row) => row.image,
     cell: (row) => (
-      <span className="text-sm font-semibold ">
-        {row.coupon}
-      </span>
+      <img
+        src={row.image}
+        alt="news"
+        className="w-12 h-12 object-cover rounded-md"
+      />
     ),
     center: true,
   },
   {
-    name: "Country",
+    name: "Location",
     selector: (row) => row.flag,
     cell: (row) => (
-      <img src={row.flag} alt="flag" className="w-5 h-5 rounded-full" />
+      <img
+        src={row.flag}
+        alt="flag"
+        className="w-5 h-5 rounded-full"
+      />
     ),
     center: true,
   },
   {
-    name: "Price",
-    selector: () => "-",
+    name: "Time",
+    selector: (row) => row.time,
+    center: true,
+  },
+  {
+    name: "Date",
+    selector: (row) => row.date,
     center: true,
   },
 ];
 
-// createTheme("lightTheme", {
-//   text: { primary: "#000", secondary: "#555" },
-//   background: { default: "#ffffff" },
-//   divider: { default: "#ddd" },
-// });
-
-// createTheme("darkTheme", {
-//   text: { primary: "#ffffff", secondary: "#bbb" },
-//   background: { default: "#9CA3AF" },
-//   divider: { default: "#444" },
-// });
-
 const ShowTable = () => {
-//   const [theme, setTheme] = useState("light");
-//   console.log("theme",theme)
-//   useEffect(() => {
-//     const savedTheme = localStorage.getItem("theme") || "light";
-//     setTheme(savedTheme);
-//     document.documentElement.classList.toggle("dark", savedTheme === "dark");
-//   }, []);
   return (
     <div className="p-5 rounded-lg shadow-md text-lightTitle dark:text-darkTitle bg-lightCard dark:bg-dark">
-      <div className="flex justify-between items-center mb-4 ">
-        <h2 className="text-lg font-bold ">Top Products</h2>
-        <a
-          href="#"
-          className="text-sm "
-        >
-          View all
-        </a>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-bold">Today's Top 10 News</h2>
+
       </div>
       <DataTable
-        columns={columns}
-        data={data}
+        columns={newsColumns}
+        data={newsData}
         responsive
         highlightOnHover
+        pagination
         className="rdt_Table"
-        // theme={theme === "dark" ? "darkTheme" : "lightTheme"}
       />
     </div>
   );

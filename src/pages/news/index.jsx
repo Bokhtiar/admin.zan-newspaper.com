@@ -22,7 +22,7 @@ export const NewsList = () => {
   const [news, setNews] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { theme } = useContext(ThemeContext);
+  
 
   console.log("news", news);
   const {
