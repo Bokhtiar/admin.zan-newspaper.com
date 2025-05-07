@@ -182,7 +182,7 @@ const EditCategory = () => {
         </div>
 
         {/* Thumbnail Upload */}
-        <div className="mt-4 cursor-pointer">
+        {/* <div className="mt-4 cursor-pointer">
           <ImageUpload
             name="category_image"
             control={control}
@@ -190,7 +190,7 @@ const EditCategory = () => {
             onUpload={(file) => setValue("category_image", file)}
             imgUrl={category?.category_image}
           />
-        </div>
+        </div> */}
 
         <div className="flex items-center gap-2 mt-4">
           <TextCheckbox

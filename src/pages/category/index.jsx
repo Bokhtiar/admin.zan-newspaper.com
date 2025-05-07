@@ -107,10 +107,10 @@ export const CategoryList = () => {
   };
 
   const columns = [
-    {
-      name: "Category ID",
-      cell: (row) => row?.category_id,
-    },
+    // {
+    //   name: "Category ID",
+    //   cell: (row) => row?.category_id,
+    // },
     {
       name: "priority Navber",
       cell: (row) => (
@@ -122,20 +122,20 @@ export const CategoryList = () => {
         />
       ),
     },
-    {
-      name: "Thumbnail",
-      cell: (row) => (
-        <img
-          className="w-10 h-10 rounded-full border"
-          src={
-            row?.category_image
-              ? `${process.env.REACT_APP_API_SERVER}${row?.category_image}`
-              : ""
-          }
-          alt="images"
-        />
-      ),
-    },
+    // {
+    //   name: "Thumbnail",
+    //   cell: (row) => (
+    //     <img
+    //       className="w-10 h-10 rounded-full border"
+    //       src={
+    //         row?.category_image
+    //           ? `${process.env.REACT_APP_API_SERVER}${row?.category_image}`
+    //           : ""
+    //       }
+    //       alt="images"
+    //     />
+    //   ),
+    // },
     {
       name: "Category Name",
       cell: (row) => row?.category_name,
@@ -183,7 +183,7 @@ export const CategoryList = () => {
                 <tbody>
                   {data?.child_category?.map((item) => (
                     <tr key={item?.category_id} className="border-b hover:bg-gray-50">
-                      <td className="px-4 py-2">{item?.category_id}</td>
+                      {/* <td className="px-4 py-2">{item?.category_id}</td> */}
 
 
                       <td className="px-4 py-2">{item?.category_name}</td>
