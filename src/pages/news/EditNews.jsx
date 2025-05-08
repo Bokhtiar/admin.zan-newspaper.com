@@ -42,7 +42,7 @@ const EditNews = () => {
     },
   });
   console.log("cate", categories);
-  console.log("news", news);
+  console.log("value", value);
 
   // ক্যাটাগরি লোড করা
   const fetchCategory = useCallback(async () => {
@@ -149,7 +149,7 @@ const EditNews = () => {
     formData.append("author_id", data?.author_id);
     formData.append("title", data?.title);
     formData.append("subtitle", data?.subtitle);
-    formData.append("content", data?.content);
+    formData.append("content", value);
     formData.append("status", data?.status ? 1 : 0);
 
     if (data.article_image) {
