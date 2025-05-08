@@ -7,8 +7,8 @@ import { Toastify } from "../../components/toastify";
 import { useNavigate } from "react-router-dom";
 import {
   ImageUpload,
+  MultiSelect,
   SingleSelect,
-  TextAreaInput,
   TextInput,
 } from "../../components/input";
 import { networkErrorHandeller } from "../../utils/helper";
@@ -19,17 +19,12 @@ import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 
 const CreateHero = () => {
-  const [categories, setCategories] = useState([]);
-  const [author, setAuthor] = useState([]);
   const [loading, setLoading] = useState(false);
   const [btnloading, setBtnLoading] = useState(false);
-  const [editValue, seteditValue] = useState("");
-  const quillRef = useRef(null);
-  const [singleCategory, setSingleCategory] = useState([]);
-  const [smallloading, setSmallLoading] = useState(false);
   const [news, setNews] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-  console.log("news",news)
+  console.log("news", news);
 
   const navigate = useNavigate();
 
@@ -44,13 +39,8 @@ const CreateHero = () => {
       status: 0,
     },
   });
-
-  console.log("categories",categories)
-
-  const selectedCategory = watch("category_id");
-  const selectedCategoryNumber = Number(selectedCategory); // Convert to number
-  // console.log("selectedCategory", selectedCategoryNumber);
-
+  const selectedCategoryId = watch("category_id");
+  console.log("selectedCategoryId",selectedCategoryId)
   const fetchCategory = useCallback(async () => {
     setLoading(true);
     try {
@@ -75,35 +65,13 @@ const CreateHero = () => {
   useEffect(() => {
     fetchCategory();
   }, [fetchCategory]);
-
-  const fatchSingleCategory = useCallback(async () => {
-    setSmallLoading(true);
-    try {
-      const response = await NetworkServices.Category.show(
-        selectedCategoryNumber
-      );
-
-      if (response?.status === 200) {
-        const result = response?.data?.data?.category_name;
-        setSingleCategory(result);
-      }
-    } catch (error) {
-      console.error("Fetch Category Error:", error);
-    }
-    setSmallLoading(false);
-  }, [selectedCategoryNumber]);
-
-  useEffect(() => {
-    fatchSingleCategory();
-  }, [fatchSingleCategory]);
-
   const fetchNews = useCallback(async () => {
     setLoading(true);
     try {
       const response = await NetworkServices.News.index();
-      // console.log("response", response);
+      console.log("response", response);
       if (response && response.status === 200) {
-        const result = response?.data?.data?.map((item) => {
+        const result = response?.data?.data?.data?.map((item) => {
           return {
             label: item.title,
             value: item.title,
@@ -122,65 +90,33 @@ const CreateHero = () => {
     fetchNews();
   }, [fetchNews]);
 
-  const fetchAuthor = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await NetworkServices.Author.index();
-      if (response && response.status === 200) {
-        const result = response.data.data.map((item, index) => {
-          return {
-            label: item.author_name,
-            value: item.author_name,
-            ...item,
-          };
-        });
-        setAuthor(result);
-      }
-    } catch (error) {
-      console.error("Fetch Author Error:", error);
-    }
-    setLoading(false); // End loading (handled in both success and error)
-  }, []);
-
-  // category api fetch
-  useEffect(() => {
-    fetchAuthor();
-  }, [fetchAuthor]);
-
-
-
   const onFormSubmit = async (data) => {
-    
-    const formData = new FormData();
+    const array_news = data?.news?.map((item) => item?.article_id);
+    const newsdata=data.news
+   
 
-    // ফর্মের অন্যান্য ডাটা FormData তে অ্যাড করুন
-    formData.append("category_id", data.category_id);
-    formData.append("author_id", data.author_id);
-    formData.append("title", data.title);
-    formData.append("subtitle", data.subtitle);
-
-    formData.append("status", data.status ? "1" : "0");
-    formData.append("content", editValue);
-
-    // ফাইল আপলোডের জন্য
-    if (data.article_image) {
-      formData.append("article_image", data.article_image);
-    }
-    if (data.video_url) {
-      formData.append("video_url", data.video_url);
-    }
+    const value = {
+      details: [
+        { news_id: 1, type: "category" },
+        { news_id: 2, type: "news" },
+      ],
+    };
+    const payload = {
+      details: [
+        ...newsdata.map(id => ({ news_id: id, type: "news" })),
+        { news_id: selectedCategoryId, type: "category" },
+      ]
+    };
 
     try {
       setBtnLoading(true);
-      const response = await NetworkServices.News.store(formData);
+      const response = await NetworkServices.Hero.store(payload);
 
-      
       if (response && response.status === 200) {
-        // navigate("/dashboard/news");
-        return Toastify.Success("News Created Successfully.");
+        // navigate("/dashboard/hero");
+        return Toastify.Success("Hero Section Created Successfully.");
       }
     } catch (error) {
-    
       networkErrorHandeller(error);
     } finally {
       setBtnLoading(false);
@@ -196,9 +132,9 @@ const CreateHero = () => {
     );
   }
   const propsData = {
-    pageTitle: " Create News ",
+    pageTitle: " Create Hero  ",
     pageIcon: <IoMdCreate />,
-    buttonName: "News List",
+    buttonName: "Hero List",
     buttonUrl: "/dashboard/hero",
     type: "list", // This indicates the page type for the button
   };
@@ -227,19 +163,15 @@ const CreateHero = () => {
               // error={errors} // Pass an error message if validation fails
             />
           </div>
-
           <div className="mt-4">
-            <SingleSelect
+            <MultiSelect
               name="news"
               control={control}
               options={news}
-              // rules={{ required: "News selection is required" }}
-              onSelected={(selected) =>
-                setValue("article_id", selected?.article_id)
-              }
-              placeholder="Select a News "
+              placeholder="Select a news "
               error={errors.news?.message}
-              label="Choose News *"
+              rules={{ required: "Categories selection is required" }}
+              label="Select News *"
               isClearable={true}
             />
           </div>

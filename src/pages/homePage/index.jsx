@@ -48,7 +48,7 @@ const HomePage = () => {
   }
 
   const propsData = {
-    pageTitle: "Home page News List",
+    pageTitle: "Home Layout List",
     pageIcon: <IoIosList />,
     buttonName: "Create New Home Layout",
     buttonUrl: "/dashboard/create-homenews",

@@ -64,18 +64,21 @@
   color:#F9FAFB !important
 
 }
-.dark .css-yqyng-control {
+.css-sh2l0p-control{
+  background: #F9FAFB !important; 
+}
+ .dark .css-yqyng-control {
   
   background: #111827 !important; 
   color:#F9FAFB !important
 
 }
-.css-197ude0-control {
+.dark .css-197ude0-control {
   
   background: #111827 !important; 
   color:#F9FAFB !important
 
-}
+} 
 
 
 /* Dark Mode Styles */

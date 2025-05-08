@@ -128,9 +128,9 @@ const CreateHomePage = () => {
     );
   }
   const propsData = {
-    pageTitle: " Create Category ",
+    pageTitle: " Create Home Layout ",
     pageIcon: <IoMdCreate />,
-    buttonName: "Category List",
+    buttonName: "Home Layout List",
     buttonUrl: "/dashboard/home-news",
     type: "list", // This indicates the page type for the button
   };
@@ -149,6 +149,7 @@ const CreateHomePage = () => {
             options={categories}
             placeholder="Select a category "
             error={errors.categories?.message}
+            rules={{ required: "Categories selection is required" }}
             label="Choose Parent category *"
             isClearable={true}
             // error={errors} // Pass an error message if validation fails

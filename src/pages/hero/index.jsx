@@ -1,6 +1,5 @@
 
-
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback,  useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { IoIosList } from "react-icons/io";
@@ -9,26 +8,27 @@ import { MdDelete } from "react-icons/md";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
-import DataTable, { createTheme } from "react-data-table-component";
+import DataTable from "react-data-table-component";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { confirmAlert } from "react-confirm-alert";
 import ListSkeleton from "../../components/loading/ListSkeleton";
 
 export const HeroList = () => {
-  const [categories, setCategories] = useState([]);
+  const [hero, setHero] = useState([]);
   const [loading, setLoading] = useState(false);
  
 
  
 
   // Fetch categories from API
-  const fetchCategory = useCallback(async () => {
+  const fetchHero = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await NetworkServices.Category.index();
+      const response = await NetworkServices.Hero.index();
+      console.log("r",response)
      
       if (response && response.status === 200) {
-        setCategories(response?.data?.data || []);
+        setHero(response?.data?.data || []);
       }
     } catch (error) {
    
@@ -38,8 +38,8 @@ export const HeroList = () => {
   }, []);
 
   useEffect(() => {
-    fetchCategory();
-  }, [fetchCategory]);
+    fetchHero();
+  }, [fetchHero]);
 
   // Handle single category deletion
   const destroy = (id) => {
@@ -54,7 +54,7 @@ export const HeroList = () => {
               const response = await NetworkServices.Category.destroy(id);
               if (response?.status === 200) {
                 Toastify.Info("Category deleted successfully.");
-                fetchCategory();
+                fetchHero();
               }
             } catch (error) {
               networkErrorHandeller(error);
@@ -119,17 +119,7 @@ export const HeroList = () => {
     },
   ];
 
-  createTheme("lightTheme", {
-    text: { primary: "#000", secondary: "#555" },
-    background: { default: "#ffffff" },
-    divider: { default: "#ddd" },
-  });
 
-  createTheme("darkTheme", {
-    text: { primary: "#ffffff", secondary: "#bbb" },
-    background: { default: "#9CA3AF" },
-    divider: { default: "#444" },
-  });
 
   return (
     <>
@@ -137,7 +127,7 @@ export const HeroList = () => {
 
       <DataTable
         columns={columns}
-        data={categories}
+        data={hero}
         pagination
       />
     </>

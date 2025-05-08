@@ -45,6 +45,8 @@ const CreateNews = () => {
     },
   });
 
+  const result = categories.filter((item)=>!item?.parent_id)
+
   // const selectedCategory = watch("category_id");
   const selectedCategoryNumber = Number(selectedCategory); // Convert to number
   // console.log("selectedCategory", selectedCategoryNumber);
@@ -218,7 +220,7 @@ const CreateNews = () => {
             <SingleSelect
               name="category"
               control={control}
-              options={categories}
+              options={result}
               rules={{ required: "Category selection is required" }}
               onSelected={(selected) => {
                 setSelectedCategory(selected); 

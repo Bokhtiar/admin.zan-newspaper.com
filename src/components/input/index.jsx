@@ -899,9 +899,9 @@ export const ImageUpload = (props) => {
     }
   }; 
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="flex flex-col space-y-1">
   
-      <span className="text-sm mb-1 text-gray-500 flex gap-1">
+      <span className="text-sm mb- text-gray-500 flex gap-1">
         {props?.label}{" "}
         <span className="text-white">{props?.rules?.required ? "*" : ""}</span>
       </span>
@@ -921,7 +921,7 @@ export const ImageUpload = (props) => {
               className="h-12 w-12 object-cover rounded-md cursor-pointer "
             />
           ) : (
-            <div className="h-12 w-12 flex items-center justify-center  rounded-md cursor-pointer bg-gray-200 dark:bg-black  ">
+            <div className="h-12 w-12 flex items-center justify-center  rounded-md cursor-pointer bg-gray-200 dark:bg-black">
               {props?.imgUrl ? (
                 <img
                   src={`${process.env.REACT_APP_API_SERVER}${props?.imgUrl}`}
