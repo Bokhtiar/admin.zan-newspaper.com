@@ -23,6 +23,7 @@ import CreateHero from "../pages/hero/CreateHero";
 import EditHero from "../pages/hero/EditHero";
 import { HeroList } from "../pages/hero";
 import Dashboard from "../pages/Dashboard/Dashboard";
+import Seo from "../pages/news/Seo";
 
 
 const appRoutes = [
@@ -47,6 +48,7 @@ const appRoutes = [
       { path: "create-news", element: <CreateNews /> },
       { path: "edit-news/:id", element: <EditNews /> },
       { path: "single-content/:id", element: <SingleContent /> },
+      { path: "seo/:id", element: <Seo/> },
       // single add image
       { path: "singleaddimage", element: <SingleItemList /> },
       { path: "create-singleaddimage", element: <CreateAddImage /> },

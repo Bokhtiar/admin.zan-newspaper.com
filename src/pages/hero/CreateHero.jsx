@@ -92,15 +92,11 @@ const CreateHero = () => {
 
   const onFormSubmit = async (data) => {
     
-    const newsdata=data.news.article_id
-
-    
-   
-
+    const newsdata=data.news
 
     const payload = {
       details: [
-        ...newsdata.map(id => ({ news_id: id, type: "news" })),
+        ...newsdata.map(id => ({ news_id: id.article_id, type: "news" })),
         { news_id: selectedCategoryId, type: "category" },
       ]
     };
@@ -198,7 +194,7 @@ const CreateHero = () => {
           }`}
           disabled={btnloading} // Disable button when loading
         >
-          {btnloading ? "Loading..." : "Create News"}
+          {btnloading ? "Loading..." : "Create Hero"}
         </button>
       </form>
     </>

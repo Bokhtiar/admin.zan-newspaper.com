@@ -6,6 +6,7 @@ import * as Author from "../network/author.network";
 import * as SingleItem from "../network/singleImage.network";
 import * as HomeNews from "../network/homePage.network";
 import * as Hero from "../network/hero.network";
+import * as Seo from "../network/seo.network";
 
 export const NetworkServices = {
     Product,
@@ -15,5 +16,6 @@ export const NetworkServices = {
     Author,
     SingleItem,
     HomeNews,
-    Hero
+    Hero,
+    Seo
 };

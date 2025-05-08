@@ -8,21 +8,19 @@ import { Toastify } from "../../components/toastify";
 import { formatDateInBengali, networkErrorHandeller } from "../../utils/helper";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import { SkeletonTable } from "../../components/loading/skeleton-table";
 import DataTable, { createTheme } from "react-data-table-component";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
-import { ThemeContext } from "../../components/ThemeContext";
-import { DateInput, SingleSelect } from "../../components/input";
+import {  SingleSelect } from "../../components/input";
 import { useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ListSkeleton from "../../components/loading/ListSkeleton";
+import { TbSeo } from "react-icons/tb";
 
 export const NewsList = () => {
   const [news, setNews] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  
 
   console.log("news", news);
   const {
@@ -206,6 +204,9 @@ export const NewsList = () => {
             className="text-red-500 text-xl cursor-pointer"
             onClick={() => destroy(row?.article_id)}
           />
+          <Link to={`/dashboard/seo/${row?.slug}`}>
+            <TbSeo  className="text-primary text-xl" />
+          </Link>
         </div>
       ),
     },
@@ -290,7 +291,7 @@ export const NewsList = () => {
       </div>
 
       <div className="mt-5">
-        <DataTable    columns={columns} data={news} pagination />
+        <DataTable columns={columns} data={news} pagination />
       </div>
     </>
   );
