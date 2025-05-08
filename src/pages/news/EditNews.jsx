@@ -86,6 +86,8 @@ const EditNews = () => {
     fetchAuthor();
   }, [fetchAuthor]);
 
+  const result = categories.filter((item)=>!item?.parent_id)
+
   const newsData = useCallback(async () => {
     // setLoading(true);
     try {
@@ -219,7 +221,7 @@ const EditNews = () => {
             <SingleSelect
               name="category"
               control={control}
-              options={categories}
+              options={result}
               onSelected={(selected) => {
                 setSelectedCategory(selected);
                 setValue("category_id", selected?.category_id);

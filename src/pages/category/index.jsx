@@ -180,13 +180,13 @@ export const CategoryList = () => {
             <div className="p-4 bg-white border border-t-0 border-gray-200 rounded-b-md">
               <table className="w-full text-sm text-left text-gray-700">
 
-                <tbody>
+                <tbody className=" ">
                   {data?.child_category?.map((item) => (
                     <tr key={item?.category_id} className="border-b hover:bg-gray-50">
                       {/* <td className="px-4 py-2">{item?.category_id}</td> */}
 
 
-                      <td className="px-4 py-2">{item?.category_name}</td>
+                      <td className="px-4 py-2 ">{item?.category_name}</td>
                       <td className="px-4 py-2">
                         <div className="flex gap-2">
                           <Link to={`/dashboard/edit-category/${item?.category_id}`}>
