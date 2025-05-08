@@ -138,7 +138,7 @@ const EditNews = () => {
 
   const onFormSubmit = async (data) => {
     
-    
+    console.log("data",data)
 
     const formData = new FormData();
 
@@ -149,7 +149,7 @@ const EditNews = () => {
     formData.append("author_id", data?.author_id);
     formData.append("title", data?.title);
     formData.append("subtitle", data?.subtitle);
-    formData.append("content", news?.content);
+    formData.append("content", data?.content);
     formData.append("status", data?.status ? 1 : 0);
 
     if (data.article_image) {

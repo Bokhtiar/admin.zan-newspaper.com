@@ -91,16 +91,13 @@ const CreateHero = () => {
   }, [fetchNews]);
 
   const onFormSubmit = async (data) => {
-    const array_news = data?.news?.map((item) => item?.article_id);
-    const newsdata=data.news
+    
+    const newsdata=data.news.article_id
+
+    
    
 
-    const value = {
-      details: [
-        { news_id: 1, type: "category" },
-        { news_id: 2, type: "news" },
-      ],
-    };
+
     const payload = {
       details: [
         ...newsdata.map(id => ({ news_id: id, type: "news" })),
