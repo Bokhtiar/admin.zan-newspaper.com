@@ -16,6 +16,7 @@ import { PageHeader } from "../../components/pageHandle/pagehandle";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 import { EditorSection } from "./RichEditor";
+import Seo from "./Seo";
 // import { CKEditor } from "@ckeditor/ckeditor5-react";
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
@@ -337,6 +338,8 @@ const EditNews = () => {
             Status
           </label>
         </div>
+
+        
 
         {/* Submit Button */}
         <button

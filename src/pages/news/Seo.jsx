@@ -19,11 +19,10 @@ import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examFor
 const Seo = () => {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [btnloading, setBtnLoading] = useState(false);
   const navigate = useNavigate();
 
   const {
-    handleSubmit,
+    
     formState: { errors },
     setValue,
     watch,
@@ -61,43 +60,7 @@ const Seo = () => {
     fetchNews();
   }, [fetchNews]);
 
-  const onFormSubmit = async (data) => {
-    console.log("data", data);
 
-    const formData = new FormData();
-
-    if (isAutoSeo == 1) {
-        formData.append("id", data?.article_id?.article_id);
-        formData.append("is_auto_seo", data?.is_auto_seo ? 1 : 0);
-      } else {
-        formData.append("article_id", data?.article_id?.article_id);
-        formData.append("title", data?.title);
-        formData.append("og_title", data?.og_title);
-        formData.append("description", data?.description);
-        formData.append("og_description", data?.og_description);
-        // formData.append("content", value);
-      }
-      
-
-
-
-    try {
-      setBtnLoading(true);
-      const response = await NetworkServices.Seo.store(
-      
-        formData
-      );
-      console.log("responsecc",response)
-      if (response?.status === 201) {
-        Toastify.Success("Seo create successfully");
-        navigate("/dashboard/news");
-      }
-    } catch (error) {
-      console.error("Update Error:", error);
-    //   networkErrorHandeller(error);
-    }
-    setBtnLoading(false);
-  };
 
   const propsData = {
     pageTitle: "Seo ",
@@ -119,8 +82,8 @@ const Seo = () => {
   return (
     <>
       <PageHeader propsData={propsData} />
-      <form
-        onSubmit={handleSubmit(onFormSubmit)}
+      <div
+       
         className="mx-auto p-4 border border-gray-200 rounded-lg "
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -224,7 +187,7 @@ const Seo = () => {
         </div>
 
         {/* Submit Button */}
-        <button
+        {/* <button
           type="submit"
           className={`px-4 py-2 text-white rounded-md transition mt-4 ${
             btnloading
@@ -234,10 +197,13 @@ const Seo = () => {
           disabled={btnloading} // Disable button when loading
         >
           {btnloading ? "Loading..." : "Create seo"}
-        </button>
-      </form>
+        </button> */}
+      </div>
     </>
   );
 };
 
 export default Seo;
+
+
+

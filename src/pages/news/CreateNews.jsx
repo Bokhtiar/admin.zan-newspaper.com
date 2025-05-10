@@ -8,6 +8,7 @@ import {
   ImageUpload,
   SingleSelect,
   TextAreaInput,
+  TextCheckbox,
   TextInput,
 } from "../../components/input";
 import { networkErrorHandeller } from "../../utils/helper";
@@ -16,6 +17,7 @@ import { PageHeader } from "../../components/pageHandle/pagehandle";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 import { EditorSection } from "./RichEditor";
+import Seo from "./Seo";
 
 const CreateNews = () => {
   const [categories, setCategories] = useState([]);
@@ -27,6 +29,9 @@ const CreateNews = () => {
   const [smallloading, setSmallLoading] = useState(false);
   const [value, seteditValue] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
+   const [news, setNews] = useState([]);
+
+
 
   const navigate = useNavigate();
 
@@ -45,12 +50,37 @@ const CreateNews = () => {
     },
   });
 
-  const result = categories.filter((item)=>!item?.parent_id)
+  const result = categories.filter((item) => !item?.parent_id);
 
   // const selectedCategory = watch("category_id");
   const selectedCategoryNumber = Number(selectedCategory); // Convert to number
   // console.log("selectedCategory", selectedCategoryNumber);
+  const isAutoSeo = watch("is_auto_seo");
 
+  const fetchNews = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await NetworkServices.News.index();
+      console.log("response", response);
+      if (response && response.status === 200) {
+        const result = response?.data?.data?.data?.map((item) => {
+          return {
+            label: item.title,
+            value: item.title,
+            ...item,
+          };
+        });
+        setNews(result);
+      }
+    } catch (error) {
+      networkErrorHandeller(error);
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    fetchNews();
+  }, [fetchNews]);
   const fetchCategory = useCallback(async () => {
     setLoading(true);
     try {
@@ -122,47 +152,143 @@ const CreateNews = () => {
     fetchAuthor();
   }, [fetchAuthor]);
 
+  // const onFormSubmit = async (data) => {
+  //   // console.log("data", data);
+  //   const formData = new FormData();
 
+  //   // ফর্মের অন্যান্য ডাটা FormData তে অ্যাড করুন
+  //   const categoryToSend = data.child_category_id
+  //     ? data.child_category_id
+  //     : data.category_id;
+  //   formData.append("category_id", categoryToSend);
+  //   formData.append("author_id", data.author_id);
+  //   formData.append("title", data.title);
+  //   formData.append("subtitle", data.subtitle);
+  //   // formData.append("child_category_id", data.child_category_id);
 
+  //   formData.append("status", data.status ? "1" : "0");
+  //   formData.append("content", value);
+
+  //   // ফাইল আপলোডের জন্য
+  //   if (data.article_image) {
+  //     formData.append("article_image", data.article_image);
+  //   }
+  //   if (data.video_url) {
+  //     formData.append("video_url", data.video_url);
+  //   }
+
+  //   try {
+  //     setBtnLoading(true);
+  //     const response = await NetworkServices.News.store(formData);
+
+  //     // console.log("response", response);
+  //     if (response && response.status === 200) {
+  //       navigate("/dashboard/news");
+  //       return Toastify.Success("News Created Successfully.");
+  //     }
+  //   } catch (error) {
+  //     // console.log("Error:", error);
+  //     networkErrorHandeller(error);
+  //   } finally {
+  //     setBtnLoading(false);
+  //   }
+  // };
+
+  // const onFormSubmit = async (data) => {
+  //   console.log("data", data);
+
+  //   const formData = new FormData();
+
+  //   if (isAutoSeo == 1) {
+  //     formData.append("id", data?.article_id?.article_id);
+  //     formData.append("is_auto_seo", data?.is_auto_seo ? 1 : 0);
+  //   } else {
+  //     formData.append("article_id", data?.article_id?.article_id);
+  //     formData.append("title", data?.title);
+  //     formData.append("og_title", data?.og_title);
+  //     formData.append("description", data?.description);
+  //     formData.append("og_description", data?.og_description);
+  //     // formData.append("content", value);
+  //   }
+
+  //   try {
+  //     setBtnLoading(true);
+  //     const response = await NetworkServices.Seo.store(formData);
+  //     console.log("responsecc", response);
+  //     if (response?.status === 201) {
+  //       Toastify.Success("Seo create successfully");
+  //       navigate("/dashboard/news");
+  //     }
+  //   } catch (error) {
+  //     console.error("Update Error:", error);
+  //     //   networkErrorHandeller(error);
+  //   }
+  //   setBtnLoading(false);
+  // };
   const onFormSubmit = async (data) => {
-    // console.log("data", data);
-    const formData = new FormData();
+    const newsFormData = new FormData();
 
-    // ফর্মের অন্যান্য ডাটা FormData তে অ্যাড করুন
-    const categoryToSend = data.child_category_id ? data.child_category_id : data.category_id;
-    formData.append("category_id", categoryToSend);
-    formData.append("author_id", data.author_id);
-    formData.append("title", data.title);
-    formData.append("subtitle", data.subtitle);
-    // formData.append("child_category_id", data.child_category_id);
+    // Prepare news form data
+    const categoryToSend = data.child_category_id
+      ? data.child_category_id
+      : data.category_id;
+    newsFormData.append("category_id", categoryToSend);
+    newsFormData.append("author_id", data.author_id);
+    newsFormData.append("title", data.title);
+    newsFormData.append("subtitle", data.subtitle);
+    newsFormData.append("status", data.status ? "1" : "0");
+    newsFormData.append("content", value);
 
-    formData.append("status", data.status ? "1" : "0");
-    formData.append("content", value);
-
-    // ফাইল আপলোডের জন্য
     if (data.article_image) {
-      formData.append("article_image", data.article_image);
+      newsFormData.append("article_image", data.article_image);
     }
     if (data.video_url) {
-      formData.append("video_url", data.video_url);
+      newsFormData.append("video_url", data.video_url);
     }
 
     try {
       setBtnLoading(true);
-      const response = await NetworkServices.News.store(formData);
 
-      // console.log("response", response);
-      if (response && response.status === 200) {
-        navigate("/dashboard/news");
-        return Toastify.Success("News Created Successfully.");
+      // First API: Create news
+      const newsResponse = await NetworkServices.News.store(newsFormData);
+      console.log("newsResponse",newsResponse)
+
+      if (newsResponse?.status === 200) {
+        const article_id = newsResponse?.data?.data?.article_id  ;
+
+        // Prepare SEO data
+        const seoFormData = new FormData();
+
+        if (data?.is_auto_seo) {
+          seoFormData.append("id", article_id);
+          seoFormData.append("is_auto_seo", data?.is_auto_seo ? 1 : 0);
+        } else {
+          seoFormData.append("article_id", article_id);
+          seoFormData.append("seo_title", data?.seo_title);
+          seoFormData.append("og_title", data?.og_title);
+          seoFormData.append("description", data?.description);
+          seoFormData.append("og_description", data?.og_description);
+          // seoFormData.append("content", value); // optional
+        }
+
+        // Second API: SEO create
+        const seoResponse = await NetworkServices.Seo.store(seoFormData);
+
+        if (seoResponse?.status === 201) {
+          Toastify.Success("News & SEO Created Successfully.");
+          navigate("/dashboard/news");
+        } else {
+          Toastify.Error("News created but SEO failed.");
+        }
       }
     } catch (error) {
-      // console.log("Error:", error);
+      console.error("Error:", error);
       networkErrorHandeller(error);
     } finally {
       setBtnLoading(false);
     }
   };
+
   if (loading) {
     return (
       <>
@@ -223,8 +349,8 @@ const CreateNews = () => {
               options={result}
               rules={{ required: "Category selection is required" }}
               onSelected={(selected) => {
-                setSelectedCategory(selected); 
-                setValue("category_id", selected?.category_id); 
+                setSelectedCategory(selected);
+                setValue("category_id", selected?.category_id);
               }}
               placeholder="Select a category"
               error={errors.category?.message}
@@ -346,6 +472,106 @@ const CreateNews = () => {
           </label>
         </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {isAutoSeo == 1 ? (
+            <>
+              <div className="mt-4 w-full">
+                <SingleSelect
+                  name="article_id"
+                  control={control}
+                  options={news}
+                  rules={{ required: "Artical selection is required" }}
+                  onSelected={(selected) => {
+                    console.log("selected", selected);
+                    setValue("artical_id", selected?.artical_id);
+                  }}
+                  placeholder="Select an Article"
+                  error={errors.category?.message}
+                  label="Choose Article"
+                  isClearable={true}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="mt-4 w-full">
+                <SingleSelect
+                  name="article_id"
+                  control={control}
+                  options={news}
+                  rules={{ required: "Artical selection is required" }}
+                  onSelected={(selected) => {
+                    console.log("selected", selected);
+                    setValue("artical_id", selected?.artical_id);
+                  }}
+                  placeholder="Select an Article"
+                  error={errors.category?.message}
+                  label="Choose Article"
+                  isClearable={true}
+                />
+              </div>
+
+              <div className="mt-4">
+                <TextInput
+                  name="seo_title"
+                  control={control}
+                  label="Title Name"
+                  type="text"
+                  placeholder="Create Title"
+                  error={errors.seo_title?.message}
+                />
+              </div>
+
+              <div className="mt-4">
+                <TextInput
+                  name="description"
+                  control={control}
+                  label="Description"
+                  type="text"
+                  placeholder="Create description"
+                  error={errors.description?.message}
+                />
+              </div>
+
+              <div className="mt-4">
+                <TextInput
+                  name="og_title"
+                  control={control}
+                  label="Og Title"
+                  type="text"
+                  placeholder="Og title"
+                  error={errors.og_title?.message}
+                />
+              </div>
+
+              <div className="mt-4">
+                <TextInput
+                  name="og_description"
+                  control={control}
+                  label="Og Description"
+                  type="text"
+                  placeholder="Og description"
+                  error={errors.og_description?.message}
+                />
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="flex items-center  mt-4 gap-2 ">
+          <TextCheckbox
+            type="checkbox"
+            name="is_auto_seo"
+            className=""
+            control={control}
+            onChange={(e) => setValue("is_auto_seo", e.target.checked ? 1 : 0)}
+            checked={watch("is_auto_seo") == 1} // If is_auto_seo is 1, checked = true
+          />
+          <label htmlFor="is_auto_seo" className="text-sm text-gray-700 ">
+            Is auto seo
+          </label>
+        </div>
+
         {/* Submit Button */}
         <button
           type="submit"
@@ -364,24 +590,3 @@ const CreateNews = () => {
 };
 
 export default CreateNews;
-
-// const RichEditor = ({ editorContent, setEditorContent }) => {
-
-//   // console.log("content",content)
-//   return (
-//     <>
-//       <CKEditor
-//         editor={ClassicEditor}
-//         data="<p>Write something...</p>"
-//         onChange={(event, editor) => {
-//           const data = editor.getData();
-//           console.log(data);
-//           setEditorContent(data);
-//         }}
-//       />
-//       <h3>Output:</h3>
-//       <div dangerouslySetInnerHTML={{ __html: editorContent }} />
-//       {/* <p>editorContent</p> */}
-//     </>
-//   );
-// };

@@ -21,6 +21,8 @@ export const CategoryList = () => {
   const [loading, setLoading] = useState(false);
   const [btnloading, setBtnLoading] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
+
+  console.log(categories)
   // Fetch categories from API
   const priorityNavber = useCallback(async () => {
     setBtnLoading(true);
