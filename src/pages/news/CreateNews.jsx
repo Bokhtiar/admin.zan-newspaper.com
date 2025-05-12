@@ -29,7 +29,7 @@ const CreateNews = () => {
   const [smallloading, setSmallLoading] = useState(false);
   const [value, seteditValue] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
-   const [news, setNews] = useState([]);
+  const [news, setNews] = useState([]);
 
 
 
@@ -152,111 +152,107 @@ const CreateNews = () => {
     fetchAuthor();
   }, [fetchAuthor]);
 
-  // const onFormSubmit = async (data) => {
-  //   // console.log("data", data);
-  //   const formData = new FormData();
 
-  //   // ফর্মের অন্যান্য ডাটা FormData তে অ্যাড করুন
+  // const onFormSubmit = async (data) => {
+  //   const newsFormData = new FormData();
+
+  //   // Prepare news form data
   //   const categoryToSend = data.child_category_id
   //     ? data.child_category_id
   //     : data.category_id;
-  //   formData.append("category_id", categoryToSend);
-  //   formData.append("author_id", data.author_id);
-  //   formData.append("title", data.title);
-  //   formData.append("subtitle", data.subtitle);
-  //   // formData.append("child_category_id", data.child_category_id);
+  //   newsFormData.append("category_id", categoryToSend);
+  //   newsFormData.append("author_id", data.author_id);
+  //   newsFormData.append("title", data.title);
+  //   newsFormData.append("subtitle", data.subtitle);
+  //   newsFormData.append("status", data.status ? "1" : "0");
+  //   newsFormData.append("content", value);
 
-  //   formData.append("status", data.status ? "1" : "0");
-  //   formData.append("content", value);
-
-  //   // ফাইল আপলোডের জন্য
   //   if (data.article_image) {
-  //     formData.append("article_image", data.article_image);
+  //     newsFormData.append("article_image", data.article_image);
   //   }
   //   if (data.video_url) {
-  //     formData.append("video_url", data.video_url);
+  //     newsFormData.append("video_url", data.video_url);
   //   }
 
   //   try {
   //     setBtnLoading(true);
-  //     const response = await NetworkServices.News.store(formData);
 
-  //     // console.log("response", response);
-  //     if (response && response.status === 200) {
-  //       navigate("/dashboard/news");
-  //       return Toastify.Success("News Created Successfully.");
+  //     // First API: Create news
+  //     const newsResponse = await NetworkServices.News.store(newsFormData);
+  //     console.log("newsResponse",newsResponse)
+
+  //     if (newsResponse?.status === 200) {
+  //       Toastify.Success("News  Created Successfully.");
+  //       const article_id = newsResponse?.data?.data?.article_id  ;
+
+  //       // Prepare SEO data
+  //       const seoFormData = new FormData();
+
+  //       if (data?.is_auto_seo) {
+  //         seoFormData.append("id", article_id);
+  //         seoFormData.append("is_auto_seo", data?.is_auto_seo ? 1 : 0);
+  //       } else {
+  //         seoFormData.append("article_id", article_id);
+  //         seoFormData.append("seo_title", data?.seo_title);
+  //         seoFormData.append("og_title", data?.og_title);
+  //         seoFormData.append("description", data?.description);
+  //         seoFormData.append("og_description", data?.og_description);
+  //         // seoFormData.append("content", value); // optional
+  //       }
+
+  //       // Second API: SEO create
+  //       const seoResponse = await NetworkServices.Seo.store(seoFormData);
+
+  //       if (seoResponse?.status === 201) {
+  //         Toastify.Success("SEO Created Successfully.");
+  //         navigate("/dashboard/news");
+  //       } else {
+  //         Toastify.Error("News created but SEO failed.");
+  //       }
   //     }
   //   } catch (error) {
-  //     // console.log("Error:", error);
+  //     console.error("Error:", error);
   //     networkErrorHandeller(error);
   //   } finally {
   //     setBtnLoading(false);
   //   }
   // };
-
-  // const onFormSubmit = async (data) => {
-  //   console.log("data", data);
-
-  //   const formData = new FormData();
-
-  //   if (isAutoSeo == 1) {
-  //     formData.append("id", data?.article_id?.article_id);
-  //     formData.append("is_auto_seo", data?.is_auto_seo ? 1 : 0);
-  //   } else {
-  //     formData.append("article_id", data?.article_id?.article_id);
-  //     formData.append("title", data?.title);
-  //     formData.append("og_title", data?.og_title);
-  //     formData.append("description", data?.description);
-  //     formData.append("og_description", data?.og_description);
-  //     // formData.append("content", value);
-  //   }
-
-  //   try {
-  //     setBtnLoading(true);
-  //     const response = await NetworkServices.Seo.store(formData);
-  //     console.log("responsecc", response);
-  //     if (response?.status === 201) {
-  //       Toastify.Success("Seo create successfully");
-  //       navigate("/dashboard/news");
-  //     }
-  //   } catch (error) {
-  //     console.error("Update Error:", error);
-  //     //   networkErrorHandeller(error);
-  //   }
-  //   setBtnLoading(false);
-  // };
   const onFormSubmit = async (data) => {
-    const newsFormData = new FormData();
+  const newsFormData = new FormData();
 
-    // Prepare news form data
-    const categoryToSend = data.child_category_id
-      ? data.child_category_id
-      : data.category_id;
-    newsFormData.append("category_id", categoryToSend);
-    newsFormData.append("author_id", data.author_id);
-    newsFormData.append("title", data.title);
-    newsFormData.append("subtitle", data.subtitle);
-    newsFormData.append("status", data.status ? "1" : "0");
-    newsFormData.append("content", value);
+  const categoryToSend = data.child_category_id
+    ? data.child_category_id
+    : data.category_id;
+  newsFormData.append("category_id", categoryToSend);
+  newsFormData.append("author_id", data.author_id);
+  newsFormData.append("title", data.title);
+  newsFormData.append("subtitle", data.subtitle);
+  newsFormData.append("status", data.status ? "1" : "0");
+  newsFormData.append("content", value);
 
-    if (data.article_image) {
-      newsFormData.append("article_image", data.article_image);
-    }
-    if (data.video_url) {
-      newsFormData.append("video_url", data.video_url);
-    }
+  if (data.article_image) {
+    newsFormData.append("article_image", data.article_image);
+  }
+  if (data.video_url) {
+    newsFormData.append("video_url", data.video_url);
+  }
 
-    try {
-      setBtnLoading(true);
+  try {
+    setBtnLoading(true);
 
+    // Check if SEO data is present
+    const hasSeoData = data?.is_auto_seo ||
+      (data?.seo_title && data?.og_title && data?.description && data?.og_description);
+
+    if (hasSeoData) {
       // First API: Create news
       const newsResponse = await NetworkServices.News.store(newsFormData);
-      console.log("newsResponse",newsResponse)
+      console.log("newsResponse", newsResponse);
 
       if (newsResponse?.status === 200) {
-        const article_id = newsResponse?.data?.data?.article_id  ;
+        Toastify.Success("News Created Successfully.");
+        const article_id = newsResponse?.data?.data?.article_id;
 
-        // Prepare SEO data
         const seoFormData = new FormData();
 
         if (data?.is_auto_seo) {
@@ -268,26 +264,34 @@ const CreateNews = () => {
           seoFormData.append("og_title", data?.og_title);
           seoFormData.append("description", data?.description);
           seoFormData.append("og_description", data?.og_description);
-          // seoFormData.append("content", value); // optional
         }
 
         // Second API: SEO create
         const seoResponse = await NetworkServices.Seo.store(seoFormData);
 
         if (seoResponse?.status === 201) {
-          Toastify.Success("News & SEO Created Successfully.");
+          Toastify.Success("SEO Created Successfully.");
           navigate("/dashboard/news");
         } else {
           Toastify.Error("News created but SEO failed.");
         }
       }
-    } catch (error) {
-      console.error("Error:", error);
-      networkErrorHandeller(error);
-    } finally {
-      setBtnLoading(false);
+    } else {
+      // Only News creation
+      const newsResponse = await NetworkServices.News.store(newsFormData);
+      if (newsResponse?.status === 200) {
+        Toastify.Success("News Created Successfully.");
+        navigate("/dashboard/news");
+      }
     }
-  };
+  } catch (error) {
+    console.error("Error:", error);
+    networkErrorHandeller(error);
+  } finally {
+    setBtnLoading(false);
+  }
+};
+
 
   if (loading) {
     return (
@@ -480,13 +484,13 @@ const CreateNews = () => {
                   name="article_id"
                   control={control}
                   options={news}
-                  rules={{ required: "Artical selection is required" }}
+                  // rules={{ required: "Artical selection is required" }}
                   onSelected={(selected) => {
                     console.log("selected", selected);
                     setValue("artical_id", selected?.artical_id);
                   }}
                   placeholder="Select an Article"
-                  error={errors.category?.message}
+                  error={errors.article_id?.message}
                   label="Choose Article"
                   isClearable={true}
                 />
@@ -499,7 +503,7 @@ const CreateNews = () => {
                   name="article_id"
                   control={control}
                   options={news}
-                  rules={{ required: "Artical selection is required" }}
+                  // rules={{ required: "Artical selection is required" }}
                   onSelected={(selected) => {
                     console.log("selected", selected);
                     setValue("artical_id", selected?.artical_id);

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { IoIosList } from "react-icons/io";
@@ -8,135 +8,101 @@ import { Toastify } from "../../components/toastify";
 import { formatDateInBengali, networkErrorHandeller } from "../../utils/helper";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import DataTable from "react-data-table-component";
+import DataTable, { createTheme } from "react-data-table-component";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
-import { SingleSelect } from "../../components/input";
+import {  SingleSelect } from "../../components/input";
 import { useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ListSkeleton from "../../components/loading/ListSkeleton";
-import debounce from "lodash/debounce";
+import { TbSeo } from "react-icons/tb";
 
 export const NewsList = () => {
   const [news, setNews] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalRows, setTotalRows] = useState(0);
-  const [perPage, setPerPage] = useState(10);
-  const [filters, setFilters] = useState({
-    title: "",
-    category: null,
-    startDate: null,
-    endDate: null,
-  });
 
+  console.log("news", news);
   const {
     formState: { errors },
     setValue,
     watch,
     control,
-  } = useForm({ defaultValues: { category_id: null } });
-  const category = watch("category_id");
-  console.log("ffff", category);
-
-  const fetchNews = useCallback(
-    async (page = 1, limit = perPage) => {
-      setLoading(true);
-      try {
-        const queryParams = new URLSearchParams();
-        if (filters.title) queryParams.append("title", filters.title);
-        if (filters.category)
-          queryParams.append("category_id", filters.category);
-        if (filters.startDate)
-          queryParams.append(
-            "start_date",
-            filters.startDate.toISOString().split("T")[0]
-          );
-        if (filters.endDate)
-          queryParams.append(
-            "end_date",
-            filters.endDate.toISOString().split("T")[0]
-          );
-        queryParams.append("page", page);
-        queryParams.append("limit", limit);
-
-        const response = await NetworkServices.News.index(
-          queryParams.toString()
-        );
-        if (response?.status === 200) {
-          setNews(response?.data?.data?.data || []);
-          setTotalRows(response?.data?.data?.total || 0);
-        }
-      } catch (error) {
-        networkErrorHandeller(error);
-      } finally {
-        setLoading(false);
-      }
+  } = useForm({
+    defaultValues: {
+      status: 0,
     },
-    [filters, perPage]
-  );
+  });
+  const category = watch("category_id");
+  const [title, setTitle] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
+  // console.log("first", startDate);
+  // console.log("first", endDate);
+
+  const handleTextChange = (e) => {
+    const name = e.target.value;
+    // console.log(name);
+    setTimeout(() => {
+      setTitle(name);
+    }, 500);
+    // setTitle(e.target.value);
+  };
+
+  const fetchNews = async () => {
+    setLoading(true);
+    try {
+      // Construct the query parameters
+      const queryParams = new URLSearchParams();
+      if (title) queryParams.append("title", title);
+      if (category) queryParams.append("category_id", category);
+
+      if (startDate) queryParams.append("start_date", startDate);
+      if (endDate) queryParams.append("end_date", endDate);
+
+      const response = await NetworkServices.News.index(queryParams.toString());
+      // console.log(response);
+
+      if (response && response.status === 200) {
+        setNews(response?.data?.data?.data || []);
+      }
+    } catch (error) {
+      // console.log(error);
+      networkErrorHandeller(error);
+    }
+    setLoading(false);
+  };
   useEffect(() => {
-    fetchNews(currentPage, perPage);
-  }, [fetchNews, currentPage, perPage]);
-
-  const handleTextChange = debounce((e) => {
-    setFilters((prev) => ({ ...prev, title: e.target.value }));
-    setCurrentPage(1);
-  }, 500);
-
-  // const handleCategoryChange = (selected) => {
-  //   setValue("category_id", selected?.value);
-  //   console.log("selected",selected)
-  //   setFilters((prev) => ({ ...prev, category: selected?.value }));
-  //   setCurrentPage(1);
-  // };
-
-  const handleStartDateChange = (date) => {
-    setFilters((prev) => ({ ...prev, startDate: date }));
-    setCurrentPage(1);
-  };
-
-  const handleEndDateChange = (date) => {
-    setFilters((prev) => ({ ...prev, endDate: date }));
-    setCurrentPage(1);
-  };
-
-  const handlePageChange = (page) => setCurrentPage(page);
-
-  const handlePerRowsChange = (newPerPage, page) => {
-    setPerPage(newPerPage);
-    setCurrentPage(page);
-  };
-  useEffect(() => {
-    setFilters((prev) => ({
-      ...prev,
-      category: category,
-    }));
-    setCurrentPage(1); // Reset page when filter changes
-  }, [category]);
+    fetchNews();
+  }, [title, category, endDate]);
 
   const fetchCategory = useCallback(async () => {
+    // setLoading(true);
     try {
       const response = await NetworkServices.Category.index();
-      if (response?.status === 200) {
-        const result = response.data.data.map((item) => ({
-          label: item.category_name,
-          value: item.category_name,
-          ...item,
-        }));
+      if (response && response.status === 200) {
+        const result = response.data.data.map((item, index) => {
+          return {
+            label: item.category_name,
+            value: item.category_name,
+            ...item,
+          };
+        });
         setCategories(result);
       }
     } catch (error) {
-      console.error("Category Fetch Error", error);
+      console.error("Fetch Category Error:", error);
     }
+    setLoading(false); // End loading (handled in both success and error)
   }, []);
 
+  // category api fetch
   useEffect(() => {
     fetchCategory();
   }, [fetchCategory]);
 
+  // Handle single category deletion
   const destroy = (id) => {
     confirmAlert({
       title: "Confirm Delete",
@@ -149,17 +115,26 @@ export const NewsList = () => {
               const response = await NetworkServices.News.destroy(id);
               if (response?.status === 200) {
                 Toastify.Info("News deleted successfully.");
-                fetchNews(currentPage, perPage);
+                fetchNews();
               }
             } catch (error) {
               networkErrorHandeller(error);
             }
           },
         },
-        { label: "No" },
+        {
+          label: "No",
+        },
       ],
     });
   };
+  if (loading) {
+    return (
+      <div>
+        <ListSkeleton />
+      </div>
+    );
+  }
 
   const propsData = {
     pageTitle: "News List",
@@ -171,7 +146,7 @@ export const NewsList = () => {
 
   const columns = [
     {
-      name: "Article Image",
+      name: "Artical Image",
       cell: (row) => (
         <img
           className="w-20 h-20 rounded-full border"
@@ -188,15 +163,38 @@ export const NewsList = () => {
       name: "Title & Date",
       cell: (row) => (
         <div className="flex flex-col space-y-1">
+          {" "}
+          {/* 🆕 এটি লাইন স্পেস ঠিক করবে */}
           <span className="font-semibold">{row?.title}</span>
-          <span className="text-sm">
+          <span className=" text-sm">
             {formatDateInBengali(row?.updated_at)}
           </span>
         </div>
       ),
     },
+
     {
-      name: "Actions",
+      name: "Content Name",
+      selector: (row) => row.content,
+      cell: (row) => {
+        const contentText = row.content.replace(/<[^>]+>/g, ""); // Remove HTML tags
+
+        return (
+          <div className="">
+            <p className="line-clamp-2 mb-2">{contentText}</p>{" "}
+            {/* Limit the content to 2 lines */}
+            <Link
+              to={`/dashboard/single-content/${row?.slug}`}
+              className=" text-green-600 dark:text-gray-700 hover:underline mt-2"
+            >
+              See More
+            </Link>
+          </div>
+        );
+      },
+    },
+    {
+      name: "Action",
       cell: (row) => (
         <div className="flex gap-2">
           <Link to={`/dashboard/edit-news/${row?.slug}`}>
@@ -204,69 +202,96 @@ export const NewsList = () => {
           </Link>
           <MdDelete
             className="text-red-500 text-xl cursor-pointer"
-            onClick={() => destroy(row.article_id)}
+            onClick={() => destroy(row?.article_id)}
           />
+
         </div>
       ),
     },
   ];
 
-  return (
-    <section className="space-y-4">
-      <PageHeader propsData={propsData} />
+  createTheme("lightTheme", {
+    text: { primary: "#000", secondary: "#555" },
+    background: { default: "#ffffff" },
+    divider: { default: "#ddd" },
+  });
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <input
-          onChange={handleTextChange}
-          type="text"
-          placeholder="Search title"
-          className="border p-2 rounded-md"
-        />
+  createTheme("darkTheme", {
+    text: { primary: "#ffffff", secondary: "#bbb" },
+    background: { default: "#9CA3AF" },
+    divider: { default: "#444" },
+  });
+
+  return (
+    <>
+      <PageHeader propsData={propsData} />
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
         <SingleSelect
-          name="category_id"
+          name="categories"
           control={control}
-          error={errors.category_id?.message}
           options={categories}
-          
-          
-          isClearable
+          rules={{ required: "Category selection is required" }}
           onSelected={(selected) =>
             setValue("category_id", selected?.category_id)
           }
-          placeholder="Select Category"
-          // onChange={handleCategoryChange}
+          placeholder="Select a category "
+          error={errors.category?.message}
+          label="Choose category *"
+          isClearable={true}
+          // error={errors} // Pass an error message if validation fails
         />
-        <DatePicker
-          selected={filters.startDate}
-          onChange={handleStartDateChange}
-          placeholderText="Start Date"
-          className="border p-2 rounded-md w-full"
-        />
-        <DatePicker
-          selected={filters.endDate}
-          onChange={handleEndDateChange}
-          placeholderText="End Date"
-          className="border p-2 rounded-md w-full"
-        />
+        <div className="">
+          <label
+            htmlFor="textInput"
+            className="block text-sm  text-gray-500 mb-1"
+          >
+            Text Input:
+          </label>
+          <input
+            id="textInput"
+            type="text"
+            // value={title}
+            onChange={handleTextChange}
+            className="w-full px-4 py-3 border rounded-lg   focus:outline-none"
+            placeholder="Enter text"
+          />
+        </div>
+
+        <div className="">
+          <label className="block text-sm text-gray-500 mb-1">
+            Start Date:
+          </label>
+          <DatePicker
+            selected={startDate ? new Date(startDate) : null}
+            onChange={(date) => {
+              const formattedDate = date.toISOString().split("T")[0];
+              setStartDate(formattedDate);
+            }}
+            dateFormat="yyyy-MM-dd"
+            placeholderText="Select start date"
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none"
+          />
+        </div>
+
+        <div className="">
+          <label className="block text-sm text-gray-500 mb-1">End Date:</label>
+          <DatePicker
+            selected={endDate ? new Date(endDate) : null}
+            onChange={(date) => {
+              const formattedDate = date.toISOString().split("T")[0];
+              setEndDate(formattedDate);
+            }}
+            dateFormat="yyyy-MM-dd"
+            placeholderText="Select end date"
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none"
+          />
+        </div>
       </div>
 
-
-
-      {loading ? (
-        <ListSkeleton />
-      ) : (
-        <DataTable
-        columns={columns}
-        data={news}
-        progressPending={loading}
-        pagination
-        paginationServer
-        paginationTotalRows={totalRows}
-        onChangeRowsPerPage={handlePerRowsChange}
-        onChangePage={handlePageChange}
-        // progressComponent={<ListSkeleton />}
-      />
-      )}
-    </section>
+      <div className="mt-5">
+        <DataTable columns={columns} data={news} pagination />
+      </div>
+    </>
   );
 };
+
