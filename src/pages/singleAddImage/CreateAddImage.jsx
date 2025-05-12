@@ -11,7 +11,7 @@ import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { IoMdCreate } from "react-icons/io";
 import { networkErrorHandeller } from "../../utils/helper";
 import { Toastify } from "../../components/toastify";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 

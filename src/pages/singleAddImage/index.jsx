@@ -3,13 +3,9 @@ import { IoIosList } from "react-icons/io";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import { NetworkServices } from "../../network";
 import { networkErrorHandeller } from "../../utils/helper";
-import { confirmAlert } from "react-confirm-alert";
-import { Toastify } from "../../components/toastify";
-import { SkeletonTable } from "../../components/loading/skeleton-table";
+
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { FaEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import DataTable from "react-data-table-component";
+
 import ListSkeleton from "../../components/loading/ListSkeleton";
 
 const SingleItemList = () => {
@@ -31,7 +27,7 @@ const SingleItemList = () => {
     setLoading(true);
     try {
       const response = await NetworkServices.SingleItem.index();
-      // console.log("uuu", response);
+      console.log("uuu", response);
       if (response && response.status === 200) {
         setimageItem(response?.data?.data || {});
       }
