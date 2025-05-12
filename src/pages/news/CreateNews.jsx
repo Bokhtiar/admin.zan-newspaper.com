@@ -31,8 +31,6 @@ const CreateNews = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [news, setNews] = useState([]);
 
-
-
   const navigate = useNavigate();
 
   console.log("categories", categories);
@@ -152,146 +150,84 @@ const CreateNews = () => {
     fetchAuthor();
   }, [fetchAuthor]);
 
-
-  // const onFormSubmit = async (data) => {
-  //   const newsFormData = new FormData();
-
-  //   // Prepare news form data
-  //   const categoryToSend = data.child_category_id
-  //     ? data.child_category_id
-  //     : data.category_id;
-  //   newsFormData.append("category_id", categoryToSend);
-  //   newsFormData.append("author_id", data.author_id);
-  //   newsFormData.append("title", data.title);
-  //   newsFormData.append("subtitle", data.subtitle);
-  //   newsFormData.append("status", data.status ? "1" : "0");
-  //   newsFormData.append("content", value);
-
-  //   if (data.article_image) {
-  //     newsFormData.append("article_image", data.article_image);
-  //   }
-  //   if (data.video_url) {
-  //     newsFormData.append("video_url", data.video_url);
-  //   }
-
-  //   try {
-  //     setBtnLoading(true);
-
-  //     // First API: Create news
-  //     const newsResponse = await NetworkServices.News.store(newsFormData);
-  //     console.log("newsResponse",newsResponse)
-
-  //     if (newsResponse?.status === 200) {
-  //       Toastify.Success("News  Created Successfully.");
-  //       const article_id = newsResponse?.data?.data?.article_id  ;
-
-  //       // Prepare SEO data
-  //       const seoFormData = new FormData();
-
-  //       if (data?.is_auto_seo) {
-  //         seoFormData.append("id", article_id);
-  //         seoFormData.append("is_auto_seo", data?.is_auto_seo ? 1 : 0);
-  //       } else {
-  //         seoFormData.append("article_id", article_id);
-  //         seoFormData.append("seo_title", data?.seo_title);
-  //         seoFormData.append("og_title", data?.og_title);
-  //         seoFormData.append("description", data?.description);
-  //         seoFormData.append("og_description", data?.og_description);
-  //         // seoFormData.append("content", value); // optional
-  //       }
-
-  //       // Second API: SEO create
-  //       const seoResponse = await NetworkServices.Seo.store(seoFormData);
-
-  //       if (seoResponse?.status === 201) {
-  //         Toastify.Success("SEO Created Successfully.");
-  //         navigate("/dashboard/news");
-  //       } else {
-  //         Toastify.Error("News created but SEO failed.");
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //     networkErrorHandeller(error);
-  //   } finally {
-  //     setBtnLoading(false);
-  //   }
-  // };
   const onFormSubmit = async (data) => {
-  const newsFormData = new FormData();
+    const newsFormData = new FormData();
 
-  const categoryToSend = data.child_category_id
-    ? data.child_category_id
-    : data.category_id;
-  newsFormData.append("category_id", categoryToSend);
-  newsFormData.append("author_id", data.author_id);
-  newsFormData.append("title", data.title);
-  newsFormData.append("subtitle", data.subtitle);
-  newsFormData.append("status", data.status ? "1" : "0");
-  newsFormData.append("content", value);
+    const categoryToSend = data.child_category_id
+      ? data.child_category_id
+      : data.category_id;
+    newsFormData.append("category_id", categoryToSend);
+    newsFormData.append("author_id", data.author_id);
+    newsFormData.append("title", data.title);
+    newsFormData.append("subtitle", data.subtitle);
+    newsFormData.append("status", data.status ? "1" : "0");
+    newsFormData.append("content", value);
 
-  if (data.article_image) {
-    newsFormData.append("article_image", data.article_image);
-  }
-  if (data.video_url) {
-    newsFormData.append("video_url", data.video_url);
-  }
-
-  try {
-    setBtnLoading(true);
-
-    // Check if SEO data is present
-    const hasSeoData = data?.is_auto_seo ||
-      (data?.seo_title && data?.og_title && data?.description && data?.og_description);
-
-    if (hasSeoData) {
-      // First API: Create news
-      const newsResponse = await NetworkServices.News.store(newsFormData);
-      console.log("newsResponse", newsResponse);
-
-      if (newsResponse?.status === 200) {
-        Toastify.Success("News Created Successfully.");
-        const article_id = newsResponse?.data?.data?.article_id;
-
-        const seoFormData = new FormData();
-
-        if (data?.is_auto_seo) {
-          seoFormData.append("id", article_id);
-          seoFormData.append("is_auto_seo", data?.is_auto_seo ? 1 : 0);
-        } else {
-          seoFormData.append("article_id", article_id);
-          seoFormData.append("seo_title", data?.seo_title);
-          seoFormData.append("og_title", data?.og_title);
-          seoFormData.append("description", data?.description);
-          seoFormData.append("og_description", data?.og_description);
-        }
-
-        // Second API: SEO create
-        const seoResponse = await NetworkServices.Seo.store(seoFormData);
-
-        if (seoResponse?.status === 201) {
-          Toastify.Success("SEO Created Successfully.");
-          navigate("/dashboard/news");
-        } else {
-          Toastify.Error("News created but SEO failed.");
-        }
-      }
-    } else {
-      // Only News creation
-      const newsResponse = await NetworkServices.News.store(newsFormData);
-      if (newsResponse?.status === 200) {
-        Toastify.Success("News Created Successfully.");
-        navigate("/dashboard/news");
-      }
+    if (data.article_image) {
+      newsFormData.append("article_image", data.article_image);
     }
-  } catch (error) {
-    console.error("Error:", error);
-    networkErrorHandeller(error);
-  } finally {
-    setBtnLoading(false);
-  }
-};
+    if (data.video_url) {
+      newsFormData.append("video_url", data.video_url);
+    }
 
+    try {
+      setBtnLoading(true);
+
+      // Check if SEO data is present
+      const hasSeoData =
+        data?.is_auto_seo ||
+        (data?.seo_title &&
+          data?.og_title &&
+          data?.description &&
+          data?.og_description);
+
+      if (hasSeoData) {
+        // First API: Create news
+        const newsResponse = await NetworkServices.News.store(newsFormData);
+        console.log("newsResponse", newsResponse);
+
+        if (newsResponse?.status === 200) {
+          Toastify.Success("News Created Successfully.");
+          const article_id = newsResponse?.data?.data?.article_id;
+
+          const seoFormData = new FormData();
+
+          if (data?.is_auto_seo) {
+            seoFormData.append("id", article_id);
+            seoFormData.append("is_auto_seo", data?.is_auto_seo ? 1 : 0);
+          } else {
+            seoFormData.append("article_id", article_id);
+            seoFormData.append("seo_title", data?.seo_title);
+            seoFormData.append("og_title", data?.og_title);
+            seoFormData.append("description", data?.description);
+            seoFormData.append("og_description", data?.og_description);
+          }
+
+          // Second API: SEO create
+          const seoResponse = await NetworkServices.Seo.store(seoFormData);
+
+          if (seoResponse?.status === 201) {
+            Toastify.Success("SEO Created Successfully.");
+            navigate("/dashboard/news");
+          } else {
+            Toastify.Error("News created but SEO failed.");
+          }
+        }
+      } else {
+        // Only News creation
+        const newsResponse = await NetworkServices.News.store(newsFormData);
+        if (newsResponse?.status === 200) {
+          Toastify.Success("News Created Successfully.");
+          navigate("/dashboard/news");
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      networkErrorHandeller(error);
+    } finally {
+      setBtnLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -479,7 +415,7 @@ const CreateNews = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {isAutoSeo == 1 ? (
             <>
-              <div className="mt-4 w-full">
+              {/* <div className="mt-4 w-full">
                 <SingleSelect
                   name="article_id"
                   control={control}
@@ -494,11 +430,11 @@ const CreateNews = () => {
                   label="Choose Article"
                   isClearable={true}
                 />
-              </div>
+              </div> */}
             </>
           ) : (
             <>
-              <div className="mt-4 w-full">
+              {/* <div className="mt-4 w-full">
                 <SingleSelect
                   name="article_id"
                   control={control}
@@ -513,7 +449,7 @@ const CreateNews = () => {
                   label="Choose Article"
                   isClearable={true}
                 />
-              </div>
+              </div> */}
 
               <div className="mt-4">
                 <TextInput

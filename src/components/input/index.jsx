@@ -658,7 +658,7 @@ const customStyles = (error, themeValue) => {
       minHeight: 50,
       fontSize: 14,
       color: "black",
-      background: themeValue === 'light' ? '#FFFFFF' : "#1E293B",
+      background: themeValue === "light" ? "#FFFFFF" : "#1E293B",
       boxShadow: "none",
       "&:hover": { borderColor: "1px solid #fff" },
       border: error ? "1px solid red" : "1px solid #dfdfdf",
@@ -669,33 +669,31 @@ const customStyles = (error, themeValue) => {
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected
-        ? '#87CEEB'
+        ? "#87CEEB"
         : state.isFocused
-        ? '#7FB3F0'
-        : '',
+        ? "#7FB3F0"
+        : "",
       color:
         state.isSelected || state.isFocused
-          ? themeValue === 'light'
-            ? 'black'
-            : '#fff'
-          : '',
+          ? themeValue === "light"
+            ? "black"
+            : "#fff"
+          : "",
     }),
 
     singleValue: (provided) => ({
       ...provided,
-      color: themeValue === 'light' ? 'black' : 'white',
+      color: themeValue === "light" ? "black" : "white",
     }),
   };
 
   return myStyles;
 };
 
-
 /* Single select field */
 export const SingleSelect = (props) => {
   const {
     field: { onChange, onBlur, value },
-   
   } = useController({
     name: props.name,
     control: props.control,
@@ -709,11 +707,11 @@ export const SingleSelect = (props) => {
     props.onSelected?.(event);
   };
 
-  // mode added 
+  // mode added
   // ||"light"
   const [theme, setTheme] = useState(localStorage.getItem("theme"));
 
-console.log("theme1",theme)
+  console.log("theme1", theme);
 
   // Optional: Listen for theme changes across tabs
   useEffect(() => {
@@ -727,7 +725,7 @@ console.log("theme1",theme)
       window.removeEventListener("localStorageUpdated", handleStorageChange);
     };
   }, []);
-  
+
   return (
     <div className="cursor-pointer">
       {props.error ? (
@@ -740,18 +738,18 @@ console.log("theme1",theme)
         onBlur={onBlur} // notify when input is touched/blur
         value={value} // input value
         name={props.name} // send down the input name
-        styles={customStyles(props.error,theme) }
+        styles={customStyles(props.error, theme)}
         components={{
           DropdownIndicator: () => null,
           IndicatorSeparator: () => null,
-        }}      
+        }}
         options={props.options}
         onChange={handleSelect}
         isClearable={props.isClearable}
         defaultValue={props.defaultvalue ? { ...props.defaultvalue } : null}
         placeholder={props.placeholder}
         // disabled={props.disabled}
-        isDisabled={props.disabled} 
+        isDisabled={props.disabled}
       />
     </div>
   );
@@ -880,7 +878,9 @@ export const ImageUpload = (props) => {
       required: props.required ? "Image is required" : false,
       validate: (file) => {
         if (!file && props.required) return "Image is required";
-        return !file || file.size < 2 * 1024 * 1024 || "File must be less than 2MB";
+        return (
+          !file || file.size < 2 * 1024 * 1024 || "File must be less than 2MB"
+        );
       },
     },
     defaultValue: props.defaultValue || null,
@@ -897,10 +897,9 @@ export const ImageUpload = (props) => {
       setPreview(URL.createObjectURL(file)); // Show file preview
       props.onUpload?.(file); // Callback for additional handling
     }
-  }; 
+  };
   return (
     <div className="flex flex-col space-y-1">
-  
       <span className="text-sm mb- text-gray-500 flex gap-1">
         {props?.label}{" "}
         <span className="text-white">{props?.rules?.required ? "*" : ""}</span>
@@ -933,7 +932,9 @@ export const ImageUpload = (props) => {
               )}
             </div>
           )}
-          <span className="text-gray-700 dark:text-gray-300 ">Click to upload</span>
+          <span className="text-gray-700 dark:text-gray-300 ">
+            Click to upload
+          </span>
         </div>
       </div>
       {props?.error && (
@@ -946,13 +947,12 @@ export const ImageUpload = (props) => {
 /* checkbox input */
 export const TextCheckbox = (props) => {
   const {
-    field: {  onBlur, value },
+    field: { onBlur, value },
   } = useController({
     name: props.name,
     control: props.control,
     rules: { ...props.rules },
     defaultValue: props.defaultvalue,
-
   });
 
   return (
@@ -987,8 +987,6 @@ export const TextCheckbox = (props) => {
   );
 };
 
-
-
 export const ExcelUpload = (props) => {
   const {
     field: { onChange, onBlur, value },
@@ -1008,7 +1006,9 @@ export const ExcelUpload = (props) => {
         if (file && !allowedTypes.includes(file.type)) {
           return "Only Excel or CSV files are allowed";
         }
-        return !file || file.size < 5 * 1024 * 1024 || "File must be less than 5MB";
+        return (
+          !file || file.size < 5 * 1024 * 1024 || "File must be less than 5MB"
+        );
       },
     },
     defaultValue: null,

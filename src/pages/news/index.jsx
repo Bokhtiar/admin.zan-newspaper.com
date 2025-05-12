@@ -50,7 +50,7 @@ export const NewsList = () => {
     const timer = setTimeout(() => {
       setFilteredText(text); // 1 second পরে সেট হবে
       console.log("Filtered with:", text); // এখানে filter বা search call করো
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timer); // আগের টাইমার মুছে ফেলবে
   }, [text]);
@@ -211,7 +211,6 @@ export const NewsList = () => {
             className="text-red-500 text-xl cursor-pointer"
             onClick={() => destroy(row?.article_id)}
           />
-
         </div>
       ),
     },
@@ -246,7 +245,7 @@ export const NewsList = () => {
             type="text"
             // value={title}
             onChange={handleTextChange}
-            className="w-full px-4 py-3 border rounded-lg focus:outline-none"
+            className="w-full px-4 py-3 rounded-lg focus:outline-none border bg-lightCard dark:bg-darkCard border-lightBorder  dark:border-darkBorder"
             placeholder="Enter text"
           />
         </div>
@@ -257,25 +256,36 @@ export const NewsList = () => {
           <DatePicker
             selected={startDate ? new Date(startDate) : null}
             onChange={(date) => {
-              const formattedDate = date.toISOString().split("T")[0];
-              setStartDate(formattedDate);
+              if (date) {
+                const formattedDate = date.toISOString().split("T")[0];
+                setStartDate(formattedDate);
+              } else {
+                setStartDate(""); // অথবা null, যেটা তোমার লজিকে ঠিক
+              }
             }}
             dateFormat="yyyy-MM-dd"
             placeholderText="Select start date"
-            className="w-full px-4 py-3 border rounded-lg focus:outline-none"
+            className="w-full px-4 py-3  rounded-lg focus:outline-none border bg-lightCard dark:bg-darkCard border-lightBorder  dark:border-darkBorder"
+            isClearable // 👉 এটা দিলে clear button দেখাবে
           />
         </div>
+
         <div>
-          <label className="block text-sm text-gray-500 mb-1">End Date:</label>
+          <label className="block text-sm text-gray-500 mb-1 ">End Date:</label>
           <DatePicker
             selected={endDate ? new Date(endDate) : null}
             onChange={(date) => {
-              const formattedDate = date.toISOString().split("T")[0];
-              setEndDate(formattedDate);
+              if (date) {
+                const formattedDate = date.toISOString().split("T")[0];
+                setEndDate(formattedDate);
+              } else {
+                setEndDate(""); // বা null, যেটা তুমি হ্যান্ডেল করো
+              }
             }}
             dateFormat="yyyy-MM-dd"
             placeholderText="Select end date"
-            className="w-full px-4 py-3 border rounded-lg focus:outline-none"
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none  bg-lightCard dark:bg-darkCard border-lightBorder  dark:border-darkBorder"
+            isClearable
           />
         </div>
       </div>

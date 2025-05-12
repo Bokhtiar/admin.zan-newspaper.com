@@ -35,6 +35,7 @@ const CreateAddImage = () => {
       status: 0,
     },
   });
+  console.log("news",news)
   const selectedStatus = watch("status");
   const selectedNews = watch("article_id");
   const uploadedImage = watch("article_image");
@@ -44,9 +45,9 @@ const CreateAddImage = () => {
     setLoading(true);
     try {
       const response = await NetworkServices.News.index();
-      // console.log("response", response);
+      console.log("response", response);
       if (response && response.status === 200) {
-        const result = response?.data?.data?.map((item) => {
+        const result = response?.data?.data?.data?.map((item) => {
           return {
             label: item.title,
             value: item.title,
