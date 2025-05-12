@@ -6,14 +6,11 @@ import { Navigate, useRoutes } from "react-router-dom";
 import Login from "./pages/auth/login";
 import Register from "./pages/auth/Register";
 import 'react-quill/dist/quill.snow.css';
-import { useEffect } from "react";
-import { setFavicon } from "./pages/setFavicon";
+
 
 export const App = () => {
 
-    useEffect(() => {
-    setFavicon();
-  }, []);
+
 
   const mainRoutes = { 
     path: "/",
