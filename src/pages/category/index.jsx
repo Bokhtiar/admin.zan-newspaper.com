@@ -51,7 +51,7 @@ export const CategoryList = () => {
       const response = await NetworkServices.Category.index();
       console.log("mm",response);
       if (response && response.status === 200) {
-        const result = response?.data?.data.filter((item)=>!item?.parent_id)
+        const result = response?.data?.data.filter((item)=>!item?.parent_id|| item?.parent_id===item?.category_id)
         setCategories(result || []);
       }
     } catch (error) {
