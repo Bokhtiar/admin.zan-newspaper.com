@@ -8,11 +8,10 @@ export const DashboardLayout = () => {
   const [menuStyle, setMenuStyle] = useState("hover");
   const [menuPosition, setMenuPosition] = useState("fixed");
 
-  console.log("menuStyle", menuStyle);
-  console.log("menuPosition", menuPosition);
+
 
   const toggleSidebar = () => {
-    console.log("first");
+   
     setMenuOpen(!menuOpen);
   };
 

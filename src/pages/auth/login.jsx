@@ -18,7 +18,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log("inputValues", inputValues);
+  
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

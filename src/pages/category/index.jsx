@@ -22,7 +22,7 @@ export const CategoryList = () => {
   const [btnloading, setBtnLoading] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
-  console.log(categories)
+  // console.log(categories)
   // Fetch categories from API
   const priorityNavber = useCallback(async () => {
     setBtnLoading(true);
@@ -49,7 +49,7 @@ export const CategoryList = () => {
     setLoading(true);
     try {
       const response = await NetworkServices.Category.index();
-      console.log("mm",response);
+      
       if (response && response.status === 200) {
         const result = response?.data?.data.filter((item)=>!item?.parent_id|| item?.parent_id===item?.category_id)
         setCategories(result || []);

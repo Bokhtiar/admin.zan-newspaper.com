@@ -6,8 +6,6 @@ import { FiGrid, FiUser, FiSettings, FiLogOut } from "react-icons/fi";
 import userimg from "../../assets/logo/userimg.jpg";
 import { CiSettings } from "react-icons/ci";
 import { FaCheck } from "react-icons/fa6";
-
-import { FaFlag } from "react-icons/fa";
 import { NetworkServices } from "../../network";
 import { Navigate, useNavigate } from "react-router-dom";
 
@@ -18,12 +16,7 @@ import { removeToken } from "../../utils/helper";
 const Header = ({ toggleSidebar, menuOpen, setMenuStyle, menuStyle,setMenuPosition,menuPosition }) => {
   const [showPopup, setShowPopup] = useState(false);
   const popupRef = useRef(null);
-  // const [header, setHeader] = useState("fixed");
-  // const [menuStyle, setMenuStyle] = useState("click");
 
-  // const [layoutStyle, setLayoutStyle] = useState("fullWidth");
-
-  // console.log("header",header)
 
   const [isOpen, setIsOpen] = useState(false);
   const [check, setCheck] = useState("");
@@ -32,7 +25,7 @@ const Header = ({ toggleSidebar, menuOpen, setMenuStyle, menuStyle,setMenuPositi
   const [profile, setProfile] = useState([]);
   const navigate = useNavigate();
 
-  console.log("profile",profile)
+  
 
   const [theme, setTheme] = useState(() => {
     return (
@@ -80,7 +73,7 @@ const Header = ({ toggleSidebar, menuOpen, setMenuStyle, menuStyle,setMenuPositi
     fetch("https://ipinfo.io?token=d12e9ebf8437bb")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        
         const countryCode = data.country.toLowerCase();
         const flagUrl = `https://flagcdn.com/w320/${countryCode}.png`; // Removed the extra space
         setFlagUrl(flagUrl);
@@ -125,6 +118,7 @@ const Header = ({ toggleSidebar, menuOpen, setMenuStyle, menuStyle,setMenuPositi
       }
     } catch (error) {
       console.error("Fetch User Error:", error);
+      //  networkErrorHandeller(error);
     }
     setLoading(false); // End loading (handled in both success and error)
   }, []);

@@ -1,5 +1,4 @@
-
-import React, { useCallback,  useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { IoIosList } from "react-icons/io";
@@ -17,23 +16,17 @@ export const HeroList = () => {
   const [hero, setHero] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  console.log("hero",hero)
- 
-
- 
-
   // Fetch categories from API
   const fetchHero = useCallback(async () => {
-    setLoading(true);
+    setLoading(true); /*  */
     try {
       const response = await NetworkServices.Hero.index();
-      console.log("r",response)
-     
+      
+
       if (response && response.status === 200) {
         setHero(response?.data?.data || []);
       }
     } catch (error) {
-   
       networkErrorHandeller(error);
     }
     setLoading(false);
@@ -86,7 +79,6 @@ export const HeroList = () => {
   };
 
   const columns = [
-
     {
       name: "Type",
       cell: (row) => row?.type,
@@ -108,17 +100,11 @@ export const HeroList = () => {
     },
   ];
 
-
-
   return (
     <>
       <PageHeader propsData={propsData} />
 
-      <DataTable
-        columns={columns}
-        data={hero}
-        pagination
-      />
+      <DataTable columns={columns} data={hero} pagination />
     </>
   );
 };

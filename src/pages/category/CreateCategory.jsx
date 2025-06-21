@@ -53,7 +53,6 @@ const CreateCategory = () => {
     fetchCategory();
   }, [fetchCategory]);
 
-
   const onFormSubmit = async (data) => {
     // console.log("Submitted Data:", data);
 
@@ -85,10 +84,9 @@ const CreateCategory = () => {
         Toastify.Success("Category Created.");
       }
     } catch (error) {
-      console.log("Error:", error);
       networkErrorHandeller(error);
     } finally {
-      setBtnLoading(false); 
+      setBtnLoading(false);
     }
   };
 
@@ -118,15 +116,15 @@ const CreateCategory = () => {
       >
         <div className="mb-4">
           <SingleSelect
-            name="singleSelect"
+            name="seoSelect"
             control={control}
             options={categories}
             onSelected={(selected) =>
-              setValue("category_id", selected?.category_id)
+              setValue("seoCategory_id", selected?.category_id)
             }
-            placeholder="Select a category "
+            placeholder="Select a seo  category "
             error={errors.singleSelect?.message}
-            label="Choose Parent category *"
+            label="Choose Seo Category "
             isClearable={true}
             // error={errors} // Pass an error message if validation fails
           />
@@ -184,6 +182,34 @@ const CreateCategory = () => {
           <label htmlFor="status" className="text-sm text-gray-700">
             Status
           </label>
+        </div>
+
+        <div className="mb-4">
+          <SingleSelect
+            name="singleSelect"
+            control={control}
+            options={categories}
+            onSelected={(selected) =>
+              setValue("category_id", selected?.category_id)
+            }
+            placeholder="Select a category "
+            error={errors.singleSelect?.message}
+            label="Choose Parent category *"
+            isClearable={true}
+            // error={errors} // Pass an error message if validation fails
+          />
+        </div>
+
+        <div>
+          <TextInput
+            name="category_name"
+            control={control}
+            label="Category *"
+            type="text"
+            placeholder="Create Category"
+            rules={{ required: "Category is required" }} // Validation rule
+            error={errors.category_name?.message} // Show error message
+          />
         </div>
 
         {/* Submit Button */}

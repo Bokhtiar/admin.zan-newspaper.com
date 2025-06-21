@@ -16,12 +16,11 @@ import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 
 const CreateAddImage = () => {
-  
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [btnloading, setBtnLoading] = useState(false);
+  const [typedInput, setTypedInput] = useState("");
 
-  // console.log("news", news);
   const navigate = useNavigate();
 
   const {
@@ -35,16 +34,18 @@ const CreateAddImage = () => {
       status: 0,
     },
   });
-  console.log("news",news)
+  
   const selectedStatus = watch("status");
   const selectedNews = watch("article_id");
   const uploadedImage = watch("article_image");
   // console.log("selectedNews", selectedNews);
 
   const fetchNews = useCallback(async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
-      const response = await NetworkServices.News.index();
+      const queryParams = new URLSearchParams();
+      queryParams.append("title", typedInput);
+      const response = await NetworkServices.News.index(queryParams.toString());
       console.log("response", response);
       if (response && response.status === 200) {
         const result = response?.data?.data?.data?.map((item) => {
@@ -60,7 +61,7 @@ const CreateAddImage = () => {
       networkErrorHandeller(error);
     }
     setLoading(false);
-  }, []);
+  }, [typedInput]);
 
   useEffect(() => {
     fetchNews();
@@ -92,7 +93,6 @@ const CreateAddImage = () => {
       // console.log("API Response:", response);
 
       if (response && response.status === 200) {
-        
         Toastify.Success("Created Single Item");
         navigate("/dashboard/singleaddimage");
       }
@@ -110,6 +110,11 @@ const CreateAddImage = () => {
     buttonUrl: "/dashboard/singleaddimage",
     type: "list", // This indicates the page type for the button
   };
+
+  //   const handleInputChange = (value) => {
+  //   setInputValue(value);
+  //   props.onInputText?.(value); // pass to parent
+  // };
 
   if (loading) {
     return (
@@ -139,6 +144,7 @@ const CreateAddImage = () => {
                 onSelected={(selected) =>
                   setValue("article_id", selected?.article_id)
                 }
+                onInputText={(text) => setTypedInput(text)}
                 placeholder="Select a News "
                 error={errors.news?.message}
                 label="Choose News *"

@@ -22,7 +22,7 @@ export const AuthorList = () => {
     setLoading(true);
     try {
       const response = await NetworkServices.Author.index();
-      console.log(response);
+      
       if (response && response.status === 200) {
         setAuthor(response?.data?.data || []);
       }
@@ -39,7 +39,7 @@ export const AuthorList = () => {
 
   // Handle single category deletion
   const destroy = (id) => {
-    console.log("id", id);
+    
     confirmAlert({
       title: "Confirm Delete",
       message: "Are you sure you want to delete this author?",

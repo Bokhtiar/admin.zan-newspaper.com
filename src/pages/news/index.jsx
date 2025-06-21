@@ -49,7 +49,7 @@ export const NewsList = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setFilteredText(text); // 1 second পরে সেট হবে
-      console.log("Filtered with:", text); // এখানে filter বা search call করো
+     
     }, 500);
 
     return () => clearTimeout(timer); // আগের টাইমার মুছে ফেলবে

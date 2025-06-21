@@ -16,7 +16,7 @@ const Sidebar = ({ toggleSidebar, menuOpen, menuStyle }) => {
     setOpenMenu(openMenu === title ? null : title);
   };
 
-  console.log("menuStyle", menuStyle);
+  
 
 
   return (

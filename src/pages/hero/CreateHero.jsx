@@ -23,6 +23,7 @@ const CreateHero = () => {
   const [btnloading, setBtnLoading] = useState(false);
   const [news, setNews] = useState([]);
   const [categories, setCategories] = useState([]);
+ 
 
   console.log("news", news);
 

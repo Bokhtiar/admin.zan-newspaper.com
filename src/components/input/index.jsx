@@ -650,7 +650,7 @@ export const DateInput = (props) => {
 /* ------------------------ Single Select field -------------------- */
 
 const customStyles = (error, themeValue) => {
-  console.log("themeValue:", themeValue);
+  
 
   const myStyles = {
     control: (provided) => ({
@@ -711,7 +711,14 @@ export const SingleSelect = (props) => {
   // ||"light"
   const [theme, setTheme] = useState(localStorage.getItem("theme"));
 
-  console.log("theme1", theme);
+
+  
+
+const handleInputChange = (inputValue, { action }) => {
+  if (action === "input-change") {
+    props.onInputText?.(inputValue); // send user input to parent
+  }
+};
 
   // Optional: Listen for theme changes across tabs
   useEffect(() => {
@@ -743,6 +750,7 @@ export const SingleSelect = (props) => {
           DropdownIndicator: () => null,
           IndicatorSeparator: () => null,
         }}
+        onInputChange={handleInputChange}
         options={props.options}
         onChange={handleSelect}
         isClearable={props.isClearable}
@@ -899,6 +907,7 @@ export const ImageUpload = (props) => {
     }
   };
   return (
+    
     <div className="flex flex-col space-y-1">
       <span className="text-sm mb- text-gray-500 flex gap-1">
         {props?.label}{" "}

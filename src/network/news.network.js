@@ -3,7 +3,7 @@ import { privateRequest } from '../config/axios.config'
 /* list of resource */
 /* list of resource */
 export const index = async (queryParams) => {
-    console.log(queryParams,"my query params")
+    // console.log(queryParams,"my query params")
     try {
       const response = await privateRequest.get(`/admin/news?${queryParams}`);
       return response;
