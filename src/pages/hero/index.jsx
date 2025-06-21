@@ -16,6 +16,8 @@ import ListSkeleton from "../../components/loading/ListSkeleton";
 export const HeroList = () => {
   const [hero, setHero] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  console.log("hero",hero)
  
 
  
@@ -51,9 +53,9 @@ export const HeroList = () => {
           label: "Yes",
           onClick: async () => {
             try {
-              const response = await NetworkServices.Category.destroy(id);
+              const response = await NetworkServices.Hero.destroy(id);
               if (response?.status === 200) {
-                Toastify.Info("Category deleted successfully.");
+                Toastify.Info("Hero deleted successfully.");
                 fetchHero();
               }
             } catch (error) {
@@ -84,35 +86,22 @@ export const HeroList = () => {
   };
 
   const columns = [
+
     {
-      name: "Thumbnail",
-      cell: (row) => (
-        <img
-          className="w-10 h-10 rounded-full border"
-          src={
-            row?.category_image
-              ? `${process.env.REACT_APP_API_SERVER}${row?.category_image}`
-              : ""
-          }
-          alt="images"
-        />
-      ),
-    },
-    {
-      name: "Category Name",
-      cell: (row) => row?.category_name,
+      name: "Type",
+      cell: (row) => row?.type,
     },
 
     {
       name: "Action",
       cell: (row) => (
         <div className="flex gap-2">
-          <Link to={`/dashboard/edit-category/${row?.category_id}`}>
+          <Link to={`/dashboard/edit-hero/${row?.homeHero_id}`}>
             <FaEdit className="text-primary text-xl" />
           </Link>
           <MdDelete
             className="text-red-500 text-xl cursor-pointer"
-            onClick={() => destroy(row?.category_id)}
+            onClick={() => destroy(row?.homeHero_id)}
           />
         </div>
       ),

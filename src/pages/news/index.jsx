@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ListSkeleton from "../../components/loading/ListSkeleton";
-import { TbSeo } from "react-icons/tb";
+
 
 export const NewsList = () => {
   const [news, setNews] = useState([]);

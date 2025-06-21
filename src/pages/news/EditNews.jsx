@@ -31,6 +31,9 @@ const EditNews = () => {
   const [value, seteditValue] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
 
+  console.log("value",value)
+  console.log("news",news)
+
   const {
     handleSubmit,
     formState: { errors },
@@ -120,8 +123,7 @@ const EditNews = () => {
     news?.status,
     news?.subtitle,
     news?.title,
-    // categories.child_category_id,
-    // categories.category_id
+
   ]);
   // useEffect(() => {
   //   if (news?.content) {
@@ -150,7 +152,7 @@ const EditNews = () => {
     formData.append("author_id", data?.author_id);
     formData.append("title", data?.title);
     formData.append("subtitle", data?.subtitle);
-    formData.append("content", value);
+    formData.append("content", value ? value : data?.content);
     formData.append("status", data?.status ? 1 : 0);
 
     if (data.article_image) {
