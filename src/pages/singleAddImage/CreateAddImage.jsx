@@ -71,7 +71,7 @@ const CreateAddImage = () => {
       networkErrorHandeller(error);
     }
     setLoading(false);
-  }, [typedInput]);
+  }, [filterText]);
 
   useEffect(() => {
     fetchNews();

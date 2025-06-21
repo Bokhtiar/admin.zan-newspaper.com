@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { useNavigate } from "react-router-dom";
-import { ImageUpload, SingleSelect, TextInput } from "../../components/input";
+import { ImageUpload, SingleSelect, TextAreaInput, TextInput } from "../../components/input";
 import { networkErrorHandeller } from "../../utils/helper";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
@@ -200,15 +200,15 @@ const CreateCategory = () => {
           />
         </div>
 
-        <div>
-          <TextInput
-            name="category_name"
+        <div className="mt-4">
+          <TextAreaInput
+            name="description"
             control={control}
-            label="Category *"
+            label=" "
             type="text"
-            placeholder="Create Category"
-            rules={{ required: "Category is required" }} // Validation rule
-            error={errors.category_name?.message} // Show error message
+            placeholder="Enter subtitle"
+            // rules={{ required: "subtitle is required" }}
+            error={errors.subtitle?.message} // Show error message
           />
         </div>
 
