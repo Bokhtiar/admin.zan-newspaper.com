@@ -20,6 +20,7 @@ const CreateAddImage = () => {
   const [loading, setLoading] = useState(false);
   const [btnloading, setBtnLoading] = useState(false);
   const [typedInput, setTypedInput] = useState("");
+  const [filterText, setFilteredText] = useState("");
 
   const navigate = useNavigate();
 
@@ -40,11 +41,20 @@ const CreateAddImage = () => {
   const uploadedImage = watch("article_image");
   // console.log("selectedNews", selectedNews);
 
+    useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilteredText(typedInput); // 1 second পরে সেট হবে
+     
+    }, 500);
+
+    return () => clearTimeout(timer); // আগের টাইমার মুছে ফেলবে
+  }, [typedInput]);
+
   const fetchNews = useCallback(async () => {
     // setLoading(true);
     try {
       const queryParams = new URLSearchParams();
-      queryParams.append("title", typedInput);
+      queryParams.append("title", filterText);
       const response = await NetworkServices.News.index(queryParams.toString());
       console.log("response", response);
       if (response && response.status === 200) {
