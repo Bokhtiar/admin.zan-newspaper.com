@@ -4,6 +4,8 @@ import { MdNewspaper } from "react-icons/md";
 import { FaAddressCard, FaImage } from "react-icons/fa";
 import { FaPerson } from "react-icons/fa6";
 import { IoHome } from "react-icons/io5";
+import { TbSeo } from "react-icons/tb";
+
 
 export const menuData = [
   {
@@ -40,6 +42,11 @@ export const menuData = [
     title: "Ads",
     icon: <FaImage />,
     path: "/dashboard/singleaddimage",
+  },
+  {
+    title: "Seo",
+    icon: <TbSeo />,
+    path: "/dashboard/seoList",
   },
  
 ];

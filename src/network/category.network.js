@@ -27,3 +27,8 @@ export const update = async(id, data) => {
 export const destroy = async (id) => {
     return await privateRequest.delete(`/admin/category/${id}`)
 }
+
+/* resource store */
+export const seoPost = async(data) => {
+    return await privateRequest.post('/admin/seo-categories', data)
+}

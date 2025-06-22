@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+
 import { IoMdCreate } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
@@ -9,8 +9,9 @@ import { networkErrorHandeller } from "../../utils/helper";
 import { PageHeader } from "../../components/pageHandle/pagehandle";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import { useCallback, useEffect, useState } from "react";
 
-const CreateCategory = () => {
+const CreateSeo = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [btnloading, setBtnLoading] = useState(false);
@@ -59,31 +60,21 @@ const CreateCategory = () => {
     try {
       setBtnLoading(true);
       const formData = new FormData();
-      formData.append("category_name", data.category_name);
-      formData.append("status", data?.status ? "1" : "0");
-      formData.append("isNavbar", data?.isNavber ? "1" : "0");
 
-      // Append parent_id if exists
-      if (data?.singleSelect?.category_id) {
-        formData.append("parent_id", data?.singleSelect?.category_id);
-      }
+      formData.append("category_id", data.category_id);
+      formData.append("description", data.description);
 
-
-      // Append category image if exists
-      if (data?.category_image) {
-        formData.append("category_image", data?.category_image);
-      }
-
+  
       console.log("FormData Entries:", [...formData.entries()]); // Debugging log
 
       // Send data to API
-      const response = await NetworkServices.Category.store(formData);
+      const response = await NetworkServices.Category.seoPost(formData);
       console.log("API Response:", response);
 
-      if (response && response.status === 200) {
-        navigate("/dashboard/category");
-        Toastify.Success("Category Created.");
-      }
+   
+        // navigate("/dashboard/category");
+        Toastify.Success("SEO Category created successfully");
+      
     } catch (error) {
       networkErrorHandeller(error);
     } finally {
@@ -101,11 +92,11 @@ const CreateCategory = () => {
     );
   }
   const propsData = {
-    pageTitle: " Create Category ",
+    pageTitle: " Create Seo ",
     pageIcon: <IoMdCreate />,
-    buttonName: "Category List",
-    buttonUrl: "/dashboard/category",
-    type: "list", // This indicates the page type for the button
+    buttonName: "Seo List",
+    buttonUrl: "/dashboard/seoList",
+    type: "list", 
   };
   return (
     <>
@@ -115,74 +106,34 @@ const CreateCategory = () => {
         onSubmit={handleSubmit(onFormSubmit)}
         className="mx-auto p-4 border border-gray-200 rounded-lg"
       >
+
+
         <div className="mb-4">
           <SingleSelect
-            name="seoSelect"
+            name="singleSelect"
             control={control}
             options={categories}
             onSelected={(selected) =>
-              setValue("seoCategory_id", selected?.category_id)
+              setValue("category_id", selected?.category_id)
             }
-            placeholder="Select a seo  category "
+            placeholder="Select a category "
             error={errors.singleSelect?.message}
-            label="Choose Seo Category "
+            label="Choose Parent category *"
             isClearable={true}
             // error={errors} // Pass an error message if validation fails
           />
         </div>
 
-        {/* Total Questions */}
-        <div>
-          <TextInput
-            name="category_name"
+        <div className="mt-4">
+          <TextAreaInput
+            name="description"
             control={control}
-            label="Category *"
+            label="Description"
             type="text"
-            placeholder="Create Category"
-            rules={{ required: "Category is required" }} // Validation rule
-            error={errors.category_name?.message} // Show error message
+            placeholder="Enter subtitle"
+            // rules={{ required: "subtitle is required" }}
+            error={errors.description?.message} // Show error message
           />
-        </div>
-
-        {/* Thumbnail Upload */}
-        {/* <div className="mt-4 cursor-pointer">
-          <ImageUpload
-            name="category_image"
-            control={control}
-            label="Category Picture"
-            file="image *"
-            // required
-            onUpload={(file) => setValue("category_image", file)}
-            error={errors.category_image?.message}
-          />
-        </div> */}
-
-        <div className="flex items-center gap-2 mt-4">
-          <TextInput
-            type="checkbox"
-            name="isNavber"
-            className="w-5 h-5"
-            control={control}
-            onChange={(e) => setValue("isNavber", e.target.checked ? 1 : 0)}
-            checked={watch("isNavber") === 1}
-          />
-          <label htmlFor="status" className="text-sm text-gray-700">
-            Is Navber
-          </label>
-        </div>
-
-        <div className="flex items-center gap-2 mt-4">
-          <TextInput
-            type="checkbox"
-            name="status"
-            className="w-5 h-5"
-            control={control}
-            onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
-            checked={watch("status") === 1}
-          />
-          <label htmlFor="status" className="text-sm text-gray-700">
-            Status
-          </label>
         </div>
 
         {/* Submit Button */}
@@ -195,11 +146,11 @@ const CreateCategory = () => {
           }`}
           disabled={btnloading} // Disable button when loading
         >
-          {btnloading ? "Loading..." : "Create Category"}
+          {btnloading ? "Loading..." : "Create Seo"}
         </button>
       </form>
     </>
   );
 };
 
-export default CreateCategory;
+export default CreateSeo;

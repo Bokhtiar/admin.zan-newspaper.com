@@ -24,6 +24,8 @@ import EditHero from "../pages/hero/EditHero";
 import { HeroList } from "../pages/hero";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Seo from "../pages/news/Seo";
+import CreateSeo from "../pages/seo/createSeo";
+import { SeoList } from "../pages/seo";
 
 
 const appRoutes = [
@@ -62,11 +64,11 @@ const appRoutes = [
       { path: "create-hero", element: <CreateHero/> },
       { path: "edit-hero/:id", element: <EditHero/> },
 
-      // /** product */
-      // { path: "product", element:  <Product /> },
-      // { path: "product/category", element:  <Product /> },
-      // { path: "product/product-list", element:  <ProductList/>},
-      // { path: "product/add-product", element:  <AddProduct/>},
+      /** hero */
+      { path: "seoList", element: <SeoList/> },
+      { path: "seo", element: <CreateSeo/> },
+
+
     ],
   },
 ];
