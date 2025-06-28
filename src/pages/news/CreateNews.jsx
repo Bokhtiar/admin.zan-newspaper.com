@@ -162,6 +162,7 @@ const CreateNews = () => {
     newsFormData.append("subtitle", data.subtitle);
     newsFormData.append("status", data.status ? "1" : "0");
     newsFormData.append("content", value);
+    newsFormData.append("slug", data?.slug);
 
     if (data.article_image) {
       newsFormData.append("article_image", data.article_image);
@@ -263,6 +264,17 @@ const CreateNews = () => {
               placeholder="Create Title"
               rules={{ required: "Title is required" }}
               error={errors.title?.message} // Show error message
+            />
+          </div>
+          <div className="mt-4 w-full">
+            <TextInput
+              name="slug"
+              control={control}
+              label="Slug Url Name *"
+              type="text"
+              placeholder="Create Slug"
+              rules={{ required: "Slug is required" }}
+              error={errors.slug?.message} // Show error message
             />
           </div>
           {/* <div className="mt-4 w-full">
